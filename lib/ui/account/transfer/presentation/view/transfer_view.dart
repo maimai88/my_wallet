@@ -384,9 +384,6 @@ class _ConfirmState extends State<_Confirm> {
             "After transfer is done, balance is",
             "",
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
             ConversationRow(
                 "Account",
                 toAccount == null ? "" : toAccount.name,
@@ -399,11 +396,6 @@ class _ConfirmState extends State<_Confirm> {
                   .textTheme
                   .title,
             ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
             ConversationRow(
                 "and Account",
                 fromAccount == null ? "" : fromAccount.name,
@@ -416,8 +408,6 @@ class _ConfirmState extends State<_Confirm> {
                   .textTheme
                   .title,
             ),
-          ],
-        ),
         Padding(
           padding: const EdgeInsets.only(left: 12.0, right: 12.0),
           child: RoundedButton(

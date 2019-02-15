@@ -35,7 +35,8 @@ Future<User> login(String email, String password) async {
     FirebaseUser user = await _auth.signInWithEmailAndPassword(email: email, password: password);
 
     if (user != null) {
-      return User(user.uid, user.email, user.displayName, user.photoUrl, null, user.isEmailVerified);
+      return getCurrentUser();
+      //return User(user.uid, user.email, user.displayName, user.photoUrl, null, user.isEmailVerified);
     }
 
     throw Exception("Failed to signin to firebase");

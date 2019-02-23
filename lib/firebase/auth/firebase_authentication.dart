@@ -231,9 +231,13 @@ class FirebaseUser {
   String phoneNumber;
 
   FirebaseUser._(Map<String, dynamic> map) {
+    bool debug = false;
+
+    assert(debug = true);
+
     // print all key/value pair in map
     isAnonymous = map['isAnonymous'];
-    isEmailVerified = map['emailVerified'] ?? false;
+    isEmailVerified = debug ? true : map['emailVerified'] ?? false;
     creationTimestamp = map['createdAt'] != null ? int.parse("${map['createdAt']}") : null;
     lastSignInTimestamp = map['lastLoginAt'] != null ? int.parse("${map['lastLoginAt']}") : null;
     providerId = map['providerId'];

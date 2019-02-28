@@ -23,16 +23,16 @@ class CreateCategoryRepository extends CleanArchitectureRepository {
     return _dbRepo._generateRandomColor();
   }
 
-  Future<bool> saveCategory(int id, String name, String color, CategoryType type) {
-    _fbRepo.saveCategory(id, name, color, type);
+  Future<bool> saveCategory(int id, String name, String color, CategoryType type, int group) {
+    _fbRepo.saveCategory(id, name, color, type, group);
 
-    return _dbRepo.saveCategory(id, name, color, type);
+    return _dbRepo.saveCategory(id, name, color, type, group);
   }
 
-  Future<bool> updateCategory(int id, String name, String colorHex, CategoryType type) {
-    _fbRepo.updateCategory(id, name, colorHex, type);
+  Future<bool> updateCategory(int id, String name, String colorHex, CategoryType type, int group) {
+    _fbRepo.updateCategory(id, name, colorHex, type, group);
 
-    return _dbRepo.updateCategory(id, name, colorHex, type);
+    return _dbRepo.updateCategory(id, name, colorHex, type, group);
   }
 
   Future<bool> validateName(String name) async {
@@ -68,21 +68,21 @@ class _CreateCategoryDatabaseRepository {
     return color;
   }
 
-  Future<bool> saveCategory(int id, String name, String color, CategoryType categoryType) async {
-    return (await db.insertCagetory(AppCategory(id, name, color, categoryType))) >= 0;
+  Future<bool> saveCategory(int id, String name, String color, CategoryType categoryType, int group) async {
+    return (await db.insertCagetory(AppCategory(id, name, color, categoryType, group: group))) >= 0;
   }
 
-  Future<bool> updateCategory(int id, String name, String colorHex, CategoryType type) async {
-    return (await db.updateCategory(AppCategory(id, name, colorHex, type))) >= 0;
+  Future<bool> updateCategory(int id, String name, String colorHex, CategoryType type, int group) async {
+    return (await db.updateCategory(AppCategory(id, name, colorHex, type, group: group))) >= 0;
   }
 }
 
 class _CreateCategoryFirebaseRepository {
-  Future<bool> saveCategory(int id, String name, String color, CategoryType categoryType) {
-    return fm.addCategory(AppCategory(id, name, color, categoryType));
+  Future<bool> saveCategory(int id, String name, String color, CategoryType categoryType, int group) {
+    return fm.addCategory(AppCategory(id, name, color, categoryType, group: group));
   }
 
-  Future<bool> updateCategory(int id, String name, String colorHex, CategoryType type) {
-    return fm.updateCategory(AppCategory(id, name, colorHex, type));
+  Future<bool> updateCategory(int id, String name, String colorHex, CategoryType type, int group) {
+    return fm.updateCategory(AppCategory(id, name, colorHex, type, group: group));
   }
 }

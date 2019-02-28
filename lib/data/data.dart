@@ -151,6 +151,7 @@ class AppCategory {
   final String name;
   final String colorHex;
   final CategoryType categoryType;
+  final int group;
   double income;
   double expense;
 
@@ -160,6 +161,7 @@ class AppCategory {
       this.colorHex,
       this.categoryType,
       {
+        this.group,
         this.income = 0.0,
         this.expense = 0.0}
       );

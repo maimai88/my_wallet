@@ -40,6 +40,7 @@ final _tableCategory = tableCategory;
 final _catName = "_name";
 final _catColorHex = "_colorHex";
 final _catCategoryType = "_type";
+final _catGroup = "_group";
 
 // table budget
 final _tableBudget = tableBudget;
@@ -865,7 +866,8 @@ AppCategory _toCategory(Map<String, dynamic> map) {
     map[_id],
     map[_catName],
     map[_catColorHex],
-    CategoryType.all[map[_catCategoryType] == null ? 0 : map[_catCategoryType]]
+    CategoryType.all[map[_catCategoryType] == null ? 0 : map[_catCategoryType]],
+    group: map[_catGroup],
   );
 }
 
@@ -954,6 +956,7 @@ Map<String, dynamic> _categoryToMap(AppCategory cat) {
   if(cat.name != null) map.putIfAbsent(_catName, () => cat.name);
   if(cat.colorHex != null) map.putIfAbsent(_catColorHex, () => cat.colorHex);
   if(cat.categoryType != null) map.putIfAbsent(_catCategoryType, () => cat.categoryType.id);
+  if(cat.group != null) map.putIfAbsent(_catGroup, () => cat.group);
 
   map.putIfAbsent(_id, () => cat.id);
 
@@ -1355,6 +1358,7 @@ class _PrivateDbHelper {
         $_catName TEXT NOT NULL,
         $_catColorHex TEXT NOT NULL,
         $_catCategoryType INTEGER NOT NULL,
+        $_catGroup INTEGER NOT NULL,
         $_updated INTEGER NOT NULL
         )
         """);

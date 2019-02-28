@@ -254,7 +254,8 @@ AppCategory _snapshotToCategory(DocumentSnapshot snapshot) {
       _toId(snapshot),
       snapshot.data[fldName],
       snapshot.data[fldColorHex],
-      CategoryType.all[snapshot.data[fldType] == null ? 0 : snapshot.data[fldType]]
+      CategoryType.all[snapshot.data[fldType] == null ? 0 : snapshot.data[fldType]],
+      group: snapshot.data[fldGroup] != null ? int.parse(snapshot.data[fldGroup]) : null
   );
 //      snapshot.data[fldBalance] != null ? double.parse("${snapshot.data[fldBalance]}") : null);
 }

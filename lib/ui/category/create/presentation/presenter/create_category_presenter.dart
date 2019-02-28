@@ -5,8 +5,8 @@ import 'package:my_wallet/ui/category/create/presentation/view/create_category_d
 class CreateCategoryPresenter extends CleanArchitecturePresenter<CreateCategoryUseCase, CreateCategoryDataView>{
   CreateCategoryPresenter() : super(CreateCategoryUseCase());
 
-  void saveCategory(int id, String name, CategoryType type) {
-    return useCase.saveCategory(id, name, type, dataView.onCreateCategorySuccess, dataView.onCreateCategoryError);
+  void saveCategory(int id, String name, CategoryType type, int groupId) {
+    return useCase.saveCategory(id, name, type, groupId, dataView.onCreateCategorySuccess, dataView.onCreateCategoryError);
   }
 
   void loadCategoryDetail(int id) {

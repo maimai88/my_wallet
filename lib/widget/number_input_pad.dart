@@ -7,7 +7,7 @@ class NumberInputPad extends StatefulWidget {
   final String _decimal;
   final bool showNumPad;
 
-  NumberInputPad(GlobalKey<NumberInputPadState> key, this._onValueChanged, this._number, this._decimal, {this.showNumPad = false}) : super(key: key);
+  NumberInputPad(GlobalKey<NumberInputPadState> key, this._onValueChanged, this._number, this._decimal, {this.showNumPad = true}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() {

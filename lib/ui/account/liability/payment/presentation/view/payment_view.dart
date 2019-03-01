@@ -25,7 +25,6 @@ class _PayLiabilityState extends CleanArchitectureView<PayLiability, PayLiabilit
   final _dateFormat = DateFormat("dd MMM, yyyy");
   final _timeFormat = DateFormat("HH:mm");
 
-  final GlobalKey<NumberInputPadState> _numPadKey = GlobalKey();
   final GlobalKey<BottomViewContentState<Account>> _accountKey = GlobalKey();
   final GlobalKey<BottomViewContentState<AppCategory>> _categoryKey = GlobalKey();
 
@@ -39,8 +38,12 @@ class _PayLiabilityState extends CleanArchitectureView<PayLiability, PayLiabilit
   List<Account> _accounts;
   AppCategory _category;
   List<AppCategory> _categories;
-  double _amount = 0.0;
   DateTime _date = DateTime.now();
+
+  // payment
+  double _dischargeLiability = 0.0;
+  double _interest = 0.0;
+  double _additionalPayment = 0.0;
 
   @override
   void init() {
@@ -97,29 +100,59 @@ class _PayLiabilityState extends CleanArchitectureView<PayLiability, PayLiabilit
                       dataColor: _category == null ? AppTheme.pinkAccent : Color(AppTheme.hexToInt(_category.colorHex)),
                       onPressed: _showCategoryListSelection,
                     ),
-                    ConversationRow("Amount", _nf.format(_amount)),
                     Row(
                       children: <Widget>[
                         ConversationRow("on", _dateFormat.format(_date)),
                         ConversationRow("at", _timeFormat.format(_date))
                       ],
                     ),
+                    ConversationRow(
+                      "Discharge liability",
+                      _nf.format(_dischargeLiability),
+                      onPressed: _changeDischargeLiability,
+                    ),
+                    ConversationRow(
+                      "Interest",
+                      _nf.format(_interest),
+                      onPressed: _changeInterest,
+                    ),
+                    ConversationRow(
+                      "Additional payment",
+                      _nf.format(_additionalPayment),
+                      onPressed: _changeAdditionalPayment,
+                    )
                   ],
                 ),
               ),
             ),
           ),
-          Align(
-            child: NumberInputPad(_numPadKey, _onNumberInput, null, null, showNumPad: true,),
-            alignment: Alignment.bottomCenter,
-          )
         ],
       ),
     );
   }
 
-  void _onNumberInput(double amount) {
-    setState(() => _amount = amount);
+  void _changeDischargeLiability() {
+    Navigator.push(context,
+        SlidePageRoute(builder:
+            (context) => _AmountInput(
+                "Discharge Liability")))
+    .then((value) => setState(() => _dischargeLiability = value));
+  }
+
+  void _changeInterest() {
+    Navigator.push(context,
+        SlidePageRoute(builder:
+            (context) => _AmountInput(
+            "Interest")))
+        .then((value) => setState(() => _interest = value));
+  }
+
+  void _changeAdditionalPayment() {
+    Navigator.push(context,
+        SlidePageRoute(builder:
+            (context) => _AmountInput(
+            "Additional Payment")))
+        .then((value) => setState(() => _additionalPayment = value));
   }
 
   void _showAccountListSelection() {
@@ -210,7 +243,9 @@ class _PayLiabilityState extends CleanArchitectureView<PayLiability, PayLiabilit
       widget._id,
       _account,
       _category,
-      _amount,
+      _dischargeLiability,
+      _interest,
+      _additionalPayment,
       _date
     );
   }
@@ -252,6 +287,87 @@ class _PayLiabilityState extends CleanArchitectureView<PayLiability, PayLiabilit
 
   @override
   void onSaveFailed(Exception e) {
+    showDialog(context: context,
+    builder: (context) => AlertDialog(
+      title: Text("Failed to save payment"),
+      content: Text(e.toString()),
+      actions: <Widget>[
+        FlatButton(
+          child: Text("OK"),
+          onPressed: () => Navigator.pop(context),
+        )
+      ],
+    ));
+  }
+}
 
+class _AmountInput extends StatefulWidget {
+
+  final String _caption;
+  _AmountInput(this._caption);
+
+  @override
+  State<StatefulWidget> createState() {
+    return _AmountInputState();
+  }
+
+}
+
+class _AmountInputState extends State<_AmountInput> {
+
+  final _nf = NumberFormat("\$#,###.##");
+  double number = 0.0;
+  final GlobalKey<NumberInputPadState> _numPadKey = GlobalKey();
+
+  @override
+  Widget build(BuildContext context) {
+    return PlainScaffold(
+      appBar: MyWalletAppBar(
+        title: "Enter amount",
+        actions: <Widget>[
+          FlatButton(
+            child: Text("Save"),
+            onPressed: () => Navigator.pop(context, number),
+          )
+        ],
+      ),
+      body: Column(
+        children: <Widget>[
+          Expanded(
+            child: Container(
+              color: AppTheme.white,
+              alignment: Alignment.center,
+              child: FittedBox(
+                child: Column(
+                  children: <Widget>[
+                    ConversationRow(
+                        widget._caption,
+                        _nf.format(number)
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Container(
+            child: NumberInputPad(
+                _numPadKey,
+                _updateNumber,
+                null,
+                null
+            ),
+            decoration: BoxDecoration(
+              gradient: AppTheme.bgGradient
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  void _updateNumber(double value) {
+    setState(() {
+      number = value;
+    });
   }
 }

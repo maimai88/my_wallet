@@ -25,6 +25,12 @@ class PayLiabilityRepository extends CleanArchitectureRepository {
     _fbRepo.saveDischargeOfLiability(discharge);
     return _dbRepo.saveDischargeOfLiability(discharge);
   }
+
+  Future<bool> saveInterestTransaction(AppTransaction interest) {
+    _fbRepo.saveInterestTransaction(interest);
+
+    return _dbRepo.saveInterestTransaction(interest);
+  }
 }
 
 class _PayLiabilityDatabaseRepository {
@@ -43,10 +49,18 @@ class _PayLiabilityDatabaseRepository {
   Future<bool> saveDischargeOfLiability(DischargeOfLiability discharge) async {
     return (await db.insertDischargeOfLiability(discharge)) > 0;
   }
+
+  Future<bool> saveInterestTransaction(AppTransaction interest) async {
+    return (await db.insertTransaction(interest)) > 0;
+  }
 }
 
 class _PayLiabilityFirebaseRepository {
   Future<bool> saveDischargeOfLiability(DischargeOfLiability discharge) {
     return fdb.addDischargeOfLiability(discharge);
+  }
+
+  Future<bool> saveInterestTransaction(AppTransaction interest) {
+    return fdb.addTransaction(interest);
   }
 }

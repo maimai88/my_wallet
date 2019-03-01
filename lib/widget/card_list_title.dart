@@ -4,7 +4,7 @@ import 'package:my_wallet/style/app_theme.dart';
 class CardListTile extends Card {
   CardListTile({
     Key key,
-    double elevation,
+    double elevation = 0.5,
     EdgeInsets margin = const EdgeInsets.all(4.0),
     Clip clipBehavior = Clip.none,
     bool semanticContainer = true,

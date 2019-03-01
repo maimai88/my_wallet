@@ -14,7 +14,7 @@ class PayLiabilityPresenter extends CleanArchitecturePresenter<PayLiabilityUseCa
     useCase.loadCategories(type, dataView.onCategoryLoaded, dataView.onCategoryLoadFailed);
   }
 
-  void savePayment(int liabilityId, Account fromAccount, AppCategory category, double amount, DateTime date) {
-    useCase.savePayment(liabilityId, fromAccount, category, amount, date, dataView.onSaveSuccess, dataView.onSaveFailed);
+  void savePayment(int liabilityId, Account fromAccount, AppCategory category, double dischargeLiability, double interest, double additionalPayment, DateTime date) {
+    useCase.savePayment(liabilityId, fromAccount, category, dischargeLiability, interest, additionalPayment, date, dataView.onSaveSuccess, dataView.onSaveFailed);
   }
 }

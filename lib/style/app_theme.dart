@@ -153,6 +153,8 @@ class AppTheme {
     }
     return val;
   }
+
+  static const darkblueText = TextStyle(color: darkBlue);
 }
 
 class _MyWalletPageTransitionBuilder extends PageTransitionsBuilder {

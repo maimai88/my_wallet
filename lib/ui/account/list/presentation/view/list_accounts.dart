@@ -85,7 +85,7 @@ class _ListAccountsState extends CleanArchitectureView<ListAccounts, ListAccount
                     routes.AccountDetail(accountId: _accounts[index].id, accountName: _accounts[index].name),);
                 }
                 },
-              subTitle: _accounts[index].type == AccountType.liability ? "(-${_nf.format(_accounts[index].balance)})" : "${_nf.format(_accounts[index].balance)}",
+              subTitle: _accounts[index].type == AccountType.liability ? "(-${_nf.format(_accounts[index].balance)})" : "${_nf.format(_accounts[index].balance ?? 0.0)}",
               trailing: isEditMode ? IconButton(
                 onPressed: () {
                   _deleteAccount(_accounts[index]);

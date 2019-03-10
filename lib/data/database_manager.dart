@@ -1358,7 +1358,7 @@ class _PrivateDbHelper {
         $_catName TEXT NOT NULL,
         $_catColorHex TEXT NOT NULL,
         $_catCategoryType INTEGER NOT NULL,
-        $_catGroup INTEGER NOT NULL,
+        $_catGroup INTEGER,
         $_updated INTEGER NOT NULL
         )
         """);

@@ -35,7 +35,7 @@ Future<User> login(String email, String password) async {
     FirebaseUser user = await _auth.signInWithEmailAndPassword(email: email, password: password);
 
     if (user != null) {
-      return getCurrentUser();
+      return await _getCurrentUser();
       //return User(user.uid, user.email, user.displayName, user.photoUrl, null, user.isEmailVerified);
     }
 
@@ -123,6 +123,11 @@ Future<bool> signOut() async {
 /// Color for this user is null. To get user with color, use database.getUserDetail(<homeKey>)
 Future<User> getCurrentUser() async {
   return _lock.synchronized(() async {
+    return _getCurrentUser();
+  });
+}
+
+Future<User> _getCurrentUser() async {
     User _user;
 
     try {
@@ -147,7 +152,6 @@ Future<User> getCurrentUser() async {
     }
 
     return _user;
-  });
 }
 
 /// This method will try to access user's home table to get user detail from /data/<homekey>/User

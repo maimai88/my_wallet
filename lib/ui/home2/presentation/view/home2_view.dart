@@ -10,6 +10,7 @@ import 'package:my_wallet/data/data_observer.dart' as observer;
 import 'package:intl/intl.dart';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:charts_flutter/flutter.dart';
 
 class MyWalletHome extends StatefulWidget {
   MyWalletHome({GlobalKey<MyWalletState> key}) : super(key: key);
@@ -46,6 +47,9 @@ class MyWalletState extends CleanArchitectureView<MyWalletHome, MyWalletHomePres
   // tab view
   TabController _tabController;
   ChartTitleEntity _chartTitleEntity;
+  List<TransactionEntity> _incomeEntity;
+  List<TransactionEntity> _expenseEntity;
+  ChartBudgetEntity _budgetEntity;
 
   @override
   void init() {
@@ -76,9 +80,12 @@ class MyWalletState extends CleanArchitectureView<MyWalletHome, MyWalletHomePres
   void onExpensesDetailLoaded(HomeEntity value) {
     if(value != null) {
       setState(() {
-        _homeEntities = value.expenseEntity;
+        _homeEntities = value.expensesEntity;
         _totalOverview = value.totalOverview;
         _chartTitleEntity = value.chartTitleEntity;
+        _incomeEntity = value.incomeEntity;
+        _expenseEntity = value.expenseEntity;
+        _budgetEntity = value.budgetEntity;
       });
     }
   }
@@ -151,10 +158,14 @@ class MyWalletState extends CleanArchitectureView<MyWalletHome, MyWalletHomePres
                         _nf,
                         _percentage/*,
                         height: MediaQuery.of(context).size.height * _chartRatio * 0.25*/),
-//                    Container(
-//                      height: MediaQuery.of(context).size.height * _chartRatio * 0.75,
-//                      child: TabBarView(controller: _tabController, children: _tabViews),
-//                    )
+                    Container(
+                      height: MediaQuery.of(context).size.height * _chartRatio * 0.75,
+                      child: TabBarView(controller: _tabController, children: [
+                        TransactionChart(_incomeEntity),
+                        TransactionChart(_expenseEntity),
+                        ChartBudgetView(_budgetEntity, _nf)
+                      ]),
+                    )
                   ],
                 ),
               )
@@ -183,7 +194,7 @@ class MyWalletState extends CleanArchitectureView<MyWalletHome, MyWalletHomePres
                           alignment: Alignment.bottomCenter,
                           child: Icon(
                             Icons.monetization_on,
-                            color: Color(AppTheme.hexToInt(_homeEntities[index].colorHex)),
+                            color: AppTheme.toColorFromHex(_homeEntities[index].colorHex),
                             size: _iconSize,),
                           heightFactor: _homeEntities[index].remainFactor,
                         ),
@@ -195,7 +206,7 @@ class MyWalletState extends CleanArchitectureView<MyWalletHome, MyWalletHomePres
                       height: _iconSize,
                       decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          border: Border.all(color: Color(AppTheme.hexToInt(_homeEntities[index].colorHex)), width: 1.0)
+                          border: Border.all(color: AppTheme.toColorFromHex(_homeEntities[index].colorHex), width: 1.0)
                       ),
                     )
                   ],
@@ -353,6 +364,84 @@ class ChartTitleView extends StatelessWidget {
       controller: _controller,
       indicatorWeight: 4.0,
       indicatorColor: Colors.white.withOpacity(0.8),
+    );
+  }
+}
+
+class TransactionChart extends StatelessWidget {
+  final List<TransactionEntity> _transactions;
+
+  TransactionChart(this._transactions);
+
+  @override
+  Widget build(BuildContext context) {
+    return _transactions == null || _transactions.isEmpty
+        ? Center(child: Text("No Transaction found", style: Theme.of(context).textTheme.title,),)
+        : PieChart([
+      Series<TransactionEntity, double>(
+        id: "_transactions",
+        data: _transactions,
+        measureFn: (data, index) => data.amount,
+        domainFn: (data, index) => data.amount,
+        colorFn: (data, index) => Color.fromHex(code: data.color),
+        labelAccessorFn: (data, index) => "${data.category}",
+      ),
+    ],
+      animate: false,
+      defaultRenderer: ArcRendererConfig(
+          arcRendererDecorators: [ ArcLabelDecorator(
+            labelPosition: ArcLabelPosition.auto,
+            outsideLabelStyleSpec: TextStyleSpec(
+                color: Color.fromHex(code: "#FFFFFF"),
+                fontSize: 14
+            ),
+            insideLabelStyleSpec: TextStyleSpec(
+                color: Color.fromHex(code: "#FFFFFF"),
+                fontSize: 14
+            ),
+            leaderLineStyleSpec: ArcLabelLeaderLineStyleSpec(
+                color: Color.fromHex(code: "#FFFFFF"),
+                thickness: 2.0,
+                length: 24.0
+            ),
+          ) ]
+      ),
+    );
+  }
+}
+
+class ChartBudgetView extends StatelessWidget {
+  final ChartBudgetEntity _entity;
+  final NumberFormat _nf;
+
+  ChartBudgetView(this._entity, this._nf);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.all(10.0),
+      child: Stack(
+        children: <Widget>[
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: ClipRect(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                heightFactor: _entity == null ? 0.0 : _entity.fraction,
+                child: Container(
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.pinkAccent),
+                ),
+              ),
+            ),
+          ),
+          Container(
+            alignment: Alignment.center,
+            decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.pinkAccent, width: 3.0)),
+            child: Text(_entity == null ? "\$0.00" : _nf.format(_entity.spent), style: Theme.of(context).textTheme.display2,),
+          ),
+        ],
+      ),
     );
   }
 }

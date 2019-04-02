@@ -14,6 +14,8 @@ class MyWalletHomeRepository extends CleanArchitectureRepository {
 
   final _HomeOverviewDatabaseRepository _homeRepo = _HomeOverviewDatabaseRepository();
   final _ChartTitleRepository _chartTitleRepository = _ChartTitleRepository();
+  final _ChartTransactionDatabaseRepository _chartTransactionDatabaseRepository = _ChartTransactionDatabaseRepository();
+  final _ChartBudgetRepository _chartBudgetRepository = _ChartBudgetRepository();
 
   Future<List<ExpenseEntity>> loadExpense() {
     return _dbRepo.loadExpense();
@@ -25,6 +27,18 @@ class MyWalletHomeRepository extends CleanArchitectureRepository {
 
   Future<ChartTitleEntity> loadChartTitleEntity() {
     return _chartTitleRepository.loadTitleDetail();
+  }
+
+  Future<List<TransactionEntity>> loadIncomeEntity() {
+    return _chartTransactionDatabaseRepository.loadTransaction(TransactionType.typeIncome);
+  }
+
+  Future<List<TransactionEntity>> loadExpenseEntity() {
+    return _chartTransactionDatabaseRepository.loadTransaction(TransactionType.typeExpense);
+  }
+
+  Future<ChartBudgetEntity> loadChartBudgetEntity() {
+    return _chartBudgetRepository.loadSaving();
   }
 
   Future<bool> resumeDatabase() async {
@@ -114,5 +128,38 @@ class _ChartTitleRepository extends CleanArchitectureRepository{
     var budget = await _db.querySumAllBudgetForMonth(from, to, CategoryType.expense);
 
     return ChartTitleEntity(expenses, income, budget == 0 ? 0.0 : expenses < budget ? expenses / budget : 1.0);
+  }
+}
+
+class _ChartTransactionDatabaseRepository {
+  Future<List<TransactionEntity>> loadTransaction(List<TransactionType> type) async {
+
+    var from = Utils.firstMomentOfMonth(DateTime.now());
+    var to = Utils.lastDayOfMonth(DateTime.now());
+
+    var transactions = await _db.queryCategoryWithTransaction(from: from, to: to, type: type, filterZero: true, orderByType: true);
+    var total = await _db.sumAllTransactionBetweenDateByType(from, to, type);
+    List<TransactionEntity> list = transactions == null ? [] : transactions.map((f) => TransactionEntity(f.name, f.income > 0 ? f.income : f.expense > 0 ? f.expense : 0.0, f.colorHex)).toList().sublist(0, transactions.length > 3 ? 3 : transactions.length);
+
+    var balance = list.fold(0.0, (pre, next) => pre + next.amount);
+
+    list.sort((a, b) => b.amount.floor() - a.amount.floor());
+
+    if(total - balance > 0) list.add(TransactionEntity("Others", total - balance, "#1B5E20"));
+
+    return list;
+  }
+}
+
+class _ChartBudgetRepository extends CleanArchitectureRepository {
+  Future<ChartBudgetEntity> loadSaving() async {
+    var start = Utils.firstMomentOfMonth(DateTime.now());
+    var today = DateTime.now();
+
+    var expenseThisMonth = await _db.sumAllTransactionBetweenDateByType(start, today, TransactionType.typeExpense) ?? 0.0;
+
+    var monthlyBudget = await _db.querySumAllBudgetForMonth(start, Utils.lastDayOfMonth(start), CategoryType.expense) ?? 0.0;
+
+    return ChartBudgetEntity(monthlyBudget - expenseThisMonth, monthlyBudget, 1 - (monthlyBudget == 0 ? 0.0 : expenseThisMonth < monthlyBudget ? expenseThisMonth / monthlyBudget : 1.0));
   }
 }

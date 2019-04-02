@@ -7,11 +7,14 @@ class MyWalletHomeUseCase extends CleanArchitectureUseCase<MyWalletHomeRepositor
 
   void loadExpense(onNext<HomeEntity> next) {
     execute(Future(() async {
-      List<ExpenseEntity> expenseEntity = await repo.loadExpense();
+      List<ExpenseEntity> expensesEntity = await repo.loadExpense();
       double totalOverview = await repo.loadTotalOverview();
       ChartTitleEntity chartTitleEntity = await repo.loadChartTitleEntity();
+      List<TransactionEntity> incomeEntity = await repo.loadIncomeEntity();
+      List<TransactionEntity> expenseEntity = await repo.loadExpenseEntity();
+      ChartBudgetEntity chartBudgetEntity = await repo.loadChartBudgetEntity();
 
-      next(HomeEntity(totalOverview, chartTitleEntity, expenseEntity));
+      next(HomeEntity(totalOverview, chartTitleEntity, incomeEntity, expenseEntity, chartBudgetEntity, expensesEntity));
     }), next, (e) {
       next(null);
     });

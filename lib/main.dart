@@ -1,6 +1,7 @@
 import 'package:my_wallet/app_material.dart';
 
-import 'package:my_wallet/ui/home/homemain/presentation/view/homemain_view.dart';
+//import 'package:my_wallet/ui/home/homemain/presentation/view/homemain_view.dart';
+import 'package:my_wallet/ui/home2/presentation/view/home2_view.dart';
 import 'package:my_wallet/widget/my_wallet_app_bar.dart';
 
 import 'package:my_wallet/ui/transaction/add/presentation/view/add_transaction_view.dart';

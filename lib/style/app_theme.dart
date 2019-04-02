@@ -130,6 +130,10 @@ class AppTheme {
     end: Alignment.centerRight
       );
 
+  static Color toColorFromHex(String hex) {
+    return Color(hexToInt(hex));
+  }
+
   static int hexToInt(String hex) {
     hex = hex.replaceFirst("#", "");
     if (hex.length < 8) hex = "FF$hex";

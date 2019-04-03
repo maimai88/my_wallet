@@ -136,7 +136,7 @@ class _PayLiabilityState extends CleanArchitectureView<PayLiability, PayLiabilit
         SlidePageRoute(builder:
             (context) => _AmountInput(
                 "Discharge Liability")))
-    .then((value) => setState(() => _dischargeLiability = value));
+    .then((value) => setState(() => _dischargeLiability = value ?? 0.0));
   }
 
   void _changeInterest() {
@@ -144,7 +144,7 @@ class _PayLiabilityState extends CleanArchitectureView<PayLiability, PayLiabilit
         SlidePageRoute(builder:
             (context) => _AmountInput(
             "Interest")))
-        .then((value) => setState(() => _interest = value));
+        .then((value) => setState(() => _interest = value ?? 0.0));
   }
 
   void _changeAdditionalPayment() {
@@ -152,7 +152,7 @@ class _PayLiabilityState extends CleanArchitectureView<PayLiability, PayLiabilit
         SlidePageRoute(builder:
             (context) => _AmountInput(
             "Additional Payment")))
-        .then((value) => setState(() => _additionalPayment = value));
+        .then((value) => setState(() => _additionalPayment = value ?? 0.0));
   }
 
   void _showAccountListSelection() {

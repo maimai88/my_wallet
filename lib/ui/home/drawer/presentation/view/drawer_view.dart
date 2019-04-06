@@ -16,7 +16,7 @@ class _LeftDrawerState extends CleanArchitectureView<LeftDrawer, LeftDrawerPrese
 
   final drawerListItems = [
     _DrawerTitle("Finance"),
-    _DrawerItem("Categories", routes.ListCategories),
+//    _DrawerItem("Categories", routes.ListCategories),
     _DrawerItem("Accounts", routes.ListAccounts),
     _DrawerItem("Budgets", routes.ListBudgets),
     _DrawerTitle("Profile"),

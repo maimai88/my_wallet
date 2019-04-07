@@ -81,6 +81,9 @@ class _ListBudgetsState extends CleanArchitectureView<ListBudgets, ListBudgetsPr
   }
 
   Widget _generateMonthlyBudgetOverview(double height, double width) {
+    final daysRemains = _daysRemain();
+    final totalDays = _totalDaysOfMonth();
+
     return SliverAppBar(
 //      title: Text("Your Budget", style: Theme.of(context).textTheme.title.apply(color: AppTheme.white),),
       expandedHeight: height,
@@ -108,13 +111,19 @@ class _ListBudgetsState extends CleanArchitectureView<ListBudgets, ListBudgetsPr
             ),
             Expanded(
                 child: BudgetSlider(
-                  value: _budgetList.totalExpense,
-                  max: max(_budgetList.expenseBudget, _budgetList.totalExpense),
-                  min: 0.0,
-                  label: moneyNumberFormat.format(_budgetList.totalExpense),
+                  context,
+                  primaryValue: _budgetList.totalExpense,
+                  primaryMax: max(_budgetList.expenseBudget, _budgetList.totalExpense),
+                  primaryLabel: moneyNumberFormat.format(_budgetList.expenseBudget),
+                  primaryIndicatorLine1: moneyNumberFormat.format(_budgetList.expenseBudget - _budgetList.totalExpense),
+                  primaryIndicatorLine2: "remaining",
+                  secondaryMax: totalDays.toDouble(),
+                  secondaryValue: (totalDays - daysRemains).toDouble(),
+                  secondaryLabel: "$daysRemains days\nleft",
                   sliderWidth: width,
                   sliderHeight: 50.0,
-            ))
+                  size: Size(width, height),)
+                )
           ],
         ),
       ),
@@ -133,146 +142,21 @@ class _ListBudgetsState extends CleanArchitectureView<ListBudgets, ListBudgetsPr
   void loadData() {
     presenter.loadThisMonthBudgetList(_month);
   }
-}
-
-class BudgetSlider extends StatelessWidget {
-  final double value;
-  final double max;
-  final double min;
-  final String label;
-  final Color inactiveColor;
-  final Color activeColor;
-
-  final sliderHeight;
-  final sliderWidth;
-  final _sliderRadius = BorderRadius.circular(10.0);
-  final _sliderPadding = EdgeInsets.only(right: 5.0);
-  final _sliderMargin = EdgeInsets.only(left: 15.0, right: 15.0);
-
-  BudgetSlider({
-    this.value = 0.0,
-    this.max = 0.0,
-    this.min = 0.0,
-    this.label = "",
-    this.inactiveColor = AppTheme.white70,
-    this.activeColor = AppTheme.white,
-    this.sliderHeight = 50.0,
-    this.sliderWidth = -1,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Stack(
-        children: <Widget>[
-          _drawSliderBar(context),
-          // value label
-          _drawValueLabel(context),
-          // days remaining label
-          _drawDaysRemaining(context),
-        ],
-      ),
-    );
-  }
-
-  Widget _drawSliderBar(BuildContext context) {
-    return Container(
-      alignment: Alignment.center,
-      child: Stack(
-        children: <Widget>[
-          // inactive bar
-          Container(
-            height: sliderHeight,
-            width: sliderWidth,
-            padding: _sliderPadding,
-            margin: _sliderMargin,
-            decoration: BoxDecoration(
-              color: inactiveColor,
-              borderRadius: _sliderRadius,
-            ),
-          ),
-          // active bar
-          Container(
-            height: sliderHeight,
-            width: max == 0 ? 0.0 : (value / max) * sliderWidth,
-            padding: _sliderPadding,
-            margin: _sliderMargin,
-            decoration: BoxDecoration(color: activeColor, borderRadius: _sliderRadius),
-          ),
-          // total label
-          Container(
-            height: sliderHeight,
-            width: sliderWidth,
-            padding: _sliderPadding,
-            margin: _sliderMargin,
-            alignment: Alignment.centerRight,
-            child: Text(
-              moneyNumberFormat.format(max),
-              style: Theme.of(context).textTheme.subhead.apply(color: AppTheme.darkBlue),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _drawValueLabel(BuildContext context) {
-    return Container(
-      width: 2*(max == 0 ? 0.0 : (value / max) * sliderWidth),
-      margin: _sliderMargin,
-      alignment: Alignment.center,
-//      child: Stack(
-//        alignment: Alignment.center,
-//          children: <Widget>[
-//            Padding(
-//              padding: EdgeInsets.only(bottom: sliderHeight * 1.5, right: 3.0),
-//              child: Text(moneyNumberFormat.format(value)),),
-//            Container(
-//              height: sliderHeight * 1.5,
-//              width: 2.0,
-//              color: activeColor,
-//            )
-//          ],
-//      )
-    );
-  }
-
-  Widget _drawDaysRemaining(BuildContext context) {
-    final _daysLeft = _daysRemain();
-    final _totalDays = _totalDaysOfMonth();
-
-    return Container(
-      width: 2*(((_totalDays - _daysLeft) / _totalDays) * sliderWidth),
-      alignment: Alignment.center,
-      child: Stack(
-        alignment: Alignment.center,
-        children: <Widget>[
-          Container(
-            padding: EdgeInsets.only(top: sliderHeight * 2),
-            child: Text("$_daysLeft days\nleft",
-            textAlign: TextAlign.center,),
-          ),
-          Container(
-            margin: _sliderMargin,
-            height: sliderHeight*1.4,
-            width: 3.0,
-            color: activeColor,
-          )
-        ],
-      ),
-    );
-  }
 
   int _daysRemain() {
     final lastMonthDate = lastDayOfMonth(DateTime.now());
 
-    return lastMonthDate.difference(DateTime.now()).inDays;
+    return lastMonthDate
+        .difference(DateTime.now())
+        .inDays;
   }
 
   int _totalDaysOfMonth() {
     final firstDay = firstMomentOfMonth(DateTime.now());
     final lastDay = lastDayOfMonth(DateTime.now());
 
-    return lastDay.difference(firstDay).inDays;
+    return lastDay
+        .difference(firstDay)
+        .inDays;
   }
 }

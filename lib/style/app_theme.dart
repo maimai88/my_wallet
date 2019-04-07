@@ -10,6 +10,7 @@ class AppTheme {
   static const blueGrey = Color(0xFF9A9AAC);
   static const brightGreen = Color(0xFF00FF00);
   static const white = Colors.white;
+  static const white70 = Color(0xB2FFFFFF);
   static const black = Colors.black;
   static const facebookColor = Color(0xFF3B5998);
   static const googleColor = Color(0xFFDB4437);

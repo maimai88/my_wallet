@@ -1,3 +1,8 @@
+import 'package:intl/intl.dart';
+export 'dart:math';
+
+final moneyNumberFormat = NumberFormat("\$##0.##");
+
 DateTime firstMomentOfMonth(DateTime day) {
   return DateTime(day.year, day.month, 0, 24);
 }

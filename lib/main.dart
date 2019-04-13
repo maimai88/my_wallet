@@ -300,7 +300,7 @@ class MyApp extends StatelessWidget {
       // get category name
       var accName = splits[2].split(":")[1];
 
-      return CreateCategory(id: id, name: accName);
+      return CreateCategory(title: "Edit Category", id: id, name: accName);
     }
 
     return null;

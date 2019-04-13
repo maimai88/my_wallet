@@ -5,8 +5,9 @@ import 'package:my_wallet/ui/category/create/presentation/view/create_category_d
 class CreateCategory extends StatefulWidget {
   final int id;
   final String name;
+  final String title;
 
-  CreateCategory({this.id, this.name});
+  CreateCategory({this.title = "Create Category", this.id, this.name});
 
   @override
   State<StatefulWidget> createState() {
@@ -43,7 +44,7 @@ class _CreateCategoryState extends CleanArchitectureView<CreateCategory, CreateC
   Widget build(BuildContext context) {
     return PlainScaffold(
       appBar: MyWalletAppBar(
-        title: "Create Category",
+        title: widget.title,
         actions: <Widget>[
           FlatButton(
             child: Text("Save"),

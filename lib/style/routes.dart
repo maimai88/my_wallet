@@ -6,8 +6,6 @@ class routes {
   static const TransactionListCategory = "TransactionListCategory";
   static const TransactionListDate = "TransactionListDate";
 
-  static const SelectCategory = "SelectCategory";
-  static const ListCategories = "ListCategories";
   static const CreateCategory = "CreateCategory";
 
   static const SelectAccount = "SelectAccountEx";

@@ -1,6 +1,6 @@
-import 'package:my_wallet/ui/category/create/data/create_category_repository.dart';
+import 'package:my_wallet/ui/budget/category/data/create_category_repository.dart';
 import 'package:my_wallet/ca/domain/ca_use_case.dart';
-import 'package:my_wallet/ui/category/create/domain/create_category_exception.dart';
+import 'package:my_wallet/ui/budget/category/domain/create_category_exception.dart';
 
 class CreateCategoryUseCase extends CleanArchitectureUseCase<CreateCategoryRepository>{
   CreateCategoryUseCase() : super(CreateCategoryRepository());

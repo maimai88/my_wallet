@@ -70,7 +70,7 @@ class _ListBudgetsState extends CleanArchitectureView<ListBudgets, ListBudgetsPr
                 _budgetList.totalIncome,
                 _budgetList.incomeBudget,
                 _budgetList.income,
-                AppTheme.darkGreen,
+                AppTheme.teal,
             reverse: true,);
           }
         }, itemCount: 2),

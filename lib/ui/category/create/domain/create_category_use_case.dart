@@ -5,7 +5,7 @@ import 'package:my_wallet/ui/category/create/domain/create_category_exception.da
 class CreateCategoryUseCase extends CleanArchitectureUseCase<CreateCategoryRepository>{
   CreateCategoryUseCase() : super(CreateCategoryRepository());
 
-  void saveCategory(int currentId, String name, CategoryType type, onNext<int> next, onError error) async {
+  void saveCategory(int currentId, String name, CategoryType type, int group, onNext<int> next, onError error) async {
     execute<int>(Future(() async {
       bool validateName = await repo.validateName(name);
 
@@ -14,12 +14,12 @@ class CreateCategoryUseCase extends CleanArchitectureUseCase<CreateCategoryRepos
         var id = await repo.generateId();
 
         var color = await repo.generateRandomColor();
-        await repo.saveCategory(id, name, color, type);
+        await repo.saveCategory(id, name, color, type, group);
 
         return id;
       } else {
         AppCategory category = await repo.loadCategory(currentId);
-        await repo.updateCategory(category.id, name, category.colorHex, type);
+        await repo.updateCategory(category.id, name, category.colorHex, type, group);
       }
     }), next, error);
   }

@@ -47,7 +47,7 @@ class _CreateCategoryState extends CleanArchitectureView<CreateCategory, CreateC
         actions: <Widget>[
           FlatButton(
             child: Text("Save"),
-            onPressed: () => presenter.saveCategory(widget.id, _name, _type),
+            onPressed: () => presenter.saveCategory(widget.id, _name, _type, 0 /* to be updated with group ID */),
           )
         ],
       ),

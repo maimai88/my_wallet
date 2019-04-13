@@ -21,14 +21,23 @@ class ListCategoryUseCase extends CleanArchitectureUseCase<CategoryListRepositor
 
           var spent = 0.0;
           var budgetPerMonth = 0.0;
+          var remainFactor = 1.0;
 
           spent = await repo.sumSpentPerMonthByCategory(f.id, month);
 
           if(budget != null) {
             budgetPerMonth = budget.budgetPerMonth == null ? 0.0 : budget.budgetPerMonth;
+            if(budgetPerMonth > 0) {
+              if(spent < budgetPerMonth) {
+                remainFactor =
+                    (budgetPerMonth - (spent ?? 0.0)) / budgetPerMonth;
+              } else {
+                remainFactor = 0.0;
+              }
+            }
           }
 
-          entities.add(CategoryListItemEntity(f.id, f.name, spent, budgetPerMonth));
+          entities.add(CategoryListItemEntity(f.id, f.name, spent, budgetPerMonth, f.colorHex, remainFactor));
         }
       }
 

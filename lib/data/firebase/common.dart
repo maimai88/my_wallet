@@ -20,6 +20,7 @@ const tblDischargeOfLiability = "DischargeOfLiability";
 
 const fldName = "name";
 const fldType = "type";
+const fldGroup = "group";
 const fldInitlaBalance = "initialBalance";
 const fldCreated = "created";
 const fldCurrency = "currency";

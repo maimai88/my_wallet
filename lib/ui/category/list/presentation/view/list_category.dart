@@ -1,5 +1,3 @@
-import 'package:my_wallet/data/data.dart';
-
 import 'package:my_wallet/ui/category/list/presentation/presenter/list_category_presenter.dart';
 
 import 'package:my_wallet/ca/presentation/view/ca_state.dart';
@@ -20,9 +18,12 @@ class CategoryList extends StatefulWidget {
   }
 }
 
-class _CategoryListState extends CleanArchitectureView<CategoryList, ListCategoryPresenter> implements CategoryListDataView, observer.DatabaseObservable {
+class _CategoryListState
+    extends CleanArchitectureView<CategoryList, ListCategoryPresenter>
+    implements CategoryListDataView, observer.DatabaseObservable {
   _CategoryListState() : super(ListCategoryPresenter());
 
+  final _iconSize = 45.0;
   final tables = [observer.tableCategory];
   final _nf = NumberFormat("\$#,###.##");
 
@@ -56,7 +57,7 @@ class _CategoryListState extends CleanArchitectureView<CategoryList, ListCategor
 
   @override
   Widget build(BuildContext context) {
-    return GradientScaffold(
+    return PlainScaffold(
       appBar: MyWalletAppBar(
         title: widget._title,
         actions: <Widget>[
@@ -70,50 +71,82 @@ class _CategoryListState extends CleanArchitectureView<CategoryList, ListCategor
           )
         ],
       ),
-      body: Padding(
-          padding: EdgeInsets.all(10.0),
-          child: ListView.builder(
+      body: ListView.builder(
             itemCount: _categories.length,
-            itemBuilder: (_, index) => CardListTile(
-                  title: _categories[index].name,
-                  trailing: isEditMode ? IconButton(
-                    icon: Icon(Icons.close, color: AppTheme.pinkAccent,),
-                    onPressed: () {
-                      presenter.deleteCategory(_categories[index].categoryId);
-                    }) :
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: <Widget>[
-                  Text("${_nf.format(_categories[index].spent)}"),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: AppTheme.darkBlue,
-                      borderRadius: BorderRadius.circular(3.0),
-                      border: Border.all(color: AppTheme.lightBlue, width: 1.0)
+            itemBuilder: (_, index) => Container(
+                color: index % 2 == 0 && index < _categories.length
+                    ? AppTheme.blueGrey.withOpacity(0.2)
+                    : AppTheme.white,
+                child: ListTile(
+                    leading: Container(
+                      width: _iconSize,
+                      height: _iconSize,
+                      child: Stack(
+                        children: <Widget>[
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: ClipRect(
+                              child: Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Icon(
+                                  Icons.monetization_on,
+                                  color: Color(AppTheme.hexToInt(
+                                      _categories[index].colorHex)),
+                                  size: _iconSize,
+                                ),
+                                heightFactor: _categories[index].remainFactor,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            alignment: Alignment.bottomCenter,
+                            width: _iconSize,
+                            height: _iconSize,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                    color: Color(AppTheme.hexToInt(
+                                        _categories[index].colorHex)),
+                                    width: 1.0)),
+                          )
+                        ],
+                      ),
                     ),
-                    margin: EdgeInsets.only(top: 5.0),
-                    padding: EdgeInsets.only(left: 4.0, right: 4.0),
-                    child: Text("${_nf.format(_categories[index].budget)}"),
-                  )
-                ],
-              ),
-                  onTap: () => widget.returnValue
-                      ? Navigator.pop(context, _categories[index])
-                      : isEditMode ? Navigator.pushNamed(context, routes.EditCategory(categoryId: _categories[index].categoryId, categoryName: _categories[index].name))
-                      : Navigator.pushNamed(
-                      context,
-                      routes.TransactionList(_categories[index].name, categoryId: _categories[index].categoryId)
-                  ),
-                ),
-          )),
+                    onTap: () => Navigator.pushNamed(
+                        context,
+                        routes.TransactionList(_categories[index].name,
+                            categoryId: _categories[index].categoryId)),
+                    title: Text(
+                      _categories[index].name,
+                      style: TextStyle(color: AppTheme.darkBlue),
+                    ),
+                    trailing: RichText(
+                        textAlign: TextAlign.right,
+                        text: TextSpan(children: [
+                          TextSpan(
+                            text: _nf.format(_categories[index].spent),
+                            style: TextStyle(color: AppTheme.darkBlue),
+                          ),
+                          TextSpan(
+                            text:
+                                "\n(${_nf.format(_categories[index].budget)})",
+                            style: TextStyle(
+                                color: _categories[index].budget >= 0
+                                    ? AppTheme.tealAccent
+                                    : AppTheme.red),
+                          )
+                        ]))
+                    //Text(_nf.format(_homeEntities[index].transaction), style: TextStyle(color: _homeEntities[index].transaction > _homeEntities[index].budget ? AppTheme.red : AppTheme.darkBlue),),
+                    )),
+          ),
       floatingActionButton: isEditMode
           ? RoundedButton(
-              onPressed: () => Navigator.pushNamed(context, routes.CreateCategory).then((value) {
+              onPressed: () =>
+                  Navigator.pushNamed(context, routes.CreateCategory)
+                      .then((value) {
                     if (value != null) _loadCategories();
                   }),
-              child: Text(
-                ("Create Category"),
-              ),
+              child: Text(("Create Category"),),
               color: AppTheme.pinkAccent,
             )
           : null,

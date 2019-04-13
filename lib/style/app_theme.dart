@@ -10,6 +10,7 @@ class AppTheme {
   static const blueGrey = Color(0xFF9A9AAC);
   static const brightGreen = Color(0xFF00FF00);
   static const white = Colors.white;
+  static const white70 = Color(0xB2FFFFFF);
   static const black = Colors.black;
   static const facebookColor = Color(0xFF3B5998);
   static const googleColor = Color(0xFFDB4437);
@@ -18,6 +19,7 @@ class AppTheme {
   static const red = Colors.red;
   static const soulRed = Color(0xFFA80112);
   static const fadedRed = Color(0xa0d66a69);
+  static const amber = Color(0xFFF57F17);
 
   static const _bgLeftColor = Color(0xFF330867);
   static const _bgRightColor = Color(0xFF30cfd0);
@@ -157,6 +159,8 @@ class AppTheme {
     }
     return val;
   }
+
+  static const darkblueText = TextStyle(color: darkBlue);
 }
 
 class _MyWalletPageTransitionBuilder extends PageTransitionsBuilder {

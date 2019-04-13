@@ -22,7 +22,7 @@ import 'package:my_wallet/ui/user/homeprofile/main/presentation/view/homeprofile
 import 'package:my_wallet/ui/user/detail/presentation/view/detail_view.dart';
 import 'package:my_wallet/ui/user/verify/presentation/view/verify_view.dart';
 
-import 'package:my_wallet/ui/budget/list/presentation/view/list_view2.dart';
+import 'package:my_wallet/ui/budget/list/presentation/view/list_view.dart';
 import 'package:my_wallet/ui/budget/detail/presentation/view/detail_view.dart';
 
 import 'package:my_wallet/ui/about/presentation/view/about_view.dart';

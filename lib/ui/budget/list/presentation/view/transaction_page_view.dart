@@ -13,8 +13,13 @@ class TransactionPage extends StatelessWidget {
   final LinearGradient _gradient;
   final Color safeColor;
   final Color overColor;
+  final bool reverse;
 
-  TransactionPage(this.title, this.total, this.budget, this.entities, Color color, {this.safeColor = AppTheme.tealAccent, this.overColor = AppTheme.pinkAccent}) : assert(color != null), _gradient = LinearGradient(colors: <Color>[color, color.withOpacity(0.2)]);
+  TransactionPage(this.title, this.total, this.budget, this.entities, Color color, {this.reverse = false})
+      : assert(color != null),
+        _gradient = LinearGradient(colors: <Color>[color, color.withOpacity(0.2)]),
+        safeColor = reverse ? AppTheme.pinkAccent : AppTheme.tealAccent,
+        overColor = reverse ? AppTheme.tealAccent : AppTheme.pinkAccent;
 
   final _df = DateFormat("${DateFormat.MONTH}");
 
@@ -83,7 +88,7 @@ class TransactionPage extends StatelessWidget {
                       primaryMax: max(budget, total),
                       primaryLabel: budgetCurrencyFormatter.format(budget),
                       primaryIndicatorLine1: budgetCurrencyFormatter.format(budget - total),
-                      primaryIndicatorLine2: "remaining",
+                      primaryIndicatorLine2: reverse ? "more" : "remaining",
                       secondaryMax: totalDays.toDouble(),
                       secondaryValue: (totalDays - daysRemains).toDouble(),
                       secondaryLabel: "$daysRemains days\nleft",
@@ -108,13 +113,17 @@ class TransactionPage extends StatelessWidget {
 
   Widget _generateGridItemView(BuildContext context, BudgetEntity entity) {
     final _iconSize = 60.0;
-    final _left = entity.total - entity.transaction;
-    final _transactionDesc = "${budgetCurrencyFormatter.format(_left)} ${_left >= 0 ? "left" : "over"}";
+    final _left = (entity.total - entity.transaction);
+
+    var _transactionDesc = "";
+    if(_left >= 0) {
+      _transactionDesc = "${budgetCurrencyFormatter.format(_left)} ${reverse ? "more" : "left"}";
+    } else {
+      _transactionDesc = "${budgetCurrencyFormatter.format(_left * (-1))} over";
+    }
+
     final _color = _left == 0 ? AppTheme.amber : _left > 0 ? safeColor : overColor;
 
-    if(entity.categoryName == "one more please") {
-      print("checking $_left and ${entity.total} and ${entity.transaction}");
-    }
     return Stack(
       children: <Widget>[
         Container(

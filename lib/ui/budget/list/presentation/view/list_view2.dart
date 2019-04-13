@@ -65,7 +65,14 @@ class _ListBudgetsState extends CleanArchitectureView<ListBudgets, ListBudgetsPr
                 _budgetList.expenseBudget,
                 _budgetList.expense,
                 AppTheme.pinkAccent);
-            case 1: return TransactionPage("Income", _budgetList.totalIncome, _budgetList.incomeBudget, _budgetList.income, AppTheme.darkGreen);
+            case 1: return TransactionPage(
+                "Income",
+                _budgetList.totalIncome,
+                _budgetList.incomeBudget,
+                _budgetList.income,
+                AppTheme.darkGreen,
+            safeColor: AppTheme.pinkAccent,
+            overColor: AppTheme.tealAccent,);
           }
         }, itemCount: 2),
         length: 2,

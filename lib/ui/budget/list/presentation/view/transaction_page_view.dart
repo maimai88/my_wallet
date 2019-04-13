@@ -3,6 +3,7 @@ import 'package:my_wallet/utils.dart';
 import 'package:intl/intl.dart';
 import 'package:my_wallet/ui/budget/list/data/list_entity.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:my_wallet/ui/budget/budget_config.dart';
 
 class TransactionPage extends StatelessWidget {
   final String title;
@@ -10,8 +11,10 @@ class TransactionPage extends StatelessWidget {
   final double budget;
   final List<BudgetEntity> entities;
   final LinearGradient _gradient;
+  final Color safeColor;
+  final Color overColor;
 
-  TransactionPage(this.title, this.total, this.budget, this.entities, Color color) : assert(color != null), _gradient = LinearGradient(colors: <Color>[color, color.withOpacity(0.2)]);
+  TransactionPage(this.title, this.total, this.budget, this.entities, Color color, {this.safeColor = AppTheme.tealAccent, this.overColor = AppTheme.pinkAccent}) : assert(color != null), _gradient = LinearGradient(colors: <Color>[color, color.withOpacity(0.2)]);
 
   final _df = DateFormat("${DateFormat.MONTH}");
 
@@ -43,7 +46,7 @@ class TransactionPage extends StatelessWidget {
         expandedHeight: height,
         flexibleSpace: FlexibleSpaceBar(
           background: Container(
-            padding: EdgeInsets.only(top: height / 3.5, bottom: 5.0),
+            padding: EdgeInsets.only(top: height / 4, bottom: 5.0),
             height: height,
             decoration: BoxDecoration(gradient: _gradient),
             child: Column(
@@ -62,7 +65,7 @@ class TransactionPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: <Widget>[
                           Text(
-                            moneyNumberFormat.format(total),
+                            budgetCurrencyFormatter.format(total),
                             style: Theme.of(context).textTheme.display1.apply(color: AppTheme.white),
                           ),
                           Text("spent in ${_df.format(DateTime.now())}")
@@ -78,8 +81,8 @@ class TransactionPage extends StatelessWidget {
                       context,
                       primaryValue: total,
                       primaryMax: max(budget, total),
-                      primaryLabel: moneyNumberFormat.format(budget),
-                      primaryIndicatorLine1: moneyNumberFormat.format(budget - total),
+                      primaryLabel: budgetCurrencyFormatter.format(budget),
+                      primaryIndicatorLine1: budgetCurrencyFormatter.format(budget - total),
                       primaryIndicatorLine2: "remaining",
                       secondaryMax: totalDays.toDouble(),
                       secondaryValue: (totalDays - daysRemains).toDouble(),
@@ -106,8 +109,8 @@ class TransactionPage extends StatelessWidget {
   Widget _generateGridItemView(BuildContext context, BudgetEntity entity) {
     final _iconSize = 60.0;
     final _left = entity.total - entity.transaction;
-    final _transactionDesc = "${moneyNumberFormat.format(_left)} ${_left >= 0 ? "left" : "over"}";
-    final _color = _left == 0 ? AppTheme.amber : _left > 0 ? AppTheme.tealAccent : AppTheme.pinkAccent;
+    final _transactionDesc = "${budgetCurrencyFormatter.format(_left)} ${_left >= 0 ? "left" : "over"}";
+    final _color = _left == 0 ? AppTheme.amber : _left > 0 ? safeColor : overColor;
 
     if(entity.categoryName == "one more please") {
       print("checking $_left and ${entity.total} and ${entity.transaction}");
@@ -132,7 +135,7 @@ class TransactionPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     Text(entity.categoryName, style: Theme.of(context).textTheme.body1.apply(color: AppTheme.darkBlue), textAlign: TextAlign.center,),
-                    Text(moneyNumberFormat.format(entity.total), style: Theme.of(context).textTheme.title.apply(color: AppTheme.black), textAlign: TextAlign.center,),
+                    Text(budgetCurrencyFormatter.format(entity.total), style: Theme.of(context).textTheme.title.apply(color: AppTheme.black), textAlign: TextAlign.center,),
                     Text(_transactionDesc, style: Theme.of(context).textTheme.body2.apply(color: _color), textAlign: TextAlign.center, ),
                     Padding(
                       padding: EdgeInsets.only(top:10.0, bottom: 10.0),
@@ -154,8 +157,11 @@ class TransactionPage extends StatelessWidget {
           ),
         ),
         Align(
-          alignment: Alignment.topCenter,
-          child: Icon(Icons.monetization_on, color: Color(AppTheme.hexToInt(entity.colorHex)), size: _iconSize,),
+          alignment: Alignment.topLeft,
+          child: CircleAvatar(
+            child: Icon(Icons.monetization_on, color: Color(AppTheme.hexToInt(entity.colorHex)), size: _iconSize,),
+            backgroundColor: AppTheme.white,
+          )
         ),
       ],
     );

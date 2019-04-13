@@ -35,6 +35,8 @@ dependencies:
   http: any
   package_info: any
   rxdart: any
+  percent_indicator: any
+  page_indicator: any
 
 dev_dependencies:
   flutter_test:

@@ -93,6 +93,7 @@ class _BudgetDetailState extends CleanArchitectureView<BudgetDetail, BudgetDetai
                     ConversationRow(
                       "A monthly budget for",
                       _category == null ? "Select Category" : _category.name,
+                      onPressed: () => Navigator.pushNamed(context, routes.EditCategory(categoryId: _category.id, categoryName: _category.name)),
                     ),
                         ConversationRow(
                           "from",

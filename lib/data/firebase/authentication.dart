@@ -1,6 +1,8 @@
 import 'package:my_wallet/data/firebase/common.dart';
 
-import 'package:my_wallet/firebase/auth/firebase_authentication.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:my_wallet/data/data.dart';
 import 'package:flutter/foundation.dart';
@@ -10,12 +12,11 @@ const _homes = "homes";
 const _host = "host";
 const _data = "data";
 
-FirebaseAuthentication _auth;
+FirebaseAuth _auth;
 bool _isInit = false;
 final Lock _lock = Lock();
 
-FirebaseDatabase _firestore;
-
+Firestore _firestore;
 
 Future<void> init(FirebaseApp _app) async {
   return _lock.synchronized(() async {
@@ -23,7 +24,7 @@ Future<void> init(FirebaseApp _app) async {
 
     _isInit = true;
 
-    _auth = FirebaseAuthentication(_app);
+    _auth = FirebaseAuth.fromApp(_app);
 
     _firestore = await firestore(_app);
   });
@@ -90,11 +91,29 @@ Future<bool> checkCurrentUser() async {
 }
 
 Future<bool> registerEmail(String email, String password, {String displayName}) async {
-  return _lock.synchronized(() async => await _auth.createUserWithEmailAndPassword(email: email, password: password, displayName: displayName) != null);
+  return _lock.synchronized(() async {
+    FirebaseUser _user = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+
+    if (_user != null) {
+      UserUpdateInfo userUpdateInfo = UserUpdateInfo();
+      userUpdateInfo.displayName = displayName;
+      await _user.updateProfile(userUpdateInfo);
+
+      return true;
+    }
+
+    return false;
+  });
 }
 
 Future<bool> sendValidationEmail() {
-  return _lock.synchronized(() => _auth.sendVerification());
+  return _lock.synchronized(() async {
+    FirebaseUser _user = await _auth.currentUser();
+    await _user.reload();
+    _user = await _auth.currentUser();
+
+    return _user.isEmailVerified;
+  });// _auth.sendVerification());
 }
 
 //Future<bool> updateDisplayName(String displayName) async {

@@ -76,7 +76,6 @@ class _ListBudgetsState extends CleanArchitectureView<ListBudgets, ListBudgetsPr
   }
 
 
-
   @override
   void onBudgetLoaded(BudgetListEntity list) {
     setState(() => _budgetList = list);
@@ -85,6 +84,4 @@ class _ListBudgetsState extends CleanArchitectureView<ListBudgets, ListBudgetsPr
   void loadData() {
     presenter.loadThisMonthBudgetList(_month);
   }
-
-
 }

@@ -43,7 +43,7 @@ class TransactionPage extends StatelessWidget {
         expandedHeight: height,
         flexibleSpace: FlexibleSpaceBar(
           background: Container(
-            padding: EdgeInsets.only(top: height / 3, bottom: 5.0),
+            padding: EdgeInsets.only(top: height / 3.5, bottom: 5.0),
             height: height,
             decoration: BoxDecoration(gradient: _gradient),
             child: Column(

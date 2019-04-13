@@ -166,7 +166,6 @@ class _BudgetSliderPainter extends CustomPainter {
     }
     var indicatorBottom = sliderRect.top - indicatorArrowHeight;
     var indicatorTop = indicatorBottom - indicatorHeight;
-
     final indicatorRect = ui.Rect.fromLTRB(indicatorLeft, indicatorTop, indicatorRight, indicatorBottom);
     canvas.drawRRect(ui.RRect.fromRectAndRadius(indicatorRect, progressRadius), sliderProgress);
 

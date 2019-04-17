@@ -13,8 +13,7 @@ import 'package:my_wallet/ui/account/transfer/presentation/view/transfer_view.da
 import 'package:my_wallet/ui/account/liability/detail/presentation/view/liability_view.dart';
 import 'package:my_wallet/ui/account/liability/payment/presentation/view/payment_view.dart';
 
-import 'package:my_wallet/ui/category/list/presentation/view/list_category.dart';
-import 'package:my_wallet/ui/category/create/presentation/view/create_category_view.dart';
+import 'package:my_wallet/ui/budget/category/presentation/view/create_category_view.dart';
 
 import 'package:my_wallet/ui/user/login/presentation/view/login_view.dart';
 import 'package:my_wallet/ui/user/register/presentation/view/register_view.dart';
@@ -67,10 +66,6 @@ class MyApp extends StatelessWidget {
             case routes.ListAccounts:
               return ListAccounts("Accounts");
               break;
-            case routes.SelectCategory:
-              return CategoryList("Select Category", returnValue: true,);
-            case routes.ListCategories:
-              return CategoryList("Categories");
             case routes.CreateCategory:
               return CreateCategory();
             case routes.UserProfile:

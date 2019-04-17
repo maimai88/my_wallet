@@ -1,6 +1,6 @@
 import 'package:my_wallet/data/data.dart';
 import 'package:my_wallet/data/database_manager.dart' as db;
-import 'package:my_wallet/ui/category/create/domain/create_category_exception.dart';
+import 'package:my_wallet/ui/budget/category/domain/create_category_exception.dart';
 import 'dart:math';
 import 'package:my_wallet/data/firebase/database.dart' as fm;
 import 'package:my_wallet/ca/data/ca_repository.dart';

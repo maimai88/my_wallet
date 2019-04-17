@@ -3,11 +3,12 @@ import 'package:my_wallet/ca/data/ca_repository.dart';
 import 'package:my_wallet/ui/splash/data/splash_entity.dart';
 export 'package:my_wallet/ui/splash/data/splash_entity.dart';
 
-import 'package:my_wallet/firebase/firebase_common.dart';
 import 'dart:io' show Platform;
 import 'package:my_wallet/firebase_config.dart' as fbConfig;
 import 'package:my_wallet/data/firebase/database.dart' as fdb;
 import 'package:my_wallet/data/firebase/authentication.dart' as auth;
+
+import 'package:firebase_core/firebase_core.dart';
 
 import 'package:my_wallet/data/database_manager.dart' as db;
 

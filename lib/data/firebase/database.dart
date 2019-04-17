@@ -2,9 +2,13 @@ import 'dart:async';
 
 import 'package:my_wallet/data/database_manager.dart' as db;
 import 'package:my_wallet/data/firebase/common.dart';
-import 'package:my_wallet/firebase/database/firebase_database.dart';
 
 import 'package:flutter/foundation.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+export 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'package:firebase_core/firebase_core.dart';
 
 const _data = "data";
 

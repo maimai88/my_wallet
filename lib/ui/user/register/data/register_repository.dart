@@ -9,7 +9,6 @@ import 'package:my_wallet/data/firebase/authentication.dart' as fm;
 import 'package:flutter/services.dart';
 import 'package:my_wallet/utils.dart' as Utils;
 
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:my_wallet/shared_pref/shared_preference.dart';
 
 class RegisterRepository extends CleanArchitectureRepository {
@@ -84,10 +83,8 @@ class _RegisterFirebaseRepository {
     return fm.getCurrentUser();
   }
 
-  Future<void> saveUserReference(String uuid) async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-
-    await pref.setString(UserUUID, uuid);
+  Future<void> saveUserReference(String uuid) {
+    return SharedPreferences.setUserUUID(uuid);
   }
 
   Future<void> sendVerificationEmail() {

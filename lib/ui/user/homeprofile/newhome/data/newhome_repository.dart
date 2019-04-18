@@ -35,11 +35,9 @@ class NewHomeRepository extends CleanArchitectureRepository {
   }
 
   Future<void> saveHome(String homeKey, String homeName, String hostEmail) async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-
-    pref.setString(prefHomeProfile, homeKey);
-    pref.setString(prefHomeName, homeName);
-    pref.setString(prefHostEmail, hostEmail);
+    await SharedPreferences.setHomeProfile(homeKey);
+    await SharedPreferences.setHomeName(homeName);
+    await SharedPreferences.setHostEmail(hostEmail);
   }
 
   Future<void> updateDatabaseReference(String key) {

@@ -5,12 +5,9 @@ import 'package:my_wallet/data/database_manager.dart' as db;
 import 'package:my_wallet/data/data.dart';
 import 'package:my_wallet/utils.dart' as Utils;
 import 'package:my_wallet/shared_pref/shared_preference.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:my_wallet/ui/user/login/domain/login_exception.dart';
 import 'package:flutter/services.dart';
 import 'dart:math';
-
-import 'package:my_wallet/ui/user/login/data/login_entity.dart';
 
 export 'package:my_wallet/data/data.dart';
 export 'package:my_wallet/ui/user/login/domain/login_exception.dart';
@@ -47,16 +44,12 @@ class LoginRepository extends CleanArchitectureRepository{
   }
 
   Future<void> saveHome(Home home) async {
-    var sharePref = await SharedPreferences.getInstance();
-
-    await sharePref.setString(prefHomeProfile, home.key);
-    await sharePref.setString(prefHomeName, home.name);
+    await SharedPreferences.setHomeProfile(home.key);
+    await SharedPreferences.setHomeName(home.name);
   }
 
-  Future<void> saveUserReference(String uuid) async {
-    var sharePref = await SharedPreferences.getInstance();
-
-    await sharePref.setString(UserUUID, uuid);
+  Future<void> saveUserReference(String uuid) {
+    return SharedPreferences.setUserUUID(uuid);
   }
 
   Future<void> switchReference(String key) {
@@ -69,9 +62,7 @@ class LoginRepository extends CleanArchitectureRepository{
   }
 
   Future<bool> checkUserHome() async {
-    var sharePref = await SharedPreferences.getInstance();
-
-    var key = sharePref.getString(prefHomeProfile);
+    var key = await SharedPreferences.getHomeProfile();
 
     return key != null && key.isNotEmpty;
   }

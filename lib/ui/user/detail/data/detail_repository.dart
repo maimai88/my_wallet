@@ -15,9 +15,8 @@ class UserDetailRepository extends CleanArchitectureRepository {
 
     if(user == null) return null;
 
-    SharedPreferences sharedPref = await SharedPreferences.getInstance();
-    String homeName = sharedPref.getString(prefHomeName);
-    String homeKey = sharedPref.getString(prefHomeProfile);
+    String homeName = await SharedPreferences.getHomeName();
+    String homeKey = await SharedPreferences.getHomeProfile();
 
     String hostDisplayName = "";
     String hostEmail = "";

@@ -68,6 +68,7 @@ Future<void> setupDatabase(final String homeKey) async {
 
 Future<void> _addSubscriptions() async {
   subs.putIfAbsent(tblAccount, () => _firestore.collection(tblAccount).snapshots().listen((f) => f.documentChanges.forEach((change) {
+    print("on $tblAccount data changed $change");
     if(change == null) return;
     if(change.document == null) return;
 
@@ -79,6 +80,7 @@ Future<void> _addSubscriptions() async {
   })));
 
   subs.putIfAbsent(tblBudget, () =>_firestore.collection(tblBudget).snapshots().listen((f) => f.documentChanges.forEach((change) {
+    print("on $tblBudget data changed $change");
     if(change == null) return;
     if(change.document == null) return;
 
@@ -90,6 +92,7 @@ Future<void> _addSubscriptions() async {
   })));
 
   subs.putIfAbsent(tblCategory, () => _firestore.collection(tblCategory).snapshots().listen((f) => f.documentChanges.forEach((change) {
+    print("on $tblCategory data changed $change");
     if(change == null) return;
     if(change.document == null) return;
 
@@ -101,6 +104,7 @@ Future<void> _addSubscriptions() async {
   })));
 
   subs.putIfAbsent(tblTransaction, () => _firestore.collection(tblTransaction).snapshots().listen((f) => f.documentChanges.forEach((change) {
+    print("on $tblTransaction data changed $change");
     if(change == null) return;
     if(change.document == null) return;
 
@@ -112,6 +116,8 @@ Future<void> _addSubscriptions() async {
   })));
 
   subs.putIfAbsent(tblUser, () => _firestore.collection(tblUser).snapshots().listen((f) => f.documentChanges.forEach((change) {
+    print("on $tblUser data changed $change");
+
     if(change == null) return;
     if(change.document == null) return;
 
@@ -123,6 +129,8 @@ Future<void> _addSubscriptions() async {
   })));
 
   subs.putIfAbsent(tblTransfer, () => _firestore.collection(tblTransfer).snapshots().listen((f) => f.documentChanges.forEach((change) {
+    print("on $tblTransfer data changed $change");
+
     if(change == null) return;
     if(change.document == null) return;
 
@@ -134,6 +142,8 @@ Future<void> _addSubscriptions() async {
   })));
 
   subs.putIfAbsent(tblDischargeOfLiability, () => _firestore.collection(tblDischargeOfLiability).snapshots().listen((f) => f.documentChanges.forEach((change) {
+    print("on $tblDischargeOfLiability data changed $change");
+
     if(change == null) return;
     if(change.document == null) return;
 

@@ -14,9 +14,7 @@ class AccountTransferUseCase extends CleanArchitectureUseCase<AccountTransferRep
     execute(Future(() async{
       var id = await repo.generateTransferId();
 
-      SharedPreferences sharedPref = await SharedPreferences.getInstance();
-
-      var uuid = sharedPref.getString(UserUUID);
+      var uuid = await SharedPreferences.getUserUUID();
 
       return repo.transferAmount(Transfer(id, fromAccount.id, toAccount.id, amount, DateTime.now(), uuid));
 

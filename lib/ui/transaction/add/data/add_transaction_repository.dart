@@ -149,10 +149,7 @@ class _AddTransactionDatabaseRepository {
   }
 
   Future<UserDetail> loadCurrentUserName() async {
-    SharedPreferences sharedPref = await SharedPreferences.getInstance();
-    String uid = sharedPref.getString(UserUUID);
-
-    return await _getUserWithUid(uid);
+    return await _getUserWithUid(await SharedPreferences.getUserUUID());
   }
 
   Future<bool> checkTransactionType(TransactionType type) async {
@@ -200,9 +197,7 @@ class _AddTransactionDatabaseRepository {
       DateTime _date,
       String _desc,
       bool newTransaction) async {
-    SharedPreferences sharedPref = await SharedPreferences.getInstance();
-
-    var uuid = sharedPref.getString(UserUUID);
+    var uuid = await SharedPreferences.getUserUUID();
 
     if(newTransaction) {
       return (await _db.insertTransaction(AppTransaction(
@@ -246,9 +241,7 @@ class _AddTransactionFirebaseRepository {
       double _amount,
       DateTime _date,
       String _desc) async {
-    SharedPreferences sharedPref = await SharedPreferences.getInstance();
-
-    var uuid = sharedPref.getString(UserUUID);
+    var uuid = await SharedPreferences.getUserUUID();
 
     return await _fm.addTransaction(AppTransaction(id, _date, _account.id, _category.id, _amount, _desc, _type, uuid));
   }

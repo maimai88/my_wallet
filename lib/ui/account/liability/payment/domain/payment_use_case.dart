@@ -23,8 +23,7 @@ class PayLiabilityUseCase extends CleanArchitectureUseCase<PayLiabilityRepositor
       // Create a dischargeOfLiability transaction
       var id = await repo.generateDischargeLiabilityId();
 
-      SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-      String userUid = sharedPreferences.getString(UserUUID);
+      String userUid = await SharedPreferences.getUserUUID();
 
       DischargeOfLiability discharge = DischargeOfLiability(id, date, liabilityId, fromAccount.id, category.id, dischargeLiability, userUid);
 

@@ -5,11 +5,9 @@ import 'package:my_wallet/shared_pref/shared_preference.dart';
 
 class GoHomeRepository extends CleanArchitectureRepository {
   Future<void> updateHomeReference(String homeKey, String homeName, String hostEmail) async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-
-    pref.setString(prefHomeProfile, homeKey);
-    pref.setString(prefHomeName, homeName);
-    pref.setString(prefHostEmail, hostEmail);
+    await SharedPreferences.setHomeProfile(homeKey);
+    await SharedPreferences.setHomeName(homeName);
+    await SharedPreferences.setHostEmail(hostEmail);
   }
 
   Future<void> switchReference(String homeKey) async {

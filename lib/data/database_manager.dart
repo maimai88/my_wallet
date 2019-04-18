@@ -108,9 +108,7 @@ Future<List<String>> queryOutOfSync(String table) async {
   var result = <String> [];
 
   do {
-  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-
-  var pausedTime = sharedPreferences.getInt(prefPausedTime);
+  var pausedTime = await SharedPreferences.getPausedTime();
   if (pausedTime == null) break;
 
   var dbTable = _tableMap[table];
@@ -1099,9 +1097,7 @@ class _Database {
   }
 
   Future<void> dispose() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    pref.setInt(prefPausedTime, DateTime.now().millisecondsSinceEpoch);
-
+    await SharedPreferences.setPausedTime(DateTime.now().millisecondsSinceEpoch);
     await db.close();
   }
 

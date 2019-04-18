@@ -12,10 +12,8 @@ class LeftDrawerRepository extends CleanArchitectureRepository {
   }
 
   Future<void> clearAllPreference() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-
-    await pref.remove(UserUUID);
-    await pref.remove(prefHomeProfile);
+    await SharedPreferences.deleteUserUUID();
+    await SharedPreferences.deleteHomeProfile();
   }
 
   Future<void> deleteDatabase() async {

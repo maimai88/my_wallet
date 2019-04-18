@@ -23,7 +23,6 @@ dependencies:
   path_provider: any
   flutter_staggered_grid_view: any
 #  google_sign_in: any
-  shared_preferences: any
   gradient_app_bar: any
   auto_size_text: any
   w3c_event_source: any
@@ -40,6 +39,7 @@ dependencies:
   firebase_core: any
   firebase_auth: any
   cloud_firestore: any
+  flutter_keychain: any
 
 dev_dependencies:
   flutter_test:

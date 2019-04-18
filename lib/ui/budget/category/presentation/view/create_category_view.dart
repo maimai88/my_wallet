@@ -1,6 +1,6 @@
-import 'package:my_wallet/ui/category/create/presentation/presenter/create_category_presenter.dart';
+import 'package:my_wallet/ui/budget/category/presentation/presenter/create_category_presenter.dart';
 import 'package:my_wallet/ca/presentation/view/ca_state.dart';
-import 'package:my_wallet/ui/category/create/presentation/view/create_category_data_view.dart';
+import 'package:my_wallet/ui/budget/category/presentation/view/create_category_data_view.dart';
 
 class CreateCategory extends StatefulWidget {
   final int id;

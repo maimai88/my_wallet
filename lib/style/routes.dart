@@ -16,6 +16,7 @@ class routes {
 
   static const UserProfile = "UserProfile";
 
+  static const LoginSelection = "LoginSelection";
   static const Login = "Login";
   static const RequestValidation = "RequestValidation";
   static const ValidationProcessing = "ValidationProcessing";

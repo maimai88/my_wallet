@@ -12,6 +12,8 @@ import 'package:my_wallet/ui/splash/presentation/view/splash_view.dart';
 import 'package:my_wallet/ui/user/login/presentation/view/login_view.dart';
 import 'package:my_wallet/ui/user/register/presentation/view/register_view.dart';
 
+import 'package:my_wallet/widget/rounded_button.dart';
+
 void main() {
   testWidgets('Test splash screen', (WidgetTester tester) async {
     // Start app with out user or home
@@ -30,9 +32,24 @@ void main() {
     // expect to open Login page
     expect(find.text('Email Address'), findsOneWidget);
     expect(find.text('Password'), findsOneWidget);
-    expect(find.text('Sign In'), findsOneWidget);
-    expect(find.text('Register your email'), findsOneWidget);
+    expect(find.text('Sign In'), findsNWidgets(2));
+    expect(find.text('First time here? Sign up'), findsOneWidget);
   });
+
+//  testWidgets('Login screen: empty email and password', (WidgetTester tester) async {
+//    await tester.pumpWidget(MaterialApp(
+//      home: Login(),
+//    ));
+//
+//    // click on Sign In button without any input ==> Error show
+//    await tester.tap(find.descendant(
+//      of: find.byType(RoundedButton),
+//      matching: find.text('Sign In')
+//    ));
+//
+//    expect(find.text('Email is empty'), findsOneWidget);
+//    expect(find.text('Password is empty'), findsOneWidget);
+//  });
 
   testWidgets('Test Register new user screen', (WidgetTester tester) async {
     await tester.pumpWidget(MaterialApp(
@@ -40,13 +57,10 @@ void main() {
     ));
 
     // verify content on Register your email
-    expect(find.text('Create your account'), findsOneWidget);
-    expect(find.text('NAME'), findsOneWidget);
-    expect(find.text('Sample Name'), findsOneWidget);
-    expect(find.text('EMAIL ADDRESS'), findsOneWidget);
-    expect(find.text('SampleEmail@domain.com'), findsOneWidget);
-    expect(find.text('PASSWORD'), findsOneWidget);
-    expect(find.text('samplepassword'), findsOneWidget);
+    expect(find.text('Sign Up'), findsOneWidget);
+    expect(find.text('Display name'), findsOneWidget);
+    expect(find.text('Email Address'), findsOneWidget);
+    expect(find.text('Password'), findsOneWidget);
     expect(find.text('Register'), findsOneWidget);
   });
 }

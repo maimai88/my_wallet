@@ -43,7 +43,7 @@ class _RegisterState extends CleanArchitectureView<Register, RegisterPresenter> 
         elevation: 0.0,
       ),
       body: Padding(
-        padding: EdgeInsets.all(30),
+        padding: EdgeInsets.only(left: 30.0, right: 30.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -132,7 +132,7 @@ class _RegisterState extends CleanArchitectureView<Register, RegisterPresenter> 
                     TextSpan(
                         style: Theme.of(context).textTheme.subtitle.apply(color: AppTheme.white, fontFamily: 'Raleway', fontWeightDelta: 2),
                         text: "Sign In",
-                        recognizer: TapGestureRecognizer()..onTap = () => Navigator.popAndPushNamed(context, routes.Login))
+                        recognizer: TapGestureRecognizer()..onTap = () => Navigator.pushNamedAndRemoveUntil(context, routes.Login, (route) => route.isFirst))
                   ]),
                   textAlign: TextAlign.center,
                 )

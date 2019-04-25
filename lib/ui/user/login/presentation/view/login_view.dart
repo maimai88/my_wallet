@@ -43,7 +43,7 @@ class _LoginState extends CleanArchitectureView<Login, LoginPresenter> implement
         elevation: 0.0,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(30.0),
+        padding: const EdgeInsets.only(left: 30.0, right: 30.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -106,7 +106,7 @@ class _LoginState extends CleanArchitectureView<Login, LoginPresenter> implement
                     TextSpan(
                         style: Theme.of(context).textTheme.subtitle.apply(color: AppTheme.white, fontFamily: 'Raleway', fontWeightDelta: 2),
                         text: "Sign up",
-                        recognizer: TapGestureRecognizer()..onTap = () => Navigator.popAndPushNamed(context, routes.Register))
+                        recognizer: TapGestureRecognizer()..onTap = () => Navigator.pushNamedAndRemoveUntil(context, routes.Register, (route) => route.isFirst))
                   ]),
                   textAlign: TextAlign.center,
                 )

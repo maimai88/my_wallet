@@ -7,7 +7,7 @@ class LoginSelectionView extends StatelessWidget {
   Widget build(BuildContext context) {
     return PlainScaffold(
       body: Padding(
-        padding: EdgeInsets.all(MediaQuery.of(context).size.width / 8),
+        padding: EdgeInsets.only(left: MediaQuery.of(context).size.width / 8, right: MediaQuery.of(context).size.width / 8),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.stretch,

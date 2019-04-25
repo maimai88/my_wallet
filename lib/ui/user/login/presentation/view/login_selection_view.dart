@@ -23,7 +23,7 @@ class LoginSelectionView extends StatelessWidget {
                 fontFamily: 'Raleway',
                 fontWeight: FontWeight.w900,
                 color: AppTheme.darkBlue,
-                fontSize: 60.0
+                fontSize: 55.0
               ),
             ),
             // login buttons,

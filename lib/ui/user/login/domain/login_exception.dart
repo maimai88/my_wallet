@@ -1,10 +1,7 @@
 class LoginException implements Exception {
-  final String message;
+  final String emailException;
+  final String passwordException;
+  final String loginException;
 
-  LoginException(this.message);
-
-  @override
-  String toString() {
-    return message;
-  }
+  LoginException({this.emailException, this.passwordException, this.loginException});
 }

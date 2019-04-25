@@ -49,12 +49,15 @@ class PlainScaffold extends Scaffold {
     Widget bottomNavigationBar,
     Widget bottomSheet,
     bool primary = true,
+    Color color,
+    EdgeInsetsGeometry padding,
   }) : super(
       key: key,
       appBar: appBar,
       body: Container(
-        color: AppTheme.white,
+        color: color == null ? AppTheme.white : color,
         child: body,
+        padding: padding,
       ),
       floatingActionButton: floatingActionButton,
       floatingActionButtonLocation: floatingActionButtonLocation,

@@ -18,13 +18,13 @@ class LoginRepository extends CleanArchitectureRepository{
   final _LoginDatabaseRepository _dbRepo = _LoginDatabaseRepository();
 
   Future<void> validateEmail(String email) async {
-    if (email == null || email.isEmpty) throw LoginException("Email is empty");
-    if(!Utils.isEmailFormat(email)) throw LoginException("Invalid email format");
+    if (email == null || email.isEmpty) throw LoginException(emailException: "Email is empty");
+    if(!Utils.isEmailFormat(email)) throw LoginException(emailException: "Invalid email format");
   }
 
   Future<void> validatePassword(String password) async {
-    if(password == null || password.isEmpty) throw LoginException("Password is empty");
-    if(password.length < 6) throw LoginException("Password is too short");
+    if(password == null || password.isEmpty) throw LoginException(passwordException: "Password is empty");
+    if(password.length < 6) throw LoginException(passwordException: "Password is too short");
   }
 
   Future<User> signinToFirebase(String email, String password) {
@@ -86,7 +86,7 @@ class _LoginFirebaseRepository {
       return await fm.login(email, password);
     } on PlatformException catch (e) {
       debugPrint(e.toString());
-      throw LoginException("${e.message} ${e.details == null ? "" : e.details}");
+      throw LoginException(loginException: "${e.message} ${e.details == null ? "" : e.details}");
     } catch (e) {
       throw e;
     }

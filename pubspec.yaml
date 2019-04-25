@@ -31,7 +31,6 @@ dependencies:
 #  keyboard_visibility: any
 #  image_picker: any
 #  flutter_facebook_login: '^1.1.1'
-  http: any
   package_info: any
   rxdart: any
   percent_indicator: any
@@ -59,7 +58,6 @@ flutter:
   assets:
     - assets/nartus.png
     - assets/about/About.txt
-
   # To add assets to your application, add an assets section, like this:
   # assets:
   #  - images/a_dot_burr.jpeg
@@ -91,6 +89,15 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.io/custom-fonts/#from-packages
   fonts:
-    - family:  MyFlutterApp
+    - family: MyFlutterApp
       fonts:
         - asset: fonts/MyFlutterApp.ttf
+    - family: Raleway
+      fonts:
+        - asset: assets/font/Raleway-Regular.ttf
+        - asset: assets/font/Raleway-ExtraBold.ttf
+          weight: 700
+        - asset: assets/font/Raleway-Bold.ttf
+          weight: 500
+        - asset: assets/font/Raleway-Black.ttf
+          weight: 900

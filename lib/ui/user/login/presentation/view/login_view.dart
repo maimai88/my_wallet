@@ -106,7 +106,7 @@ class _LoginState extends CleanArchitectureView<Login, LoginPresenter> implement
                     TextSpan(
                         style: Theme.of(context).textTheme.subtitle.apply(color: AppTheme.white, fontFamily: 'Raleway', fontWeightDelta: 2),
                         text: "Sign up",
-                        recognizer: TapGestureRecognizer()..onTap = () => Navigator.pushNamed(context, routes.Register))
+                        recognizer: TapGestureRecognizer()..onTap = () => Navigator.popAndPushNamed(context, routes.Register))
                   ]),
                   textAlign: TextAlign.center,
                 )

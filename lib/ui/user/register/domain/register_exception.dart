@@ -1,7 +1,9 @@
 class RegisterException implements Exception {
-  final String message;
-  RegisterException(this.message);
+  String displayNameError;
+  String emailError;
+  String passwordError;
+  String confirmPasswordError;
+  String registerError;
 
-  @override
-  String toString() => message;
+  RegisterException({this.displayNameError, this.emailError, this.passwordError, this.confirmPasswordError, this.registerError});
 }

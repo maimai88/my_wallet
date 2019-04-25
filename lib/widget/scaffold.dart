@@ -55,6 +55,7 @@ class PlainScaffold extends Scaffold {
       key: key,
       appBar: appBar,
       body: Container(
+        constraints: BoxConstraints.expand(),
         color: color == null ? AppTheme.white : color,
         child: body,
         padding: padding,

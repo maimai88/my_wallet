@@ -73,7 +73,7 @@ class _LeftDrawerState extends CleanArchitectureView<LeftDrawer, LeftDrawerPrese
 
   @override
   void onSignOutSuccess(bool result) {
-    Navigator.pushReplacementNamed(context, routes.Login);
+    Navigator.pushReplacementNamed(context, routes.LoginSelection);
   }
 
   @override

@@ -151,6 +151,7 @@ Future<User> _getCurrentUser() async {
       FirebaseUser user = await _auth.currentUser();
 
       if (user != null) {
+        await user.reload();
         var photoUrlList; /*user.providerData != null && user.providerData.isNotEmpty
             ? user.providerData.where((f) => f.photoUrl != null && f.photoUrl.isNotEmpty).map((f) => f.photoUrl).toList()
             : [];*/

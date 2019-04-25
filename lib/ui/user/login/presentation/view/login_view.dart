@@ -51,7 +51,7 @@ class _LoginState extends CleanArchitectureView<Login, LoginPresenter> implement
           children: <Widget>[
             AutoSizeText(
               "Sign In",
-              style: TextStyle(fontFamily: 'Raleway', fontWeight: FontWeight.w900, color: AppTheme.white, fontSize: 60.0),
+              style: TextStyle(fontFamily: 'Raleway', fontWeight: FontWeight.w900, color: AppTheme.white, fontSize: 55.0),
             ),
             Column(
               mainAxisSize: MainAxisSize.max,

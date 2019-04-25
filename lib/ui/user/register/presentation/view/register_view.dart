@@ -42,104 +42,109 @@ class _RegisterState extends CleanArchitectureView<Register, RegisterPresenter> 
         color: AppTheme.darkGrey,
         elevation: 0.0,
       ),
-      body: Padding(
+      body:  Container(
         padding: EdgeInsets.only(left: 30.0, right: 30.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            AutoSizeText(
-              "Sign Up",
-              style: TextStyle(fontFamily: 'Raleway', fontWeight: FontWeight.w900, color: AppTheme.white, fontSize: 60.0),
-            ),
-            Column(
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                TextField(
-                  controller: _displayNameController,
-                  decoration: InputDecoration(
-                      labelText: "Display name",
-                      labelStyle: TextStyle(color: AppTheme.nartusOrange),
-                      errorStyle: TextStyle(color: AppTheme.pinkAccent),
-                      errorText: _displayNameErrorText,
-                      errorMaxLines: 2
-                  ),
+        alignment: Alignment.center,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.only(bottom: 30.0),
+                child: AutoSizeText(
+                  "Sign Up",
+                  style: TextStyle(fontFamily: 'Raleway', fontWeight: FontWeight.w900, color: AppTheme.white, fontSize: 55.0),
                 ),
-                TextField(
-                  controller: _emailController,
-                  decoration: InputDecoration(
-                      labelText: "Email Address",
-                      labelStyle: TextStyle(color: AppTheme.nartusOrange),
-                      errorStyle: TextStyle(color: AppTheme.pinkAccent),
-                      errorText: _emailErrorText,
-                      errorMaxLines: 2
-                  ),
-                ),
-                TextField(
-                  controller: _passwordController,
-                  decoration: InputDecoration(
-                      labelText: "Password",
-                      labelStyle: TextStyle(color: AppTheme.nartusOrange),
-                      errorStyle: TextStyle(color: AppTheme.pinkAccent),
-                      errorText: _passwordErrorText,
-                      suffixIcon: IconButton(
-                          icon: Icon(
-                            Icons.remove_red_eye,
-                            color: _obscureText ? AppTheme.white : AppTheme.blueGrey,
-                          ),
-                          onPressed: () => setState(() => _obscureText = !_obscureText))),
-                  keyboardType: TextInputType.text,
-                  obscureText: _obscureText,
-                ),
-                TextField(
-                  controller: _confirmPasswordController,
-                  decoration: InputDecoration(
-                      labelText: "Confirm password",
-                      labelStyle: TextStyle(color: AppTheme.nartusOrange),
-                      errorStyle: TextStyle(color: AppTheme.pinkAccent),
-                      errorText: _confirmPasswordErrorText,
-                      suffixIcon: IconButton(
-                          icon: Icon(
-                            Icons.remove_red_eye,
-                            color: _obscureText ? AppTheme.white : AppTheme.blueGrey,
-                          ),
-                          onPressed: () => setState(() => _obscureText = !_obscureText))),
-                  keyboardType: TextInputType.text,
-                  obscureText: _obscureText,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: RoundedButton(
-                    key: _registerKey,
-                    onPressed: _registerEmail,
-                    child: Padding(
-                      padding: EdgeInsets.all(12.0),
-                      child: Text(
-                        "Register",
-                        style: TextStyle(color: AppTheme.white, fontWeight: FontWeight.bold),
-                      ),
+              ),
+              Column(
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  TextField(
+                    controller: _displayNameController,
+                    decoration: InputDecoration(
+                        labelText: "Display name",
+                        labelStyle: TextStyle(color: AppTheme.nartusOrange),
+                        errorStyle: TextStyle(color: AppTheme.pinkAccent),
+                        errorText: _displayNameErrorText,
+                        errorMaxLines: 2
                     ),
-                    color: AppTheme.black,
                   ),
-                ),
-                Text.rich(
-                  TextSpan(children: [
-                    TextSpan(
-                        style: Theme.of(context).textTheme.body1.apply(color: AppTheme.white),
-                        text: "Not the first time here? "),
-                    TextSpan(
-                        style: Theme.of(context).textTheme.subtitle.apply(color: AppTheme.white, fontFamily: 'Raleway', fontWeightDelta: 2),
-                        text: "Sign In",
-                        recognizer: TapGestureRecognizer()..onTap = () => Navigator.pushNamedAndRemoveUntil(context, routes.Login, (route) => route.isFirst))
-                  ]),
-                  textAlign: TextAlign.center,
-                )
+                  TextField(
+                    controller: _emailController,
+                    decoration: InputDecoration(
+                        labelText: "Email Address",
+                        labelStyle: TextStyle(color: AppTheme.nartusOrange),
+                        errorStyle: TextStyle(color: AppTheme.pinkAccent),
+                        errorText: _emailErrorText,
+                        errorMaxLines: 2
+                    ),
+                  ),
+                  TextField(
+                    controller: _passwordController,
+                    decoration: InputDecoration(
+                        labelText: "Password",
+                        labelStyle: TextStyle(color: AppTheme.nartusOrange),
+                        errorStyle: TextStyle(color: AppTheme.pinkAccent),
+                        errorText: _passwordErrorText,
+                        suffixIcon: IconButton(
+                            icon: Icon(
+                              Icons.remove_red_eye,
+                              color: _obscureText ? AppTheme.white : AppTheme.blueGrey,
+                            ),
+                            onPressed: () => setState(() => _obscureText = !_obscureText))),
+                    keyboardType: TextInputType.text,
+                    obscureText: _obscureText,
+                  ),
+                  TextField(
+                    controller: _confirmPasswordController,
+                    decoration: InputDecoration(
+                        labelText: "Confirm password",
+                        labelStyle: TextStyle(color: AppTheme.nartusOrange),
+                        errorStyle: TextStyle(color: AppTheme.pinkAccent),
+                        errorText: _confirmPasswordErrorText,
+                        suffixIcon: IconButton(
+                            icon: Icon(
+                              Icons.remove_red_eye,
+                              color: _obscureText ? AppTheme.white : AppTheme.blueGrey,
+                            ),
+                            onPressed: () => setState(() => _obscureText = !_obscureText))),
+                    keyboardType: TextInputType.text,
+                    obscureText: _obscureText,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: RoundedButton(
+                      key: _registerKey,
+                      onPressed: _registerEmail,
+                      child: Padding(
+                        padding: EdgeInsets.all(12.0),
+                        child: Text(
+                          "Register",
+                          style: TextStyle(color: AppTheme.white, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      color: AppTheme.black,
+                    ),
+                  ),
+                  Text.rich(
+                    TextSpan(children: [
+                      TextSpan(
+                          style: Theme.of(context).textTheme.body1.apply(color: AppTheme.white),
+                          text: "Not the first time here? "),
+                      TextSpan(
+                          style: Theme.of(context).textTheme.subtitle.apply(color: AppTheme.white, fontFamily: 'Raleway', fontWeightDelta: 2),
+                          text: "Sign In",
+                          recognizer: TapGestureRecognizer()..onTap = () => Navigator.pushNamedAndRemoveUntil(context, routes.Login, (route) => route.isFirst))
+                    ]),
+                    textAlign: TextAlign.center,
+                  )
 
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -2,6 +2,9 @@ import 'package:my_wallet/ui/user/login/presentation/view/login_data_view.dart';
 import 'package:my_wallet/ca/presentation/view/ca_state.dart';
 import 'package:my_wallet/ui/user/login/presentation/presenter/login_presenter.dart';
 
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/gestures.dart';
+
 class Login extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -22,6 +25,10 @@ class _LoginState extends CleanArchitectureView<Login, LoginPresenter> implement
   bool _obscureText = true;
 
   bool _signingIn = false;
+
+  String _emailErrorText;
+  String _passwordErrorText;
+
   @override
   void init() {
     presenter.dataView = this;
@@ -29,119 +36,89 @@ class _LoginState extends CleanArchitectureView<Login, LoginPresenter> implement
 
   @override
   Widget build(BuildContext context) {
-    return GradientScaffold(
+    return PlainScaffold(
+      color: AppTheme.darkGrey,
+      appBar: MyWalletAppBar(
+        color: AppTheme.darkGrey,
+        elevation: 0.0,
+      ),
       body: Padding(
-        padding: EdgeInsets.all(20.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: <Widget>[
-          Image.asset("assets/nartus.png"),
-//          Text(
-//            "Login with your social account",
-//            style: Theme.of(context).textTheme.title,
-//          ),
-//          Row(
-//              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//              mainAxisSize: MainAxisSize.max,
-//              children: <Widget>[
-//                Expanded(
-//                  child: RoundedButton(
-//                    key: _facebookKey,
-//                    onPressed: _onFacebookButtonPressed,
-//                    padding: EdgeInsets.all(10.0),
-//                    child: Icon(
-//                      MyFlutterApp.facebook_rect,
-//                      color: AppTheme.white,
-//                    ),
-//                    radius: 5.0,
-//                    color: AppTheme.facebookColor,
-//                  ),
-//                ),
-//                Expanded(
-//                  child: RoundedButton(
-//                    key: _googleKey,
-//                    onPressed: _onGoogleButtonPressed,
-//                    padding: EdgeInsets.all(10.0),
-//                    child: Icon(
-//                      MyFlutterApp.googleplus_rect,
-//                      color: AppTheme.white,
-//                    ),
-//                    radius: 5.0,
-//                    color: AppTheme.googleColor,
-//                  ),
-//                ),
-//              ],
-//          ),
-//          Padding(
-//              padding: EdgeInsets.only(top: 10.0, bottom: 10.0, left: 20.0, right: 20.0),
-//              child: Row(
-//                children: <Widget>[
-//                  Expanded(
-//                    child: Container(
-//                      height: 1.0,
-//                      color: AppTheme.white,
-//                    ),
-//                  ),
-//                  Padding(
-//                    padding: EdgeInsets.all(5.0),
-//                    child: Text(
-//                      "OR",
-//                      style: Theme.of(context).textTheme.title,
-//                    ),
-//                  ),
-//                  Expanded(
-//                    child: Container(
-//                      height: 1.0,
-//                      color: AppTheme.white,
-//                    ),
-//                  )
-//                ],
-//              ),
-//            ),
-//          Text(
-//            "Login with your email",
-//            style: Theme.of(context).textTheme.title,
-//          ),
-          Column(
-            mainAxisSize: MainAxisSize.max,
-            children: <Widget>[
-              TextField(
-                controller: _emailController,
-                decoration: InputDecoration(
-                  hintText: "Email Address",
+        padding: const EdgeInsets.only(left: 30.0, right: 30.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisSize: MainAxisSize.max,
+          children: <Widget>[
+            AutoSizeText(
+              "Sign In",
+              style: TextStyle(fontFamily: 'Raleway', fontWeight: FontWeight.w900, color: AppTheme.white, fontSize: 60.0),
+            ),
+            Column(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                TextField(
+                  controller: _emailController,
+                  decoration: InputDecoration(
+                    labelText: "Email Address",
+                    labelStyle: TextStyle(color: AppTheme.nartusOrange),
+                    errorStyle: TextStyle(color: AppTheme.pinkAccent),
+                    errorText: _emailErrorText,
+                    errorMaxLines: 2
+                  ),
                 ),
-              ),
-              TextField(
-                controller: _passwordController,
-                decoration: InputDecoration(
-                    hintText: "Password",
-                    suffixIcon: IconButton(icon: Icon(Icons.remove_red_eye, color: _obscureText ? AppTheme.white : AppTheme.blueGrey,), onPressed: () => setState(() => _obscureText = !_obscureText))
+                TextField(
+                  controller: _passwordController,
+                  decoration: InputDecoration(
+                      labelText: "Password",
+                      labelStyle: TextStyle(color: AppTheme.nartusOrange),
+                      errorStyle: TextStyle(color: AppTheme.pinkAccent),
+                      errorText: _passwordErrorText,
+                      suffixIcon: IconButton(
+                          icon: Icon(
+                            Icons.remove_red_eye,
+                            color: _obscureText ? AppTheme.white : AppTheme.blueGrey,
+                          ),
+                          onPressed: () => setState(() => _obscureText = !_obscureText))),
+                  keyboardType: TextInputType.text,
+                  obscureText: _obscureText,
                 ),
-                keyboardType: TextInputType.text,
-                obscureText: _obscureText,
-              )
-            ],
-          ),
-          Column(
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              RoundedButton(
-                key: _loginKey,
-                onPressed: _signIn,
-                child: Padding(padding: EdgeInsets.all(12.0), child: Text("Sign In", style: TextStyle(color: AppTheme.white),),),
-                color: AppTheme.blue,
-              ),
-              RoundedButton(
-                onPressed: _register,
-                child: Padding(padding: EdgeInsets.all(12.0), child: Text("Register your email", style: TextStyle(color: AppTheme.darkBlue),),),
-                color: AppTheme.white,
-              )
-            ],),
-        ],
-      ),),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: RoundedButton(
+                    key: _loginKey,
+                    onPressed: _signIn,
+                    child: Padding(
+                      padding: EdgeInsets.all(12.0),
+                      child: Text(
+                        "Sign In",
+                        style: TextStyle(color: AppTheme.white, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    color: AppTheme.black,
+                  ),
+                ),
+                Text.rich(
+                  TextSpan(children: [
+                    TextSpan(
+                        style: Theme.of(context).textTheme.body1.apply(color: AppTheme.white),
+                        text: "First time here? "),
+                    TextSpan(
+                        style: Theme.of(context).textTheme.subtitle.apply(color: AppTheme.white, fontFamily: 'Raleway', fontWeightDelta: 2),
+                        text: "Sign up",
+                        recognizer: TapGestureRecognizer()..onTap = () => Navigator.pushNamedAndRemoveUntil(context, routes.Register, (route) => route.isFirst))
+                  ]),
+                  textAlign: TextAlign.center,
+                )
+
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
+
 
   void _signIn() {
     if (_signingIn) return;
@@ -155,7 +132,7 @@ class _LoginState extends CleanArchitectureView<Login, LoginPresenter> implement
   @override
   void onSignInSuccess(LoginResult user) {
     do {
-      if(!user.isVerified) {
+      if (!user.isVerified) {
         Navigator.pushNamed(context, routes.RequestValidation);
         break;
       }
@@ -167,19 +144,32 @@ class _LoginState extends CleanArchitectureView<Login, LoginPresenter> implement
   void onSignInFailed(Exception e) {
     stopProcessing();
 
-    showDialog(context: context, builder: (_) => AlertDialog(
-      title: Text("Sign in failed"),
-      content: Text("Sign in to email ${_emailController.text} failed with error ${e.toString()}"),
-      actions: <Widget>[
-        FlatButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: Text("Try Again"),
-        )
-      ],
-    )
-    );
+    if (e is LoginException) {
+      _passwordErrorText = e.passwordException;
+      _emailErrorText = e.emailException;
+
+      if (_emailErrorText == null) {
+        _emailErrorText = e.loginException;
+      }
+    } else {
+      _emailErrorText = e.toString();
+    }
+
+    setState(() {});
+//    showDialog(
+//        context: context,
+//        builder: (_) => AlertDialog(
+//              title: Text("Sign in failed"),
+//              content: Text("Sign in to email ${_emailController.text} failed with error ${e.toString()}"),
+//              actions: <Widget>[
+//                FlatButton(
+//                  onPressed: () {
+//                    Navigator.pop(context);
+//                  },
+//                  child: Text("Try Again"),
+//                )
+//              ],
+//            ));
   }
 
   void onUserHomeResult(bool exist) {
@@ -221,9 +211,8 @@ class _LoginState extends CleanArchitectureView<Login, LoginPresenter> implement
   void stopProcessing() {
     _signingIn = false;
 
-    if(_loginKey.currentState != null) _loginKey.currentState.stop();
-    if(_googleKey.currentState != null) _googleKey.currentState.stop();
-    if(_facebookKey.currentState != null) _facebookKey.currentState.stop();
-
+    if (_loginKey.currentState != null) _loginKey.currentState.stop();
+    if (_googleKey.currentState != null) _googleKey.currentState.stop();
+    if (_facebookKey.currentState != null) _facebookKey.currentState.stop();
   }
 }

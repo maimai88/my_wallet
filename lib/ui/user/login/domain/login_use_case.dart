@@ -8,8 +8,32 @@ class LoginUseCase extends CleanArchitectureUseCase<LoginRepository>{
     execute(Future(() async {
       LoginResult result;
       do {
-        await repo.validateEmail(email);
-        await repo.validatePassword(password);
+        String _emailError;
+
+        try {
+          await repo.validateEmail(email);
+        } catch (e) {
+          if (e is LoginException) {
+            _emailError = e.emailException;
+          } else {
+            _emailError = e.toString();
+          }
+        }
+
+        String _passwordError;
+        try {
+          await repo.validatePassword(password);
+        } catch (e) {
+          if (e is LoginException) {
+            _passwordError = e.passwordException;
+          } else {
+            _passwordError = e.toString();
+          }
+        }
+
+        if(_emailError != null || _passwordError != null) {
+          throw LoginException(emailException: _emailError, passwordException: _passwordError);
+        }
 
         User user = await repo.signinToFirebase(email, password);
 
@@ -57,10 +81,10 @@ class LoginUseCase extends CleanArchitectureUseCase<LoginRepository>{
   }
 
   void handleError(onError onError, dynamic e) {
-    if( e is Exception) {
+    if( e is LoginException) {
       onError(e);
     } else {
-      onError(LoginException(e.toString()));
+      onError(LoginException(loginException: e.toString()));
     }
   }
 

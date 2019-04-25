@@ -71,12 +71,12 @@ class _SplashViewState extends CleanArchitectureView<SplashView, SplashPresenter
     String routeName;
     do {
       if (detail == null) {
-        routeName = routes.Login;
+        routeName = routes.LoginSelection;
         break;
       }
 
       if (!detail.hasUser) {
-        routeName = routes.Login;
+        routeName = routes.LoginSelection;
         break;
       }
 

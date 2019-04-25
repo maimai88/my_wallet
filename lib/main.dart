@@ -15,6 +15,7 @@ import 'package:my_wallet/ui/account/liability/payment/presentation/view/payment
 
 import 'package:my_wallet/ui/budget/category/presentation/view/create_category_view.dart';
 
+import 'package:my_wallet/ui/user/login/presentation/view/login_selection_view.dart';
 import 'package:my_wallet/ui/user/login/presentation/view/login_view.dart';
 import 'package:my_wallet/ui/user/register/presentation/view/register_view.dart';
 import 'package:my_wallet/ui/user/homeprofile/main/presentation/view/homeprofile_view.dart';
@@ -72,6 +73,8 @@ class MyApp extends StatelessWidget {
               return UserDetail();
             case routes.Login:
               return Login();
+            case routes.LoginSelection:
+              return LoginSelectionView();
             case routes.RequestValidation:
               return RequestValidation();
             case routes.ValidationProcessing:

@@ -8,20 +8,24 @@ class MyWalletAppBar extends GradientAppBar {
       {String title,
         String subTitle,
         List<Widget> actions,
-        Widget leading}) : super(
-    title: subTitle == null ? Text("$title", style: TextStyle(color: AppTheme.white),)
+        Widget leading,
+        Color color,
+        double elevation = 4.0}) : super(
+    title: subTitle == null ? Text(title == null ? "" : "$title", style: TextStyle(color: AppTheme.white),)
         : Column(
       children: <Widget>[
-        Text("$title", style: TextStyle(color: AppTheme.white),),
-        Text("$subTitle", style: TextStyle(color: AppTheme.white, fontSize: 14.0),)
+        Text(title == null ? "" : "$title", style: TextStyle(color: AppTheme.white),),
+        Text(subTitle == null ? "" : "$subTitle", style: TextStyle(color: AppTheme.white, fontSize: 14.0),)
       ],
     ),
     actions: actions,
     centerTitle: true,
     leading: leading,
-    backgroundColorStart: AppTheme.bgGradient.colors[0],
-    backgroundColorEnd: AppTheme.bgGradient.colors[1]);
+    elevation: elevation,
+    backgroundColorStart: color == null ? AppTheme.bgGradient.colors[0] : color,
+    backgroundColorEnd: color == null ? AppTheme.bgGradient.colors[1] : color);
 }
+
 //class MyWalletAppBar extends AppBar {
 //  MyWalletAppBar(
 //      {String title,

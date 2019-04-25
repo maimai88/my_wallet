@@ -6,7 +6,7 @@ import 'package:my_wallet/ui/user/register/domain/register_use_case.dart';
 class RegisterPresenter extends CleanArchitecturePresenter<RegisterUseCase, RegisterDataView> {
   RegisterPresenter() : super(RegisterUseCase());
 
-  void registerEmail(String displayName, String email, String password) {
-    useCase.registerEmail(displayName, email, password, dataView.onRegisterSuccess, dataView.onRegisterFailed);
+  void registerEmail(String displayName, String email, String password, String confirmPassword) {
+    useCase.registerEmail(displayName, email, password, confirmPassword, dataView.onRegisterSuccess, dataView.onRegisterFailed);
   }
 }

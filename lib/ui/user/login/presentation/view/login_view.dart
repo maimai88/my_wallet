@@ -62,6 +62,7 @@ class _LoginState extends CleanArchitectureView<Login, LoginPresenter> implement
                   decoration: InputDecoration(
                     labelText: "Email Address",
                     labelStyle: TextStyle(color: AppTheme.nartusOrange),
+                    focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppTheme.nartusOrange)),
                     errorStyle: TextStyle(color: AppTheme.pinkAccent),
                     errorText: _emailErrorText,
                     errorMaxLines: 2
@@ -73,6 +74,7 @@ class _LoginState extends CleanArchitectureView<Login, LoginPresenter> implement
                       labelText: "Password",
                       labelStyle: TextStyle(color: AppTheme.nartusOrange),
                       errorStyle: TextStyle(color: AppTheme.pinkAccent),
+                      focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppTheme.nartusOrange)),
                       errorText: _passwordErrorText,
                       suffixIcon: IconButton(
                           icon: Icon(

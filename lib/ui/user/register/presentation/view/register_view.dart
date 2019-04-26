@@ -66,6 +66,7 @@ class _RegisterState extends CleanArchitectureView<Register, RegisterPresenter> 
                     decoration: InputDecoration(
                         labelText: "Display name",
                         labelStyle: TextStyle(color: AppTheme.nartusOrange),
+                        focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppTheme.nartusOrange)),
                         errorStyle: TextStyle(color: AppTheme.pinkAccent),
                         errorText: _displayNameErrorText,
                         errorMaxLines: 2
@@ -76,6 +77,7 @@ class _RegisterState extends CleanArchitectureView<Register, RegisterPresenter> 
                     decoration: InputDecoration(
                         labelText: "Email Address",
                         labelStyle: TextStyle(color: AppTheme.nartusOrange),
+                        focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppTheme.nartusOrange)),
                         errorStyle: TextStyle(color: AppTheme.pinkAccent),
                         errorText: _emailErrorText,
                         errorMaxLines: 2
@@ -86,6 +88,7 @@ class _RegisterState extends CleanArchitectureView<Register, RegisterPresenter> 
                     decoration: InputDecoration(
                         labelText: "Password",
                         labelStyle: TextStyle(color: AppTheme.nartusOrange),
+                        focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppTheme.nartusOrange)),
                         errorStyle: TextStyle(color: AppTheme.pinkAccent),
                         errorText: _passwordErrorText,
                         suffixIcon: IconButton(
@@ -102,6 +105,7 @@ class _RegisterState extends CleanArchitectureView<Register, RegisterPresenter> 
                     decoration: InputDecoration(
                         labelText: "Confirm password",
                         labelStyle: TextStyle(color: AppTheme.nartusOrange),
+                        focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppTheme.nartusOrange)),
                         errorStyle: TextStyle(color: AppTheme.pinkAccent),
                         errorText: _confirmPasswordErrorText,
                         suffixIcon: IconButton(
@@ -354,16 +358,6 @@ class _RegisterState extends CleanArchitectureView<Register, RegisterPresenter> 
   @override
   void onRegisterFailed(Exception e) {
     _registerKey.currentState.stop();
-//    showDialog(context: context, builder: (context) => AlertDialog(
-//      title: Text("Registration failed"),
-//      content: Text("Registration failed with error ${e.toString()}"),
-//      actions: <Widget>[
-//        FlatButton(
-//          onPressed: () => Navigator.pop(context),
-//          child: Text("Try Again"),
-//        )
-//      ],
-//    ));
 
     if(e is RegisterException) {
       _displayNameErrorText = e.displayNameError;

@@ -82,19 +82,19 @@ class TransactionPage extends StatelessWidget {
                   ],
                 ),
                 Expanded(
-                    child: BudgetSlider(
-                      context,
-                      primaryValue: total,
-                      primaryMax: max(budget, total),
-                      primaryLabel: budgetCurrencyFormatter.format(budget),
-                      primaryIndicatorLine1: budgetCurrencyFormatter.format(budget - total),
-                      primaryIndicatorLine2: reverse ? "more" : "remaining",
-                      secondaryMax: totalDays.toDouble(),
-                      secondaryValue: (totalDays - daysRemains).toDouble(),
-                      secondaryLabel: "$daysRemains days\nleft",
-                      sliderWidth: width,
-                      sliderHeight: 50.0,
-                      size: Size(width, height),)
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: PrimarySecondaryProgressBar(
+                        context,
+                        primaryValue: total,
+                        primaryMax: max(budget, total),
+                        primaryLabel: budgetCurrencyFormatter.format(budget),
+                        primaryIndicatorLine1: budgetCurrencyFormatter.format(budget - total),
+                        primaryIndicatorLine2: reverse ? "more" : "remaining",
+                        secondaryMax: totalDays.toDouble(),
+                        secondaryValue: (totalDays - daysRemains).toDouble(),
+                        secondaryLabel: "$daysRemains days\nleft"),
+                    )
                 )
               ],
             ),

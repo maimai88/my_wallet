@@ -5,6 +5,7 @@ import 'package:my_wallet/ui/about/presentation/view/about_data_view.dart';
 
 import 'package:my_wallet/app_material.dart';
 
+import 'package:my_wallet/resources.dart' as R;
 
 class AboutUs extends StatefulWidget {
   @override
@@ -36,18 +37,18 @@ class _AboutUsState extends CleanArchitectureView<AboutUs, AboutUsPresenter> imp
   Widget build(BuildContext context) {
     return PlainScaffold(
       appBar: MyWalletAppBar(
-        title: "About",
+        title: R.string.about,
       ),
       body: ListView(
         children: <Widget>[
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Image.asset("assets/nartus.png"),
+            child: Image.asset(R.asset.nartus),
           ),
           Container(
             alignment: Alignment.centerRight,
             padding: const EdgeInsets.all(8.0),
-            child: Text("App Version $_version", style: Theme.of(context).textTheme.body1.apply(color: AppTheme.darkBlue),),
+            child: Text("${R.string.app_version} $_version", style: Theme.of(context).textTheme.body1.apply(color: AppTheme.darkBlue),),
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),

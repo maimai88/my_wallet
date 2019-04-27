@@ -7,6 +7,8 @@ import 'package:my_wallet/data/data_observer.dart' as observer;
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
 import 'package:flutter_calendar_carousel/classes/event_list.dart';
 
+import 'package:my_wallet/resources.dart' as R;
+
 class TransactionList extends StatefulWidget {
   final String title;
   final int accountId;
@@ -75,7 +77,7 @@ class _TransactionListState extends CleanArchitectureView<TransactionList, Trans
           child: Container(
             margin: EdgeInsets.all(10.0),
             child: Text(
-              "Add Transaction",
+              R.string.add_transaction,
             ),
           ),
           color: AppTheme.pinkAccent,
@@ -111,7 +113,7 @@ class _TransactionListState extends CleanArchitectureView<TransactionList, Trans
             if(index == 1) return Container(
               alignment: Alignment.centerRight,
               padding: EdgeInsets.all(8.0),
-              child: Text("TOTAL EXPENSES ${_nf.format(_total)}", style: TextStyle(color: AppTheme.darkBlue),),
+              child: Text("${R.string.total_expenses} ${_nf.format(_total)}", style: TextStyle(color: AppTheme.darkBlue),),
               color: AppTheme.blueGrey.withOpacity(0.2),
             );
 

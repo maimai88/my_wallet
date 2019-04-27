@@ -2,12 +2,14 @@ import 'package:my_wallet/ui/budget/category/presentation/presenter/create_categ
 import 'package:my_wallet/ca/presentation/view/ca_state.dart';
 import 'package:my_wallet/ui/budget/category/presentation/view/create_category_data_view.dart';
 
+import 'package:my_wallet/resources.dart' as R;
+
 class CreateCategory extends StatefulWidget {
   final int id;
   final String name;
   final String title;
 
-  CreateCategory({this.title = "Create Category", this.id, this.name});
+  CreateCategory({this.title = R.string.create_category, this.id, this.name});
 
   @override
   State<StatefulWidget> createState() {
@@ -47,7 +49,7 @@ class _CreateCategoryState extends CleanArchitectureView<CreateCategory, CreateC
         title: widget.title,
         actions: <Widget>[
           FlatButton(
-            child: Text("Save"),
+            child: Text(R.string.save),
             onPressed: () => presenter.saveCategory(widget.id, _name, _type, 0 /* to be updated with group ID */),
           )
         ],
@@ -66,9 +68,9 @@ class _CreateCategoryState extends CleanArchitectureView<CreateCategory, CreateC
                 key: _categoryTypeKey,),
           ),
           DataRowView(
-            "Category Name",
-            _name == null ? "Enter category name" : _name,
-            onPress: () => Navigator.push(context, SlidePageRoute(builder: (context) => InputName("Category Name", _onNameChanged, hintText: _name == null ? "Enter category name" : _name))),
+            R.string.category_name,
+            _name == null ? R.string.enter_category_name : _name,
+            onPress: () => Navigator.push(context, SlidePageRoute(builder: (context) => InputName(R.string.category_name, _onNameChanged, hintText: _name == null ? R.string.enter_category_name : _name))),
           ),
         ],
       ),
@@ -83,12 +85,12 @@ class _CreateCategoryState extends CleanArchitectureView<CreateCategory, CreateC
   @override
   void onCreateCategoryError(Exception e) {
     showDialog(context: context, builder: (context) => AlertDialog(
-      title: Text("Error"),
+      title: Text(R.string.error),
       content: Text(e.toString()),
       actions: <Widget>[
         FlatButton(
           onPressed: () => Navigator.pop(context),
-          child: Text("OK"),
+          child: Text(R.string.ok),
         )
       ],
     ));

@@ -7,6 +7,8 @@ import 'package:my_wallet/app_material.dart';
 
 import 'package:intl/intl.dart';
 
+import 'package:my_wallet/resources.dart' as R;
+
 class AccountTransfer extends StatefulWidget {
   final int id;
   final String name;
@@ -57,7 +59,7 @@ class _AccountTransferState extends CleanArchitectureView<AccountTransfer, Accou
   Widget build(BuildContext context) {
     return PlainScaffold(
         appBar: MyWalletAppBar(
-          title: "Transfer",
+          title: R.string.transfer,
         ),
         body: PageView.builder(
           controller: _controller,
@@ -94,11 +96,11 @@ class _AccountTransferState extends CleanArchitectureView<AccountTransfer, Accou
   void onAccountListQueryFailed(Exception e) {
     showDialog(context: context,
     builder: (context) => AlertDialog(
-      title: Text("Error"),
-      content: Text("Failed to query account info."),
+      title: Text(R.string.error),
+      content: Text(R.string.failed_to_query_account_info),
       actions: <Widget>[
         FlatButton(
-          child: Text("OK"),
+          child: Text(R.string.ok),
           onPressed: () => Navigator.pop(context),
         )
       ],
@@ -146,11 +148,11 @@ class _AccountTransferState extends CleanArchitectureView<AccountTransfer, Accou
   void onAccountTransferFailed(Exception e) {
     showDialog(context: context,
     builder: (context) => AlertDialog(
-      title: Text("Error"),
-      content: Text("Error while making transfer. Please try again later"),
+      title: Text(R.string.error),
+      content: Text(R.string.error_while_making_transfer),
       actions: <Widget>[
         FlatButton(
-          child: Text("OK"),
+          child: Text(R.string.ok),
           onPressed: () => Navigator.pop(context),
         )
       ],
@@ -189,7 +191,7 @@ class _SelectAccountState extends State<_SelectAccount> {
       children: <Widget>[
         Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Text("Select Account to transfer to", style: Theme
+          child: Text(R.string.select_account_to_transfer_to, style: Theme
               .of(context)
               .textTheme
               .title
@@ -221,7 +223,7 @@ class _SelectAccountState extends State<_SelectAccount> {
         Align(
           child: RoundedButton(
             onPressed: () => widget.onAccountSelected(_selected),
-            child: Text("Select Account",),
+            child: Text(R.string.select_account,),
             color: AppTheme.darkBlue,),
         )
       ],
@@ -288,13 +290,13 @@ class _EnterAmountState extends State<_EnterAmount> {
             child: FittedBox(
               child: Column(children: <Widget>[
                 ConversationRow(
-                  "Transfer to account",
+                  R.string.transfer_to_account,
                   _toAccount.name,
                   dataColor: AppTheme.darkBlue,
                   onPressed: widget.onAccountReselect,
                 ),
                 ConversationRow(
-                  "amount",
+                  R.string.amount,
                   _nf.format(_amount),
                   style: Theme
                       .of(context)
@@ -309,7 +311,7 @@ class _EnterAmountState extends State<_EnterAmount> {
         Padding(
           padding: const EdgeInsets.only(left: 12.0, right: 12.0),
           child: RoundedButton(
-            child: Text("Confirm"),
+            child: Text(R.string.confirm),
             onPressed: () => widget.onAmountEntered(_amount),
             color: AppTheme.darkBlue,
           ),
@@ -369,11 +371,11 @@ class _ConfirmState extends State<_Confirm> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
         ConversationRow(
-            "Confirm transfer to account",
+            R.string.confirm_transfer_to_account,
             toAccount == null ? "" : toAccount.name,
         ),
         ConversationRow(
-          "amount",
+          R.string.amount,
           _nf.format(amount == null ? 0.0 : amount),
           style: Theme
               .of(context)
@@ -381,15 +383,15 @@ class _ConfirmState extends State<_Confirm> {
               .display2,
         ),
         ConversationRow(
-            "After transfer is done, balance is",
+            R.string.after_transfer_is_done_balance_is,
             "",
         ),
             ConversationRow(
-                "Account",
+                R.string.account,
                 toAccount == null ? "" : toAccount.name,
             ),
             ConversationRow(
-              "has",
+              R.string.has,
               _nf.format((toAccount == null ? 0.0 : toAccount.balance) + (amount == null ? 0.0 : amount)),
               style: Theme
                   .of(context)
@@ -397,11 +399,11 @@ class _ConfirmState extends State<_Confirm> {
                   .title,
             ),
             ConversationRow(
-                "and Account",
+                R.string.and_account,
                 fromAccount == null ? "" : fromAccount.name,
             ),
             ConversationRow(
-              "has",
+              R.string.has,
               _nf.format((fromAccount == null ? 0.0 : fromAccount.balance) - (amount == null ? 0.0 : amount)),
               style: Theme
                   .of(context)
@@ -411,7 +413,7 @@ class _ConfirmState extends State<_Confirm> {
         Padding(
           padding: const EdgeInsets.only(left: 12.0, right: 12.0),
           child: RoundedButton(
-            child: Text("Confirmed! Transfer Now!"),
+            child: Text(R.string.confirm_transfer_now),
             onPressed: widget.saveTransaction,
             color: AppTheme.darkBlue,
           ),

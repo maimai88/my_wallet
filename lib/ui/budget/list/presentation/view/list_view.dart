@@ -7,6 +7,8 @@ import 'package:my_wallet/data/data_observer.dart' as observer;
 import 'package:my_wallet/ui/budget/list/presentation/view/transaction_page_view.dart';
 import 'package:page_indicator/page_indicator.dart';
 
+import 'package:my_wallet/resources.dart' as R;
+
 class ListBudgets extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -60,13 +62,13 @@ class _ListBudgetsState extends CleanArchitectureView<ListBudgets, ListBudgetsPr
         pageView: PageView.builder(itemBuilder: (context, index) {
           switch(index) {
             case 0: return TransactionPage(
-                "Expenses",
+                R.string.expenses,
                 _budgetList.totalExpense,
                 _budgetList.expenseBudget,
                 _budgetList.expense,
                 AppTheme.pinkAccent);
             case 1: return TransactionPage(
-                "Income",
+                R.string.income,
                 _budgetList.totalIncome,
                 _budgetList.incomeBudget,
                 _budgetList.income,

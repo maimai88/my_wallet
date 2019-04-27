@@ -6,6 +6,8 @@ import 'package:my_wallet/ui/user/homeprofile/main/presentation/view/homeprofile
 import 'package:my_wallet/ui/user/homeprofile/newhome/presentation/view/newhome_view.dart';
 import 'package:my_wallet/ui/user/homeprofile/gohome/presentation/view/gohome_view.dart';
 
+import 'package:my_wallet/resources.dart' as R;
+
 class HomeProfile extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -36,7 +38,7 @@ class _HomeProfileState extends CleanArchitectureView<HomeProfile, HomeProfilePr
   Widget build(BuildContext context) {
     return GradientScaffold(
       appBar: MyWalletAppBar(
-        title: "Set up your home profile",
+        title: R.string.setting_up_your_home_profile,
       ),
       body: Container(
         decoration: BoxDecoration(

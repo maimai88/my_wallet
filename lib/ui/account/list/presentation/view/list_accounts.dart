@@ -5,6 +5,8 @@ import 'package:my_wallet/ca/presentation/view/ca_state.dart';
 import 'package:my_wallet/ui/account/list/presentation/view/list_account_dataview.dart';
 import 'package:my_wallet/data/data_observer.dart' as observer;
 
+import 'package:my_wallet/resources.dart' as R;
+
 class ListAccounts extends StatefulWidget {
   final String _title;
 
@@ -57,7 +59,7 @@ class _ListAccountsState extends CleanArchitectureView<ListAccounts, ListAccount
         title: widget._title,
         actions: <Widget>[
           FlatButton(
-            child: Text(isEditMode ? "Done" : "Edit"),
+            child: Text(isEditMode ? R.string.done : R.string.edit),
             onPressed: () {
               setState(() {
                 isEditMode = !isEditMode;
@@ -99,7 +101,7 @@ class _ListAccountsState extends CleanArchitectureView<ListAccounts, ListAccount
           .then((value) {
             if(value != null) _loadAllAccounts();
           }),
-        child: Text(("Create Account"),),
+        child: Text(R.string.create_account,),
         color: AppTheme.pinkAccent,) : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
@@ -117,7 +119,7 @@ class _ListAccountsState extends CleanArchitectureView<ListAccounts, ListAccount
 
   void _deleteAccount(Account account) {
     showDialog(context: context, builder: (context) => AlertDialog(
-      title: Text("Delete account ${account.name}"),
+      title: Text("${R.string.delete_account} ${account.name}"),
       content: Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
@@ -126,13 +128,13 @@ class _ListAccountsState extends CleanArchitectureView<ListAccounts, ListAccount
             padding: EdgeInsets.all(10.0),
           ),
           Flexible(
-            child: Text("Warning: All transactions related to this account will be remove, that includes payment transactions as well as money transfer in and out of this account. Are you sure to delete this account?"),
+            child: Text(R.string.delete_account_warning),
           ),
         ],
       ),
       actions: <Widget>[
         FlatButton(
-          child: Text("Delete"),
+          child: Text(R.string.delete),
           onPressed: () {
             Navigator.pop(context);
 
@@ -140,7 +142,7 @@ class _ListAccountsState extends CleanArchitectureView<ListAccounts, ListAccount
           },
         ),
         FlatButton(
-          child: Text("Cancel"),
+          child: Text(R.string.cancel),
           onPressed: () => Navigator.pop(context),
         )
       ],

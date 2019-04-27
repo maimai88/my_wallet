@@ -6,6 +6,8 @@ import 'package:my_wallet/ui/account/liability/payment/presentation/presenter/pa
 import 'package:my_wallet/data/data_observer.dart' as observer;
 import 'package:intl/intl.dart';
 
+import 'package:my_wallet/resources.dart' as R;
+
 class PayLiability extends StatefulWidget {
   final int _id;
   final String _name;
@@ -72,10 +74,10 @@ class _PayLiabilityState extends CleanArchitectureView<PayLiability, PayLiabilit
   Widget build(BuildContext context) {
     return GradientScaffold(
       appBar: MyWalletAppBar(
-        title: "Pay money",
+        title: R.string.make_a_payment,
         actions: <Widget>[
           FlatButton(
-            child: Text("Save"),
+            child: Text(R.string.save),
               onPressed: _savePayment
           )
         ],
@@ -89,35 +91,35 @@ class _PayLiabilityState extends CleanArchitectureView<PayLiability, PayLiabilit
               child: FittedBox(
                 child: Column(
                   children: <Widget>[
-                    ConversationRow("Pay to", _name,),
+                    ConversationRow(R.string.pay_to, _name,),
                     ConversationRow(
-                      "From ", _account == null ? "Select Account" : _account.name,
+                      R.string.from, _account == null ? R.string.select_account : _account.name,
                       dataColor: AppTheme.darkBlue,
                     onPressed: _showAccountListSelection,),
                     ConversationRow(
-                      "in",
-                        _category == null ? "Select category" : _category.name,
+                      R.string.txt_in,
+                        _category == null ? R.string.select_category : _category.name,
                       dataColor: _category == null ? AppTheme.pinkAccent : Color(AppTheme.hexToInt(_category.colorHex)),
                       onPressed: _showCategoryListSelection,
                     ),
                     Row(
                       children: <Widget>[
-                        ConversationRow("on", _dateFormat.format(_date)),
-                        ConversationRow("at", _timeFormat.format(_date))
+                        ConversationRow(R.string.on, _dateFormat.format(_date)),
+                        ConversationRow(R.string.at, _timeFormat.format(_date))
                       ],
                     ),
                     ConversationRow(
-                      "Discharge liability",
+                      R.string.discharge_liability,
                       _nf.format(_dischargeLiability),
                       onPressed: _changeDischargeLiability,
                     ),
                     ConversationRow(
-                      "Interest",
+                      R.string.interest,
                       _nf.format(_interest),
                       onPressed: _changeInterest,
                     ),
                     ConversationRow(
-                      "Additional payment",
+                      R.string.additional_payment,
                       _nf.format(_additionalPayment),
                       onPressed: _changeAdditionalPayment,
                     )
@@ -135,7 +137,7 @@ class _PayLiabilityState extends CleanArchitectureView<PayLiability, PayLiabilit
     Navigator.push(context,
         SlidePageRoute(builder:
             (context) => _AmountInput(
-                "Discharge Liability")))
+                R.string.discharge_liability)))
     .then((value) => setState(() => _dischargeLiability = value ?? 0.0));
   }
 
@@ -143,7 +145,7 @@ class _PayLiabilityState extends CleanArchitectureView<PayLiability, PayLiabilit
     Navigator.push(context,
         SlidePageRoute(builder:
             (context) => _AmountInput(
-            "Interest")))
+            R.string.interest)))
         .then((value) => setState(() => _interest = value ?? 0.0));
   }
 
@@ -151,7 +153,7 @@ class _PayLiabilityState extends CleanArchitectureView<PayLiability, PayLiabilit
     Navigator.push(context,
         SlidePageRoute(builder:
             (context) => _AmountInput(
-            "Additional Payment")))
+            R.string.additional_payment)))
         .then((value) => setState(() => _additionalPayment = value ?? 0.0));
   }
 
@@ -175,17 +177,17 @@ class _PayLiabilityState extends CleanArchitectureView<PayLiability, PayLiabilit
                     },
                 ),
               ),
-          "Select Account",
+          R.string.select_account,
           noDataDescription: Stack(
             children: <Widget>[
               Center(
-                child: Text("No Account available.", style: Theme.of(context).textTheme.title.apply(color: AppTheme.darkBlue),),
+                child: Text(R.string.no_account_available, style: Theme.of(context).textTheme.title.apply(color: AppTheme.darkBlue),),
               ),
               Align(
                 alignment: Alignment.bottomCenter,
                 child: RoundedButton(
                   onPressed: () => Navigator.pushNamed(context, routes.AddAccount),
-                  child: Text("Add Account"),
+                  child: Text(R.string.add_account),
                   color: AppTheme.darkBlue,
                 ),
               )
@@ -215,12 +217,12 @@ class _PayLiabilityState extends CleanArchitectureView<PayLiability, PayLiabilit
             },
           ),
         ),
-          "Select Category",
+          R.string.select_category,
           noDataDescription: Stack(
             children: <Widget>[
               Center(
                 child: Text(
-                  "No Category available. Please create new Category to make payment.",
+                  R.string.no_category_available,
                   style: Theme.of(context).textTheme.title.apply(color: AppTheme.darkBlue),
                   textAlign: TextAlign.center,),
               ),
@@ -228,7 +230,7 @@ class _PayLiabilityState extends CleanArchitectureView<PayLiability, PayLiabilit
                 alignment: Alignment.bottomCenter,
                 child: RoundedButton(
                     onPressed: () => Navigator.pushNamed(context, routes.CreateCategory),
-                    child: Text("Create Category"),
+                    child: Text(R.string.create_category),
                 color: AppTheme.darkBlue,),
               )
             ],
@@ -289,11 +291,11 @@ class _PayLiabilityState extends CleanArchitectureView<PayLiability, PayLiabilit
   void onSaveFailed(Exception e) {
     showDialog(context: context,
     builder: (context) => AlertDialog(
-      title: Text("Failed to save payment"),
+      title: Text(R.string.failed_to_save_payment),
       content: Text(e.toString()),
       actions: <Widget>[
         FlatButton(
-          child: Text("OK"),
+          child: Text(R.string.ok),
           onPressed: () => Navigator.pop(context),
         )
       ],
@@ -323,10 +325,10 @@ class _AmountInputState extends State<_AmountInput> {
   Widget build(BuildContext context) {
     return PlainScaffold(
       appBar: MyWalletAppBar(
-        title: "Enter amount",
+        title: R.string.enter_amount,
         actions: <Widget>[
           FlatButton(
-            child: Text("Save"),
+            child: Text(R.string.save),
             onPressed: () => Navigator.pop(context, number),
           )
         ],

@@ -3,6 +3,8 @@ import 'package:my_wallet/ca/presentation/view/ca_state.dart';
 import 'package:my_wallet/ui/splash/presentation/view/splash_data_view.dart';
 import 'package:my_wallet/ui/splash/presentation/presenter/splash_presenter.dart';
 
+import 'package:my_wallet/resources.dart' as R;
+
 class SplashView extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -38,15 +40,15 @@ class _SplashViewState extends CleanArchitectureView<SplashView, SplashPresenter
     return PlainScaffold(
       body: Stack(
         children: <Widget>[
-          _isError ? ErrorPage(_errorKey, "Error happens while starting the app. Please try again later", loadData) : Column(
+          _isError ? ErrorPage(_errorKey, R.string.auto_login_failed, loadData) : Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Image.asset("assets/nartus.png", fit: BoxFit.fitWidth, scale: 0.8,),
+            Image.asset(R.asset.nartus, fit: BoxFit.fitWidth, scale: 0.8,),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                "Loading data...",
+                R.string.loading_data,
                 textAlign: TextAlign.center,
                 style: TextStyle(color: AppTheme.darkBlue),
               ),

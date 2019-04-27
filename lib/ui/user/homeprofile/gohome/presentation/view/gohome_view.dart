@@ -3,6 +3,8 @@ import 'package:my_wallet/ca/presentation/view/ca_state.dart';
 import 'package:my_wallet/ui/user/homeprofile/gohome/presentation/presenter/gohome_presenter.dart';
 import 'package:my_wallet/ui/user/homeprofile/gohome/presentation/view/gohome_data_view.dart';
 
+import 'package:my_wallet/resources.dart' as R;
+
 class GoHome extends StatefulWidget {
   final String homeKey;
   final String homeName;
@@ -38,7 +40,7 @@ class _GoHomeState extends CleanArchitectureView<GoHome, GoHomePresenter> implem
           Container(
             alignment: Alignment.center,
             padding: EdgeInsets.all(30.0),
-            child: Text("Found your home", style: theme.headline,),),
+            child: Text(R.string.found_your_home, style: theme.headline,),),
           Container(
             alignment: Alignment.center,
             padding: EdgeInsets.all(10.0),
@@ -47,7 +49,7 @@ class _GoHomeState extends CleanArchitectureView<GoHome, GoHomePresenter> implem
           Container(
             alignment: Alignment.center,
             padding: EdgeInsets.all(10.0),
-            child: Text("and host is", style: theme.title,),
+            child: Text(R.string.and_host_is, style: theme.title,),
           ),
           Container(
             alignment: Alignment.center,
@@ -57,7 +59,7 @@ class _GoHomeState extends CleanArchitectureView<GoHome, GoHomePresenter> implem
           RoundedButton(
             key: _goHomeState,
             onPressed: _goHome,
-            child: Text("Go Home"),
+            child: Text(R.string.go_home),
             color: AppTheme.darkBlue,
           )
         ],

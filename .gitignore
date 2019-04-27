@@ -1,6 +1,13 @@
+pubspec.lock
+android/local.properties
+ios/Pods
+ios/Flutter/flutter_assets
+ios/Flutter/App.framework/flutter_assets
+ios/.symlinks
+android/.gradle
+android/build
 .idea/
 .flutter-plugins
-.gitignore
 .packages
 lib/firebase_config.dart
 build

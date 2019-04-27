@@ -1,9 +1,0 @@
-FRAMEWORK_SEARCH_PATHS = $(inherited) "${PODS_CONFIGURATION_BUILD_DIR}/FMDB" "${PODS_CONFIGURATION_BUILD_DIR}/package_info" "${PODS_CONFIGURATION_BUILD_DIR}/path_provider" "${PODS_CONFIGURATION_BUILD_DIR}/shared_preferences" "${PODS_CONFIGURATION_BUILD_DIR}/sqflite" "${PODS_ROOT}/Crashlytics/iOS" "${PODS_ROOT}/Fabric/iOS" "${PODS_ROOT}/../.symlinks/flutter/ios"
-GCC_PREPROCESSOR_DEFINITIONS = $(inherited) COCOAPODS=1
-LD_RUNPATH_SEARCH_PATHS = $(inherited) '@executable_path/Frameworks' '@loader_path/Frameworks'
-OTHER_CFLAGS = $(inherited) -iquote "${PODS_CONFIGURATION_BUILD_DIR}/FMDB/FMDB.framework/Headers" -iquote "${PODS_CONFIGURATION_BUILD_DIR}/package_info/package_info.framework/Headers" -iquote "${PODS_CONFIGURATION_BUILD_DIR}/path_provider/path_provider.framework/Headers" -iquote "${PODS_CONFIGURATION_BUILD_DIR}/shared_preferences/shared_preferences.framework/Headers" -iquote "${PODS_CONFIGURATION_BUILD_DIR}/sqflite/sqflite.framework/Headers"
-OTHER_LDFLAGS = $(inherited) -ObjC -l"c++" -l"z" -framework "Crashlytics" -framework "FMDB" -framework "Fabric" -framework "Flutter" -framework "Security" -framework "SystemConfiguration" -framework "UIKit" -framework "package_info" -framework "path_provider" -framework "shared_preferences" -framework "sqflite"
-PODS_BUILD_DIR = ${BUILD_DIR}
-PODS_CONFIGURATION_BUILD_DIR = ${PODS_BUILD_DIR}/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)
-PODS_PODFILE_DIR_PATH = ${SRCROOT}/.
-PODS_ROOT = ${SRCROOT}/Pods

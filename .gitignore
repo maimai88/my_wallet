@@ -1,3 +1,4 @@
+ios/GoogleService-Info.plist
 ios/Podfile.lock
 pubspec.lock
 android/local.properties

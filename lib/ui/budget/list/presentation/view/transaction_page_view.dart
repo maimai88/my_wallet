@@ -5,6 +5,8 @@ import 'package:my_wallet/ui/budget/list/data/list_entity.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:my_wallet/ui/budget/budget_config.dart';
 
+import 'package:my_wallet/resources.dart' as R;
+
 class TransactionPage extends StatelessWidget {
   final String title;
   final double total;
@@ -36,6 +38,28 @@ class TransactionPage extends StatelessWidget {
     final padding = 10.0;
 
     budgetBody.add(_generateMonthlyBudgetOverview(context, screenHeight * 0.35, screenWidth - 2 * padding));
+    budgetBody.add(SliverToBoxAdapter(
+      child: Container(
+        padding: EdgeInsets.all(10.0),
+        alignment: Alignment.centerRight,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(R.string.categories, style: Theme.of(context).textTheme.title.apply(color: AppTheme.teal),),
+            RaisedButton(
+              onPressed: () => Navigator.pushNamed(context, routes.CreateCategory).then((categoryId) {
+                if(categoryId != null) {
+                  Navigator.pushNamed(context, routes.EditBudget(categoryId: categoryId, month: DateTime.now()));
+                }
+              }),
+              elevation: 4.0,
+              color: AppTheme.teal,
+              child: Text(R.string.add),
+            )
+          ],
+        )
+      )
+    ));
     budgetBody.add(_generateBudgetGrid(context));
 
     return CustomScrollView(

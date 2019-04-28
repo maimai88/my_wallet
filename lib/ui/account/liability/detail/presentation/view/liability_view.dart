@@ -5,6 +5,8 @@ import 'package:my_wallet/ui/account/liability/detail/presentation/presenter/lia
 import 'package:my_wallet/data/data_observer.dart' as observer;
 import 'package:intl/intl.dart';
 
+import 'package:my_wallet/resources.dart' as R;
+
 class LiabilityView extends StatefulWidget {
   final int _id;
   final String _name;
@@ -62,23 +64,23 @@ class _LiabilityState extends CleanArchitectureView<LiabilityView, LiabilityPres
           padding: EdgeInsets.only(left: 8.0, right: 8.0),
           child: ListView(
             children: <Widget>[
-              DataRowView("Account", _account == null ? "" : _account.name),
-              DataRowView("Created", _account == null ? "" : _df.format(_account.created)),
-              DataRowView("Type", _account == null ? "" : _account.type.name),
-              DataRowView("Total Liability", _account == null ? "" : _nf.format(_account.initialBalance)),
-              DataRowView("Balance", _account == null ? "" : _nf.format(_account.balance)),
+              DataRowView(R.string.account, _account == null ? "" : _account.name),
+              DataRowView(R.string.created, _account == null ? "" : _df.format(_account.created)),
+              DataRowView(R.string.type, _account == null ? "" : _account.type.name),
+              DataRowView(R.string.total_liability, _account == null ? "" : _nf.format(_account.initialBalance)),
+              DataRowView(R.string.balance, _account == null ? "" : _nf.format(_account.balance)),
               RoundedButton(
                 onPressed: () {
                   if(_account != null) Navigator.pushNamed(context, routes.TransactionList(_account.name, accountId: _account.id));
                 },
-                child: Padding(padding: EdgeInsets.all(12.0), child: Text("View Transactions", style: TextStyle(color: AppTheme.white),),),
+                child: Padding(padding: EdgeInsets.all(12.0), child: Text(R.string.view_transactions, style: TextStyle(color: AppTheme.white),),),
                 color: AppTheme.blue,
               ),
               RoundedButton(
                 onPressed: () {
                   if(_account != null) Navigator.pushNamed(context, routes.PayLiability(accountName: _account.name, accountId: _account.id));
                 },
-                child: Padding(padding: EdgeInsets.all(12.0), child: Text("Make a payment", style: TextStyle(color: AppTheme.white),),),
+                child: Padding(padding: EdgeInsets.all(12.0), child: Text(R.string.make_a_payment, style: TextStyle(color: AppTheme.white),),),
                 color: AppTheme.blue,
               ),
             ],

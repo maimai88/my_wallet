@@ -2,6 +2,8 @@ import 'package:my_wallet/app_material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
+import 'package:my_wallet/resources.dart' as R;
+
 class LoginSelectionView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -14,13 +16,13 @@ class LoginSelectionView extends StatelessWidget {
           children: <Widget>[
             // Nartus logo
             SizedBox(
-              child: Image.asset("assets/nartus.png", alignment: Alignment.topLeft),
+              child: Image.asset(R.asset.nartus, alignment: Alignment.topLeft),
               height: 80,
             ),
             // introduction text
-            AutoSizeText("Start managing your budget",
+            AutoSizeText(R.string.start_managing_your_budget,
               style: TextStyle(
-                fontFamily: 'Raleway',
+                fontFamily: R.font.raleway,
                 fontWeight: FontWeight.w900,
                 color: AppTheme.darkBlue,
                 fontSize: 55.0
@@ -29,17 +31,17 @@ class LoginSelectionView extends StatelessWidget {
             // login buttons,
             RoundedButton(
               onPressed: () => Navigator.pushNamed(context, routes.Login),
-              child: Text("Sign In", ),
+              child: Text(R.string.sign_in),
               color: AppTheme.amber,
             ),
             Text.rich(
               TextSpan(children: [
                 TextSpan(
                     style: Theme.of(context).textTheme.body1.apply(color: AppTheme.darkGrey),
-                    text: "You do not have an account? "),
+                    text: R.string.you_do_not_have_an_account),
                 TextSpan(
-                    style: Theme.of(context).textTheme.subtitle.apply(color: AppTheme.darkGrey, fontFamily: 'Raleway', fontWeightDelta: 2),
-                    text: "Sign up here",
+                    style: Theme.of(context).textTheme.subtitle.apply(color: AppTheme.darkGrey, fontFamily: R.font.raleway, fontWeightDelta: 2),
+                    text: R.string.sign_up_here,
                     recognizer: TapGestureRecognizer()..onTap = () => Navigator.pushNamed(context, routes.Register))
               ]),
               textAlign: TextAlign.center,

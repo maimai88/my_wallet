@@ -4,6 +4,8 @@ import 'package:my_wallet/ca/presentation/view/ca_state.dart';
 import 'package:my_wallet/ui/user/detail/presentation/presenter/detail_presenter.dart';
 import 'package:my_wallet/ui/user/detail/presentation/view/detail_data_view.dart';
 
+import 'package:my_wallet/resources.dart' as R;
+
 class UserDetail extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -34,7 +36,7 @@ class _UserDetailState extends CleanArchitectureView<UserDetail, UserDetailPrese
 
     return GradientScaffold(
       appBar: MyWalletAppBar(
-        title: "Your Profile",
+        title: R.string.your_profile,
       ),
       body: ListView(
         children: <Widget>[
@@ -49,16 +51,16 @@ class _UserDetailState extends CleanArchitectureView<UserDetail, UserDetailPrese
 //                  child: _user != null
 //                      ? _user.photoUrl == null || _user.photoUrl.isEmpty ? IconButton(icon: Icon(Icons.camera_alt, color: AppTheme.blueGrey,), onPressed: _openCameraOptionSelection,) : Icon(Icons.face, color: AppTheme.darkBlue,)
 //                      : Text(""),
-                child: Image.asset("assets/nartus.png"),
+                child: Image.asset(R.asset.nartus),
                 ),
               ),
             ),
           ),
           Center(child: Text(_user != null ? _user.displayName : "", style: Theme.of(context).textTheme.headline,),),
           Center(child: Text(_user != null ? _user.email : "", style: Theme.of(context).textTheme.title,),),
-          DataRowView("Home", _user != null && _user.homeName != null ? _user.homeName : "", color: AppTheme.white,),
-          DataRowView("Host", _user != null && _user.hostDisplayName != null ? _user.hostDisplayName : "", color: AppTheme.white,),
-          DataRowView("Host Email", _user != null && _user.hostEmail != null ? _user.hostEmail : "", color: AppTheme.white,)
+          DataRowView(R.string.home, _user != null && _user.homeName != null ? _user.homeName : "", color: AppTheme.white,),
+          DataRowView(R.string.host, _user != null && _user.hostDisplayName != null ? _user.hostDisplayName : "", color: AppTheme.white,),
+          DataRowView(R.string.host_email, _user != null && _user.hostEmail != null ? _user.hostEmail : "", color: AppTheme.white,)
         ],
       ),
     );

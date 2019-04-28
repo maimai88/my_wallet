@@ -8,6 +8,8 @@ import 'package:my_wallet/data/data_observer.dart' as observer;
 import 'package:my_wallet/style/routes.dart';
 import 'package:intl/intl.dart';
 
+import 'package:my_wallet/resources.dart' as R;
+
 class AccountDetail extends StatefulWidget {
   final int _accountId;
   final String _name;
@@ -59,24 +61,24 @@ class _AccountDetailState extends CleanArchitectureView<AccountDetail, AccountDe
         padding: EdgeInsets.only(left: 8.0, right: 8.0),
         child: ListView(
           children: <Widget>[
-            DataRowView("Account", _account == null ? "" : _account.name),
-            DataRowView("Created", _account == null ? "" : _df.format(_account.created)),
-            DataRowView("Type", _account == null ? "" : _account.type.name),
-            DataRowView("Balance", _account == null ? "" : _nf.format(_account.balance)),
-            DataRowView("Spent", _account == null ? "" : _nf.format(_account.spent)),
-            DataRowView("Earned", _account == null ? "" : _nf.format(_account.earn)),
+            DataRowView(R.string.account, _account == null ? "" : _account.name),
+            DataRowView(R.string.created, _account == null ? "" : _df.format(_account.created)),
+            DataRowView(R.string.type, _account == null ? "" : _account.type.name),
+            DataRowView(R.string.balance, _account == null ? "" : _nf.format(_account.balance)),
+            DataRowView(R.string.spent, _account == null ? "" : _nf.format(_account.spent)),
+            DataRowView(R.string.earn, _account == null ? "" : _nf.format(_account.earn)),
             RoundedButton(
               onPressed: () {
                 if(_account != null) Navigator.pushNamed(context, routes.TransactionList(_account.name, accountId: _account.id));
               },
-              child: Padding(padding: EdgeInsets.all(12.0), child: Text("View Transactions", style: TextStyle(color: AppTheme.white),),),
+              child: Padding(padding: EdgeInsets.all(12.0), child: Text(R.string.view_transactions, style: TextStyle(color: AppTheme.white),),),
               color: AppTheme.blue,
             ),
             RoundedButton(
               onPressed: () {
                 if(_account != null) Navigator.pushNamed(context, routes.TransferToAccount(accountName: _account.name, accountId: _account.id));
               },
-              child: Padding(padding: EdgeInsets.all(12.0), child: Text("Make a transfer", style: TextStyle(color: AppTheme.white),),),
+              child: Padding(padding: EdgeInsets.all(12.0), child: Text(R.string.make_a_transfer, style: TextStyle(color: AppTheme.white),),),
               color: AppTheme.blue,
             ),
           ],

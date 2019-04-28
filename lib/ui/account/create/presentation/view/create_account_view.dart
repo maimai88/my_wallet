@@ -6,6 +6,8 @@ import 'package:my_wallet/ui/account/create/presentation/view/create_account_dat
 
 import 'package:intl/intl.dart';
 
+import 'package:my_wallet/resources.dart' as R;
+
 class CreateAccount extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -31,10 +33,10 @@ class _CreateAccountState extends CleanArchitectureView<CreateAccount, CreateAcc
   @override
   Widget build(BuildContext context) {
     var appBar = MyWalletAppBar(
-      title: "Create Account",
+      title: R.string.create_account,
       actions: <Widget>[
         FlatButton(
-          child: Text("Save"),
+          child: Text(R.string.save),
           onPressed: _saveAccount,
         )
       ],
@@ -54,17 +56,17 @@ class _CreateAccountState extends CleanArchitectureView<CreateAccount, CreateAcc
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
                     ConversationRow(
-                        "Create new",
+                        R.string.create_new,
                         _type.name,
                         dataColor: AppTheme.darkBlue,
                         onPressed: _showAccountTypeSelection),
                     ConversationRow(
-                      "with name",
+                      R.string.with_name,
                       _name == null || _name.isEmpty ? "Enter a name" : _name,
                       dataColor: AppTheme.darkBlue,
                       onPressed: _showAccountNameDialog,),
                     ConversationRow(
-                      "and intial amount",
+                      R.string.and_initial_amount,
                       _nf.format(_amount),
                       dataColor: AppTheme.brightPink,
                       style: Theme.of(context).textTheme.display2,),
@@ -103,13 +105,13 @@ class _CreateAccountState extends CleanArchitectureView<CreateAccount, CreateAcc
               ),
               alignment: Alignment.center,
             ),
-          "Select Account Type",
+          R.string.select_account_type,
         )
     );
   }
 
   void _showAccountNameDialog() {
-    Navigator.push(context, SlidePageRoute(builder: (context) => InputName("Account Name",(name) => setState(() => _name = name), hintText: "Enter Account Name",)));
+    Navigator.push(context, SlidePageRoute(builder: (context) => InputName(R.string.account_name, (name) => setState(() => _name = name), hintText: R.string.enter_account_name,)));
   }
 
   void _onNumberInput(double amount) {
@@ -126,13 +128,14 @@ class _CreateAccountState extends CleanArchitectureView<CreateAccount, CreateAcc
 
   void onError(Exception e) {
       showDialog(context: context, builder: (context) => AlertDialog(
-        title: Text("Error"),
+        title: Text(R.string.error),
         content: Text(e.toString()),
         actions: <Widget>[
           FlatButton(
             onPressed: () => Navigator.pop(context),
-            child: Text("OK"),
+            child: Text(R.string.ok),
           )
         ],
-      ));  }
+      ));
+  }
 }

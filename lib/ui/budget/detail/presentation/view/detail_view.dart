@@ -6,6 +6,8 @@ import 'package:my_wallet/data/data_observer.dart' as observer;
 import 'package:my_wallet/ui/budget/budget_config.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
 
+import 'package:my_wallet/resources.dart' as R;
+
 class BudgetDetail extends StatefulWidget {
   final String title;
   final int categoryId;
@@ -76,7 +78,7 @@ class _BudgetDetailState extends CleanArchitectureView<BudgetDetail, BudgetDetai
         actions: <Widget>[
           FlatButton(
             onPressed: _saveBudget,
-            child: Text("Save"),
+            child: Text(R.string.save),
           )
         ],
       ),
@@ -91,19 +93,19 @@ class _BudgetDetailState extends CleanArchitectureView<BudgetDetail, BudgetDetai
                 child: Column(
                   children: <Widget>[
                     ConversationRow(
-                      "A monthly budget for",
-                      _category == null ? "Select Category" : _category.name,
+                      R.string.a_monthly_budget_for,
+                      _category == null ? R.string.select_category : _category.name,
                       onPressed: () => Navigator.pushNamed(context, routes.EditCategory(categoryId: _category.id, categoryName: _category.name)),
                     ),
                         ConversationRow(
-                          "from",
+                          R.string.from,
                           df.format(_from),
                           dataColor: AppTheme.darkBlue,
                           onPressed: _showFromMonth,
                         ),
                     ConversationRow(
-                      "to",
-                      _to == null ? "Forever" : df.format(_to),
+                      R.string.to,
+                      _to == null ? R.string.forever : df.format(_to),
                       dataColor: AppTheme.darkBlue,
                       onPressed: _showToMonth,
                       trail: _to == null ? null : IconButton(
@@ -111,7 +113,7 @@ class _BudgetDetailState extends CleanArchitectureView<BudgetDetail, BudgetDetai
                           onPressed: () => setState(() => _to = null)),
                     ),
                     ConversationRow(
-                      "at max",
+                      R.string.at_max,
                       _nf.format(_amount),
                       style: Theme.of(context).textTheme.display2,
                     )
@@ -188,7 +190,7 @@ class _BudgetDetailState extends CleanArchitectureView<BudgetDetail, BudgetDetai
               height: 200.0,
               child: CircularProgressIndicator(),
             ),),
-            Center(child: Text("Saving...", style: Theme.of(context).textTheme.title,),)
+            Center(child: Text(R.string.saving, style: Theme.of(context).textTheme.title,),)
           ],
         ),
       ),
@@ -216,12 +218,12 @@ class _BudgetDetailState extends CleanArchitectureView<BudgetDetail, BudgetDetai
     showDialog(context: context,
         builder: (context) =>
             AlertDialog(
-              title: Text("Failed to save budget"),
+              title: Text(R.string.failed_to_save_budget),
               content: Text("Failed to save budget with error ${e.toString()}"),
               actions: <Widget>[
                 FlatButton(
                   onPressed: () => Navigator.pop(context),
-                  child: Text("Try Again"),
+                  child: Text(R.string.try_again),
                 )
               ],
             )

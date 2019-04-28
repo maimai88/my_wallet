@@ -5,6 +5,8 @@ import 'package:my_wallet/ui/transaction/list/data/transaction_list_entity.dart'
 import 'package:my_wallet/data/data.dart';
 import 'package:my_wallet/style/app_theme.dart';
 
+import 'package:my_wallet/resources.dart' as R;
+
 class TransactionListRepository extends CleanArchitectureRepository {
   final _TransactionListDatabaseRepository _dbRepo = _TransactionListDatabaseRepository();
 
@@ -89,7 +91,7 @@ class _TransactionListDatabaseRepository {
         List<Account> from = await db.queryAccounts(id: transfer.fromAccount);
         List<Account> to = await db.queryAccounts(id: transfer.toAccount);
 
-        entities.add(TransactionEntity(transfer.id, initial, "Transfer", "from ${from[0].name} to ${to[0].name}", transfer.amount, transfer.transferDate, user.color, AppTheme.blueGrey.value, TransactionType.moneyTransfer));
+        entities.add(TransactionEntity(transfer.id, initial, R.string.transfer, "${R.string.from} ${from[0].name} ${R.string.to} ${to[0].name}", transfer.amount, transfer.transferDate, user.color, AppTheme.blueGrey.value, TransactionType.moneyTransfer));
       }
     }
 
@@ -103,7 +105,7 @@ class _TransactionListDatabaseRepository {
         List<Account> from = await db.queryAccounts(id: dischargeOfLiability.accountId);
         List<Account> to = await db.queryAccounts(id: dischargeOfLiability.liabilityId);
 
-        entities.add(TransactionEntity(dischargeOfLiability.id, initial, "Discharge of Liability", "from ${from[0].name} to ${to[0].name}", dischargeOfLiability.amount, dischargeOfLiability.dateTime, user.color, AppTheme.blueGrey.value, TransactionType.dischargeOfLiability));
+        entities.add(TransactionEntity(dischargeOfLiability.id, initial, R.string.discharge_of_liability, "${R.string.from} ${from[0].name} ${R.string.to} ${to[0].name}", dischargeOfLiability.amount, dischargeOfLiability.dateTime, user.color, AppTheme.blueGrey.value, TransactionType.dischargeOfLiability));
 
       }
     }

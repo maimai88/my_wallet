@@ -12,6 +12,8 @@ import 'package:my_wallet/utils.dart' as Utils;
 
 import 'package:my_wallet/shared_pref/shared_preference.dart';
 
+import 'package:my_wallet/resources.dart' as R;
+
 class RegisterRepository extends CleanArchitectureRepository {
   _RegisterFirebaseRepository _fbRepo = _RegisterFirebaseRepository();
 
@@ -54,26 +56,26 @@ class RegisterRepository extends CleanArchitectureRepository {
 
 class _RegisterFirebaseRepository {
   Future<bool> validateDisplayName(String name) async {
-    return name == null || name.isEmpty ? throw RegisterException(displayNameError: "Name must not be empty") : true;
+    return name == null || name.isEmpty ? throw RegisterException(displayNameError: R.string.name_must_not_be_empty) : true;
   }
 
   Future<bool> validateEmail(String email) async {
-    if (email == null || email.isEmpty) throw RegisterException(emailError: "Email must not empty");
-    if(!Utils.isEmailFormat(email)) throw RegisterException(emailError: "Invalid Email format");
+    if (email == null || email.isEmpty) throw RegisterException(emailError: R.string.email_must_not_be_empty);
+    if(!Utils.isEmailFormat(email)) throw RegisterException(emailError: R.string.invalid_email_format);
 
     return true;
   }
 
   Future<bool> validatePassword(String password) async {
-    if(password == null || password.isEmpty) throw RegisterException(passwordError: "Password is empty");
-    if(password.length < 6) throw RegisterException(passwordError: "Password is too short");
+    if(password == null || password.isEmpty) throw RegisterException(passwordError: R.string.password_is_empty);
+    if(password.length < 6) throw RegisterException(passwordError: R.string.password_is_too_short);
 
     return true;
   }
 
   Future<bool> validateConfirmPassword(String password, String confirmPassword) async {
-    if (password == null || password.isEmpty) throw RegisterException(confirmPasswordError: "Password is empty");
-    if (password != confirmPassword) throw RegisterException(confirmPasswordError: "Password does not match");
+    if (password == null || password.isEmpty) throw RegisterException(confirmPasswordError: R.string.password_is_empty);
+    if (password != confirmPassword) throw RegisterException(confirmPasswordError: R.string.password_is_too_short);
 
     return true;
   }

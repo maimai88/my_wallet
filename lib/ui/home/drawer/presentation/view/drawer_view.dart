@@ -4,6 +4,8 @@ import 'package:my_wallet/ca/presentation/view/ca_state.dart';
 import 'package:my_wallet/ui/home/drawer/presentation/presenter/drawer_presenter.dart';
 import 'package:my_wallet/ui/home/drawer/presentation/view/drawer_data_view.dart';
 
+import 'package:my_wallet/resources.dart' as R;
+
 class LeftDrawer extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -15,14 +17,14 @@ class _LeftDrawerState extends CleanArchitectureView<LeftDrawer, LeftDrawerPrese
   _LeftDrawerState() : super(LeftDrawerPresenter());
 
   final drawerListItems = [
-    _DrawerTitle("Finance"),
+    _DrawerTitle(R.menu.finance),
 //    _DrawerItem("Categories", routes.ListCategories),
-    _DrawerItem("Accounts", routes.ListAccounts),
-    _DrawerItem("Budgets", routes.ListBudgets),
-    _DrawerTitle("Profile"),
-    _DrawerItem("Your profile", routes.UserProfile),
-    _DrawerTitle("About"),
-    _DrawerItem("About Us", routes.AboutUs)
+    _DrawerItem(R.menu.accounts, routes.ListAccounts),
+    _DrawerItem(R.menu.budgets, routes.ListBudgets),
+    _DrawerTitle(R.menu.profile),
+    _DrawerItem(R.menu.your_profile, routes.UserProfile),
+    _DrawerTitle(R.menu.about),
+    _DrawerItem(R.menu.about_us, routes.AboutUs)
   ];
 
   @override
@@ -54,7 +56,7 @@ class _LeftDrawerState extends CleanArchitectureView<LeftDrawer, LeftDrawerPrese
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Padding(
-                    child: Text("Sign Out", style: Theme.of(context).textTheme.title.apply(color: AppTheme.white),),
+                    child: Text(R.menu.sign_out, style: Theme.of(context).textTheme.title.apply(color: AppTheme.white),),
                     padding: EdgeInsets.all(10.0),
                   ),
                   Padding(

@@ -12,6 +12,8 @@ import 'package:intl/intl.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:charts_flutter/flutter.dart';
 
+import 'package:my_wallet/resources.dart' as R;
+
 class MyWalletHome extends StatefulWidget {
   MyWalletHome({GlobalKey<MyWalletState> key}) : super(key: key);
   @override
@@ -108,7 +110,7 @@ class MyWalletState extends CleanArchitectureView<MyWalletHome, MyWalletHomePres
           child: Container(
             margin: EdgeInsets.all(10.0),
             child: Text(
-              "Add Transaction",
+              R.string.add_transaction,
             ),
           ),
           color: AppTheme.pinkAccent,
@@ -125,7 +127,7 @@ class MyWalletState extends CleanArchitectureView<MyWalletHome, MyWalletHomePres
     list.add(SliverAppBar(
       expandedHeight: screenHeight * (_overviewRatio + _chartRatio) + _titleHeight,
       actions: <Widget>[
-        IconButton(icon: Icon(Icons.calendar_today), onPressed: () => Navigator.pushNamed(context, routes.TransactionList("Transactions", datetime: DateTime.now())))
+        IconButton(icon: Icon(Icons.calendar_today), onPressed: () => Navigator.pushNamed(context, routes.TransactionList(R.string.transactions, datetime: DateTime.now())))
       ],
       pinned: true,
       flexibleSpace: Container(
@@ -253,7 +255,7 @@ class MyWalletState extends CleanArchitectureView<MyWalletHome, MyWalletHomePres
                     CircularProgressIndicator(),
                     Padding(
                       padding: const EdgeInsets.only(left: 12.0),
-                      child: Text("Syncing..."),
+                      child: Text(R.string.syncing),
                     )
                   ],
                 ),
@@ -294,7 +296,7 @@ class HomeOverview extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Text("Saving this month", style: _titleStyle,),
+          Text(R.string.saving_this_month, style: _titleStyle,),
           Text("${_nf.format(_total)}", style: Theme.of(context).textTheme.headline.apply(fontSizeFactor: 1.8, color: _total <= 0 ? AppTheme.pinkAccent : AppTheme.tealAccent),)
         ],
       ),
@@ -325,7 +327,7 @@ class ChartTitleView extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               AutoSizeText(
-                "Income",
+                R.string.income,
                 style: textStyle.apply(color: AppTheme.tealAccent),
                 maxLines: 1,
               ),
@@ -339,7 +341,7 @@ class ChartTitleView extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               AutoSizeText(
-                "Expense",
+                R.string.expenses,
                 style: textStyle.apply(color: AppTheme.pinkAccent),
                 maxLines: 1,
               ),
@@ -352,7 +354,7 @@ class ChartTitleView extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              AutoSizeText("Budget",
+              AutoSizeText(R.string.budget,
                 style: textStyle.apply(color: AppTheme.brightGreen),
                 maxLines: 1,
               ),
@@ -376,7 +378,7 @@ class TransactionChart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _transactions == null || _transactions.isEmpty
-        ? Center(child: Text("No Transaction found", style: Theme.of(context).textTheme.title,),)
+        ? Center(child: Text(R.string.no_transaction_found, style: Theme.of(context).textTheme.title,),)
         : PieChart([
       Series<TransactionEntity, double>(
         id: "_transactions",

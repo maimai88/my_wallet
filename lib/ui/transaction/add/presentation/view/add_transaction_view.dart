@@ -8,6 +8,8 @@ import 'package:intl/intl.dart';
 
 import 'package:flutter/scheduler.dart';
 
+import 'package:my_wallet/resources.dart' as R;
+
 class AddTransaction extends StatefulWidget {
   final int transactionId;
   final int accountId;
@@ -99,11 +101,11 @@ class _AddTransactionState extends CleanArchitectureView<AddTransaction, AddTran
   @override
   Widget build(BuildContext context) {
     var appBar = MyWalletAppBar(
-      title: "Create Transaction",
+      title: R.string.create_transaction,
       actions: <Widget>[
         FlatButton(
           onPressed: _saveTransaction,
-          child: Text("Save",),
+          child: Text(R.string.save,),
         )
       ],
     );
@@ -119,13 +121,13 @@ class _AddTransactionState extends CleanArchitectureView<AddTransaction, AddTran
               child: FittedBox(
                 child: Column(children: <Widget> [
                   ConversationRow(
-                      widget.transactionId == null ? "Create new" : "An",
+                      widget.transactionId == null ? R.string.create_new : R.string.an,
                       _type.name,
                       dataColor: AppTheme.darkBlue,
                       onPressed: _showTransactionTypeSelection,
                   ),
                   ConversationRow(
-                      widget.transactionId == null ? "of" : "valued of",
+                      widget.transactionId == null ? R.string.of : R.string.value_of,
                       _numberFormat.format(_amount),
                       dataColor: TransactionType.isIncome(_type) ? AppTheme.tealAccent : TransactionType.isExpense(_type) ? AppTheme.pinkAccent : AppTheme.blueGrey,
                       style: Theme.of(context).textTheme.display2,
@@ -135,30 +137,30 @@ class _AddTransactionState extends CleanArchitectureView<AddTransaction, AddTran
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: <Widget>[
                       ConversationRow(
-                          "${widget.transactionId == null ? "" : "was made "}${TransactionType.isExpense(_type) ? "from" : TransactionType.isIncome(_type) ? "into" : "from"}",
-                          _account == null ? "Select Account" : _account.name,
+                          "${widget.transactionId == null ? "" : R.string.was_made}${TransactionType.isExpense(_type) ? R.string.from : TransactionType.isIncome(_type) ? R.string.into : R.string.from}",
+                          _account == null ? R.string.select_account : _account.name,
                           dataColor: AppTheme.darkGreen,
                           onPressed: _showSelectAccount,
                       ),
                       ConversationRow(
-                          "by ",
-                          _user == null ? "Unknown" : _user.firstName,
+                          R.string.by,
+                          _user == null ? R.string.unknown : _user.firstName,
                           dataColor: AppTheme.darkGreen,
                       )
                     ],
                   ),
                   ConversationRow(
-                      "for",
-                      _category == null ? "Select Category" : _category.name,
+                      R.string.txt_for,
+                      _category == null ? R.string.select_category : _category.name,
                       dataColor: AppTheme.brightPink,
                       onPressed: _showSelectCategory,
                     trail: IconButton(
                       icon: Icon(_note == null || _note.isEmpty ? Icons.note_add : Icons.note, color: _note == null || _note.isEmpty ? AppTheme.darkGreen : AppTheme.pinkAccent,),
                       onPressed: () => Navigator.push(context, SlidePageRoute(
                           builder: (context) => InputName(
-                            "Enter Note",
+                            R.string.enter_note,
                                 (name) =>_note = name,
-                            hintText: _note == null || _note.isEmpty ? "Add your Note" : _note,))),
+                            hintText: _note == null || _note.isEmpty ? R.string.add_your_note : _note,))),
                     )
                   ),
                   DateTimeRow(_date, _showDatePicker, _showTimePicker,),
@@ -197,7 +199,7 @@ class _AddTransactionState extends CleanArchitectureView<AddTransaction, AddTran
               ),
               alignment: Alignment.center,
             ),
-          "Select Transaction Type",
+          R.string.select_transaction_type,
         )
     );
   }
@@ -217,11 +219,11 @@ class _AddTransactionState extends CleanArchitectureView<AddTransaction, AddTran
             },
           ),
         ),
-          "Select Account",
+          R.string.select_account,
           noDataDescription: Stack(
             children: <Widget>[
               Center(
-                child: Text("No account is available. Please create your account to continue.",
+                child: Text(R.string.no_account_available,
                   style: Theme.of(context).textTheme.title.apply(color: AppTheme.darkBlue),
                 textAlign: TextAlign.center,),
               ),
@@ -229,7 +231,7 @@ class _AddTransactionState extends CleanArchitectureView<AddTransaction, AddTran
                    alignment: Alignment.bottomCenter,
                    child: RoundedButton(
                       onPressed: () => Navigator.of(context).pushNamed(routes.AddAccount),
-                      child: Text("Add Account",),
+                      child: Text(R.string.add_account,),
                       color: AppTheme.darkBlue,),
                  ),
             ],
@@ -255,7 +257,7 @@ class _AddTransactionState extends CleanArchitectureView<AddTransaction, AddTran
             },
           ),
         ),
-          "Select Category",
+          R.string.select_category,
           noDataDescription: Stack(
             children: <Widget>[
               Center(
@@ -263,11 +265,11 @@ class _AddTransactionState extends CleanArchitectureView<AddTransaction, AddTran
                   textAlign: TextAlign.center,
                   text: TextSpan(
                     children: <TextSpan> [
-                      TextSpan(text: "No Category available for transaction type ", style: style),
+                      TextSpan(text: R.string.no_category_for_transaction_type, style: style),
                       TextSpan(text: _type.name, style: style.apply(color: AppTheme.pinkAccent)),
-                      TextSpan(text: ".\n Please create new category for transaction type ", style: style),
+                      TextSpan(text: R.string.please_create_new_category_for_transaction_type, style: style),
                       TextSpan(text: _type.name, style: style.apply(color: AppTheme.pinkAccent)),
-                      TextSpan(text: ", or change transaction type", style: style)
+                      TextSpan(text: R.string.or_change_transaction_type, style: style)
                     ]
                   )
         ),
@@ -276,7 +278,7 @@ class _AddTransactionState extends CleanArchitectureView<AddTransaction, AddTran
                 alignment: Alignment.bottomCenter,
                 child: RoundedButton(
                   onPressed: () => Navigator.pushNamed(context, routes.CreateCategory),
-                  child: Text("Create Category"),
+                  child: Text(R.string.create_category),
                   color: AppTheme.darkBlue,
                 ),
               )
@@ -322,7 +324,7 @@ class _AddTransactionState extends CleanArchitectureView<AddTransaction, AddTran
               height: 200.0,
               child: CircularProgressIndicator(),
             ),),
-            Center(child: Text("Saving...", style: Theme.of(context).textTheme.title,),)
+            Center(child: Text(R.string.saving, style: Theme.of(context).textTheme.title,),)
           ],
         ),
       ),
@@ -365,12 +367,12 @@ class _AddTransactionState extends CleanArchitectureView<AddTransaction, AddTran
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
-      title: Text("Error"),
+      title: Text(R.string.error),
       content: Text(e.toString()),
       actions: <Widget>[
         FlatButton(
           onPressed: () => Navigator.pop(context),
-          child: Text("OK"),
+          child: Text(R.string.ok),
         )
       ],
     ));

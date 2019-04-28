@@ -12,6 +12,8 @@ import 'package:my_wallet/data/data_observer.dart' as observer;
 
 import 'package:intl/intl.dart';
 
+import 'package:my_wallet/resources.dart' as R;
+
 class MyWalletHome extends StatefulWidget {
   MyWalletHome({GlobalKey<MyWalletState> key}) : super(key: key);
   @override
@@ -86,7 +88,7 @@ class MyWalletState extends CleanArchitectureView<MyWalletHome, MyWalletHomePres
           child: Container(
             margin: EdgeInsets.all(10.0),
             child: Text(
-              "Add Transaction",
+              R.string.add_transaction,
             ),
           ),
           color: AppTheme.pinkAccent,
@@ -103,7 +105,7 @@ class MyWalletState extends CleanArchitectureView<MyWalletHome, MyWalletHomePres
     list.add(SliverAppBar(
       expandedHeight: screenHeight * (_overviewRatio + _chartRatio) + _titleHeight,
       actions: <Widget>[
-        IconButton(icon: Icon(Icons.calendar_today), onPressed: () => Navigator.pushNamed(context, routes.TransactionList("Transactions", datetime: DateTime.now())))
+        IconButton(icon: Icon(Icons.calendar_today), onPressed: () => Navigator.pushNamed(context, routes.TransactionList(R.string.transactions, datetime: DateTime.now())))
       ],
       pinned: true,
       flexibleSpace: Container(
@@ -211,7 +213,7 @@ class MyWalletState extends CleanArchitectureView<MyWalletHome, MyWalletHomePres
                     CircularProgressIndicator(),
                     Padding(
                       padding: const EdgeInsets.only(left: 12.0),
-                      child: Text("Syncing..."),
+                      child: Text(R.string.syncing),
                     )
                   ],
                 ),

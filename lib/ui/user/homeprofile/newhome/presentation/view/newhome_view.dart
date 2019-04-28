@@ -3,6 +3,8 @@ import 'package:my_wallet/ca/presentation/view/ca_state.dart';
 import 'package:my_wallet/ui/user/homeprofile/newhome/presentation/view/newhome_data_view.dart';
 import 'package:my_wallet/ui/user/homeprofile/newhome/presentation/presenter/newhome_presenter.dart';
 
+import 'package:my_wallet/resources.dart' as R;
+
 class NewHome extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -34,7 +36,7 @@ class _NewHomeState extends CleanArchitectureView<NewHome, NewHomePresenter> imp
         children: <Widget>[
           Container(
             alignment: Alignment.center,
-            child: Text("Join a home", style: Theme.of(context).textTheme.headline.apply(color: AppTheme.darkBlue)),
+            child: Text(R.string.join_a_home, style: Theme.of(context).textTheme.headline.apply(color: AppTheme.darkBlue)),
             margin: EdgeInsets.all(30.0),
           ),
           Container(
@@ -46,7 +48,7 @@ class _NewHomeState extends CleanArchitectureView<NewHome, NewHomePresenter> imp
             child: TextField(
               controller: _hostEmailController,
               decoration: InputDecoration.collapsed(
-                hintText: "Enter host's email address",
+                hintText: R.string.enter_your_host_email_address,
                 hintStyle: Theme.of(context).textTheme.subhead.apply(color: AppTheme.blueGrey),
               ),
               style: Theme.of(context).textTheme.title.apply(color: AppTheme.black),
@@ -55,7 +57,7 @@ class _NewHomeState extends CleanArchitectureView<NewHome, NewHomePresenter> imp
           RoundedButton(
             key: _joinHomeState,
             onPressed: _joinAHome,
-            child: Text("Request to join this home"),
+            child: Text(R.string.request_to_join_this_home),
             color: AppTheme.darkBlue,
           ),
           Padding(
@@ -70,7 +72,7 @@ class _NewHomeState extends CleanArchitectureView<NewHome, NewHomePresenter> imp
                 ),
                 Padding(
                   padding: EdgeInsets.all(10.0),
-                  child: Text("OR", style: Theme.of(context).textTheme.title.apply(color: AppTheme.darkBlue),),
+                  child: Text(R.string.or, style: Theme.of(context).textTheme.title.apply(color: AppTheme.darkBlue),),
                 ),
                 Expanded(
                   child: Container(
@@ -83,7 +85,7 @@ class _NewHomeState extends CleanArchitectureView<NewHome, NewHomePresenter> imp
           ),
           Container(
             alignment: Alignment.center,
-            child: Text("Create a new home", style: Theme.of(context).textTheme.headline.apply(color: AppTheme.darkBlue)),
+            child: Text(R.string.create_a_new_home, style: Theme.of(context).textTheme.headline.apply(color: AppTheme.darkBlue)),
             margin: EdgeInsets.all(30.0),
           ),
           Container(
@@ -95,7 +97,7 @@ class _NewHomeState extends CleanArchitectureView<NewHome, NewHomePresenter> imp
             child: TextField(
               controller: _homeNameController,
               decoration: InputDecoration.collapsed(
-                hintText: "Enter your home name",
+                hintText: R.string.enter_your_home_name,
                 hintStyle: Theme.of(context).textTheme.subhead.apply(color: AppTheme.blueGrey),
               ),
               style: Theme.of(context).textTheme.title.apply(color: AppTheme.black),
@@ -104,7 +106,7 @@ class _NewHomeState extends CleanArchitectureView<NewHome, NewHomePresenter> imp
           RoundedButton(
             key: _createHomeState,
             onPressed: _createProfile,
-            child: Text("Create home"),
+            child: Text(R.string.create_home),
             color: AppTheme.darkBlue,
           ),
         ],
@@ -135,12 +137,12 @@ class _NewHomeState extends CleanArchitectureView<NewHome, NewHomePresenter> imp
         context: context,
         builder: (context) =>
             AlertDialog(
-              title: Text("Failed to create home}"),
-              content: Text("Your home ${_homeNameController.text} is not created because ${e.toString()}"),
+              title: Text(R.string.failed_to_create_home),
+              content: Text(R.string.create_home_error(_homeNameController.text, e.toString())),
               actions: <Widget>[
                 FlatButton(
                   onPressed: () => Navigator.pop(context),
-                  child: Text("Try Again"),
+                  child: Text(R.string.try_again),
                 )
               ],
             )
@@ -171,12 +173,12 @@ class _NewHomeState extends CleanArchitectureView<NewHome, NewHomePresenter> imp
 
     showDialog(context: context,
     builder: (context) => AlertDialog(
-      title: Text("Failed to join Home"),
-      content: Text("Failed to join home of ${_hostEmailController.text} because ${e.toString()}"),
+      title: Text(R.string.failed_to_join_home),
+      content: Text(R.string.join_home_error(_hostEmailController.text, e.toString())),
       actions: <Widget>[
         FlatButton(
           onPressed: () => Navigator.pop(context),
-          child: Text("Try Again"),
+          child: Text(R.string.try_again),
         )
       ],
     ));

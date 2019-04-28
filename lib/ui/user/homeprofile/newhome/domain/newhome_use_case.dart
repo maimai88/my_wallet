@@ -2,6 +2,8 @@ import 'package:my_wallet/ca/domain/ca_use_case.dart';
 
 import 'package:my_wallet/ui/user/homeprofile/newhome/data/newhome_repository.dart';
 
+import 'package:my_wallet/resources.dart' as R;
+
 class NewHomeUseCase extends CleanArchitectureUseCase<NewHomeRepository> {
   NewHomeUseCase() : super(NewHomeRepository());
 
@@ -13,7 +15,7 @@ class NewHomeUseCase extends CleanArchitectureUseCase<NewHomeRepository> {
       // create this data reference on Firebase database
       String homeKey = await repo.createHome(host, name);
 
-      if(homeKey == null) throw NewHomeException("Failed to create this new home");
+      if(homeKey == null) throw NewHomeException(R.string.failed_to_create_this_new_home);
 
       // save this key to shared preference
       await repo.saveHome(homeKey, name, host.email);
@@ -30,13 +32,13 @@ class NewHomeUseCase extends CleanArchitectureUseCase<NewHomeRepository> {
     execute(Future(() async {
       Home home = await repo.findHomeOfHost(host);
 
-      if(home == null) throw NewHomeException("This host $host does not have any home right now");
+      if(home == null) throw NewHomeException(R.string.host_has_no_home(host));
 
       User myProfile = await repo.getCurrentUser();
 
       bool result = await repo.joinHome(home, myProfile);
 
-      if(!result) throw NewHomeException("Failed to join home with $host");
+      if(!result) throw NewHomeException(R.string.failed_to_join_home_with_host(host));
 
       // save this home key
       await repo.saveHome(home.key, home.name, home.host);

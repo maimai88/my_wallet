@@ -5,6 +5,8 @@ import 'package:my_wallet/ui/transaction/add/domain/add_transaction_exception.da
 import 'package:my_wallet/ui/transaction/add/data/add_transaction_entity.dart';
 import 'package:my_wallet/shared_pref/shared_preference.dart';
 
+import 'package:my_wallet/resources.dart' as R;
+
 class AddTransactionRepository extends CleanArchitectureRepository {
 
   final _AddTransactionDatabaseRepository _dbRepo = _AddTransactionDatabaseRepository();
@@ -119,7 +121,7 @@ class _AddTransactionDatabaseRepository {
   Future<TransactionDetail> loadTransactionDetail(int id) async {
     List<AppTransaction> transactions = await _db.queryTransactions(id: id);
 
-    if(transactions == null || transactions.isEmpty) throw AddTransactionException("Transaction with id $id not found");
+    if(transactions == null || transactions.isEmpty) throw AddTransactionException(R.string.transaction_not_found(id));
 
     AppTransaction transaction = transactions[0];
 
@@ -153,23 +155,23 @@ class _AddTransactionDatabaseRepository {
   }
 
   Future<bool> checkTransactionType(TransactionType type) async {
-    return type == null ? throw AddTransactionException("Please Select Transaction Type") : true;
+    return type == null ? throw AddTransactionException(R.string.please_select_transaction_type) : true;
   }
 
   Future<bool> checkAccount(Account acc) async {
-    return acc == null ? throw AddTransactionException("Please select an Account") : true;
+    return acc == null ? throw AddTransactionException(R.string.please_select_an_account) : true;
   }
 
   Future<bool> checkCategory(AppCategory cat) async {
-    return cat == null ? throw AddTransactionException("Please select a Category") : true;
+    return cat == null ? throw AddTransactionException(R.string.please_select_category) : true;
   }
 
   Future<bool> checkDateTime(DateTime datetime) async {
-    return datetime == null ? throw AddTransactionException("Please select a Date") : true;
+    return datetime == null ? throw AddTransactionException(R.string.please_select_date) : true;
   }
 
   Future<bool> checkDescription(String desc) async {
-    return desc == null || desc.isEmpty ? throw AddTransactionException("Please add a description for this transaction") : true;
+    return desc == null || desc.isEmpty ? throw AddTransactionException(R.string.please_add_description) : true;
   }
 
   Future<int> generateId() {

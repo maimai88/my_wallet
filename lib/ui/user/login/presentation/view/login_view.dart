@@ -5,6 +5,8 @@ import 'package:my_wallet/ui/user/login/presentation/presenter/login_presenter.d
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/gestures.dart';
 
+import 'package:my_wallet/resources.dart' as R;
+
 class Login extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -50,8 +52,8 @@ class _LoginState extends CleanArchitectureView<Login, LoginPresenter> implement
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
             AutoSizeText(
-              "Sign In",
-              style: TextStyle(fontFamily: 'Raleway', fontWeight: FontWeight.w900, color: AppTheme.white, fontSize: 55.0),
+              R.string.sign_in,
+              style: TextStyle(fontFamily: R.font.raleway, fontWeight: FontWeight.w900, color: AppTheme.white, fontSize: 55.0),
             ),
             Column(
               mainAxisSize: MainAxisSize.max,
@@ -60,8 +62,9 @@ class _LoginState extends CleanArchitectureView<Login, LoginPresenter> implement
                 TextField(
                   controller: _emailController,
                   decoration: InputDecoration(
-                    labelText: "Email Address",
+                    labelText: R.string.email_address,
                     labelStyle: TextStyle(color: AppTheme.nartusOrange),
+                    focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppTheme.nartusOrange)),
                     errorStyle: TextStyle(color: AppTheme.pinkAccent),
                     errorText: _emailErrorText,
                     errorMaxLines: 2
@@ -70,9 +73,10 @@ class _LoginState extends CleanArchitectureView<Login, LoginPresenter> implement
                 TextField(
                   controller: _passwordController,
                   decoration: InputDecoration(
-                      labelText: "Password",
+                      labelText: R.string.password,
                       labelStyle: TextStyle(color: AppTheme.nartusOrange),
                       errorStyle: TextStyle(color: AppTheme.pinkAccent),
+                      focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppTheme.nartusOrange)),
                       errorText: _passwordErrorText,
                       suffixIcon: IconButton(
                           icon: Icon(
@@ -91,7 +95,7 @@ class _LoginState extends CleanArchitectureView<Login, LoginPresenter> implement
                     child: Padding(
                       padding: EdgeInsets.all(12.0),
                       child: Text(
-                        "Sign In",
+                        R.string.sign_in,
                         style: TextStyle(color: AppTheme.white, fontWeight: FontWeight.bold),
                       ),
                     ),
@@ -102,10 +106,10 @@ class _LoginState extends CleanArchitectureView<Login, LoginPresenter> implement
                   TextSpan(children: [
                     TextSpan(
                         style: Theme.of(context).textTheme.body1.apply(color: AppTheme.white),
-                        text: "First time here? "),
+                        text: R.string.first_time_here),
                     TextSpan(
-                        style: Theme.of(context).textTheme.subtitle.apply(color: AppTheme.white, fontFamily: 'Raleway', fontWeightDelta: 2),
-                        text: "Sign up",
+                        style: Theme.of(context).textTheme.subtitle.apply(color: AppTheme.white, fontFamily: R.font.raleway, fontWeightDelta: 2),
+                        text: R.string.sign_up,
                         recognizer: TapGestureRecognizer()..onTap = () => Navigator.pushNamedAndRemoveUntil(context, routes.Register, (route) => route.isFirst))
                   ]),
                   textAlign: TextAlign.center,
@@ -156,20 +160,6 @@ class _LoginState extends CleanArchitectureView<Login, LoginPresenter> implement
     }
 
     setState(() {});
-//    showDialog(
-//        context: context,
-//        builder: (_) => AlertDialog(
-//              title: Text("Sign in failed"),
-//              content: Text("Sign in to email ${_emailController.text} failed with error ${e.toString()}"),
-//              actions: <Widget>[
-//                FlatButton(
-//                  onPressed: () {
-//                    Navigator.pop(context);
-//                  },
-//                  child: Text("Try Again"),
-//                )
-//              ],
-//            ));
   }
 
   void onUserHomeResult(bool exist) {
@@ -184,10 +174,6 @@ class _LoginState extends CleanArchitectureView<Login, LoginPresenter> implement
     debugPrint(e.toString());
 
     onUserHomeResult(true);
-  }
-
-  void _register() {
-    Navigator.pushNamed(context, routes.Register);
   }
 
 //  void _onFacebookButtonPressed() {

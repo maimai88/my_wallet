@@ -13,18 +13,20 @@ export 'package:my_wallet/data/data.dart';
 export 'package:my_wallet/ui/user/login/domain/login_exception.dart';
 export 'package:my_wallet/ui/user/login/data/login_entity.dart';
 
+import 'package:my_wallet/resources.dart' as R;
+
 class LoginRepository extends CleanArchitectureRepository{
   final _LoginFirebaseRepository _fbRepo = _LoginFirebaseRepository();
   final _LoginDatabaseRepository _dbRepo = _LoginDatabaseRepository();
 
   Future<void> validateEmail(String email) async {
-    if (email == null || email.isEmpty) throw LoginException(emailException: "Email is empty");
-    if(!Utils.isEmailFormat(email)) throw LoginException(emailException: "Invalid email format");
+    if (email == null || email.isEmpty) throw LoginException(emailException: R.string.email_must_not_be_empty);
+    if(!Utils.isEmailFormat(email)) throw LoginException(emailException: R.string.invalid_email_format);
   }
 
   Future<void> validatePassword(String password) async {
-    if(password == null || password.isEmpty) throw LoginException(passwordException: "Password is empty");
-    if(password.length < 6) throw LoginException(passwordException: "Password is too short");
+    if(password == null || password.isEmpty) throw LoginException(passwordException: R.string.password_is_empty);
+    if(password.length < 6) throw LoginException(passwordException: R.string.password_is_too_short);
   }
 
   Future<User> signinToFirebase(String email, String password) {

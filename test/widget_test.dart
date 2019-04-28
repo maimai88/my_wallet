@@ -33,7 +33,6 @@ void main() {
     expect(find.text('Email Address'), findsOneWidget);
     expect(find.text('Password'), findsOneWidget);
     expect(find.text('Sign In'), findsNWidgets(2));
-    expect(find.text('First time here? Sign up'), findsOneWidget);
   });
 
 //  testWidgets('Login screen: empty email and password', (WidgetTester tester) async {

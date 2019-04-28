@@ -56,6 +56,7 @@ class string {
   static const add_account = "Add Account";
   static const no_category_available = "No Category available. Please create new Category to make payment.";
   static const create_category = "Create Category";
+  static const add_budget = "Add Budget";
   static const failed_to_save_payment = "Failed to save payment";
   static const enter_amount = "Enter amount";
   static const done = "Done";
@@ -91,6 +92,8 @@ class string {
   static const try_again = "Try Again";
   static const expenses = "Expenses";
   static const income = "Income";
+  static const categories = "Categories";
+  static const add = "Add";
 
   // home
   static const add_transaction = "Add Transaction";

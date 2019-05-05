@@ -26,7 +26,9 @@ class _ListAccountsState extends CleanArchitectureView<ListAccounts, ListAccount
   var isEditMode = false;
 
   List<Account> _accounts = [];
+
   final NumberFormat _nf = NumberFormat("#,##0.00");
+  final DateFormat _df = DateFormat("dd MMM, yyyy");
 
   @override
   void init() {
@@ -54,7 +56,7 @@ class _ListAccountsState extends CleanArchitectureView<ListAccounts, ListAccount
 
   @override
   Widget build(BuildContext context) {
-    return GradientScaffold(
+    return PlainScaffold(
       appBar: MyWalletAppBar(
         title: widget._title,
         actions: <Widget>[
@@ -73,7 +75,10 @@ class _ListAccountsState extends CleanArchitectureView<ListAccounts, ListAccount
         child: ListView.builder(
             itemCount: _accounts.length,
             itemBuilder: (context, index) => CardListTile(
-              title: _accounts[index].name,
+                cardName: _accounts[index].name,
+                cardDescription: "Created ${_df.format(_accounts[index].created)}",
+                cardBalance: _nf.format(_accounts[index].balance),
+                cardSpent: _nf.format(_accounts[index].spent),
                 onTap: () {
                 if(isEditMode) return;
                 if(_accounts[index].type == AccountType.liability) {
@@ -87,13 +92,14 @@ class _ListAccountsState extends CleanArchitectureView<ListAccounts, ListAccount
                     routes.AccountDetail(accountId: _accounts[index].id, accountName: _accounts[index].name),);
                 }
                 },
-              subTitle: _accounts[index].type == AccountType.liability ? "(-${_nf.format(_accounts[index].balance)})" : "${_nf.format(_accounts[index].balance ?? 0.0)}",
-              trailing: isEditMode ? IconButton(
-                onPressed: () {
-                  _deleteAccount(_accounts[index]);
-                },
-                icon: Icon(Icons.close, color: AppTheme.pinkAccent,),
-              ) : null,
+//              subTitle: _accounts[index].type == AccountType.liability ? "(-${_nf.format(_accounts[index].balance)})" : "${_nf.format(_accounts[index].balance ?? 0.0)}",
+//              trailing: isEditMode ? IconButton(
+//                onPressed: () {
+//                  _deleteAccount(_accounts[index]);
+//                },
+//                icon: Icon(Icons.close, color: AppTheme.pinkAccent,),
+//              ) : null,
+            cardColor: Colors.orange
             )
         ),
       ),

@@ -9,6 +9,7 @@
 #import <flutter_keychain/FlutterKeychainPlugin.h>
 #import <package_info/PackageInfoPlugin.h>
 #import <path_provider/PathProviderPlugin.h>
+#import <primary_secondary_progress_bar/PrimarySecondaryProgressBarPlugin.h>
 #import <sqflite/SqflitePlugin.h>
 
 @implementation GeneratedPluginRegistrant
@@ -20,6 +21,7 @@
   [FlutterKeychainPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterKeychainPlugin"]];
   [FLTPackageInfoPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTPackageInfoPlugin"]];
   [FLTPathProviderPlugin registerWithRegistrar:[registry registrarForPlugin:@"FLTPathProviderPlugin"]];
+  [PrimarySecondaryProgressBarPlugin registerWithRegistrar:[registry registrarForPlugin:@"PrimarySecondaryProgressBarPlugin"]];
   [SqflitePlugin registerWithRegistrar:[registry registrarForPlugin:@"SqflitePlugin"]];
 }
 

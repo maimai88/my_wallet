@@ -312,24 +312,6 @@ class _AddTransactionState extends CleanArchitectureView<AddTransaction, AddTran
 
     _isSaving = true;
 
-    showDialog(context: context, builder: (_) => AlertDialog(
-      key: _alertDialog,
-      content: SizedBox(
-        width: 300.0,
-        height: 300.0,
-        child: Stack(
-          children: <Widget>[
-            Center(child: SizedBox(
-              width: 200.0,
-              height: 200.0,
-              child: CircularProgressIndicator(),
-            ),),
-            Center(child: Text(R.string.saving, style: Theme.of(context).textTheme.title,),)
-          ],
-        ),
-      ),
-    ));
-
     SchedulerBinding.instance.addPostFrameCallback((duration) => presenter.saveTransaction(
         widget.transactionId,
         _type,

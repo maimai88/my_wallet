@@ -58,7 +58,7 @@ class _CreateCategoryDatabaseRepository {
 
   Future<String> _generateRandomColor() async {
     Random rnd = Random();
-    var hex = "0123456789abcdef";
+    var hex = "0123456789abcd";
 
     var color = "#";
     for(int i = 0; i < 6; i++) {

@@ -102,7 +102,7 @@ class MyWalletState extends CleanArchitectureView<MyWalletHome, MyWalletHomePres
 
     return PlainScaffold(
       body: _generateMainBody(),
-      drawer: LeftDrawer(),
+//      drawer: LeftDrawer(),
       floatingActionButton: Padding(
         padding: EdgeInsets.all(platform == TargetPlatform.iOS ? 10.0 : 0.0),
         child: RoundedButton(

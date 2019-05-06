@@ -23,8 +23,6 @@ class _ListAccountsState extends CleanArchitectureView<ListAccounts, ListAccount
 
   var tables = [observer.tableAccount];
 
-  var isEditMode = false;
-
   List<Account> _accounts = [];
 
   final NumberFormat _nf = NumberFormat("#,##0.00");
@@ -57,59 +55,29 @@ class _ListAccountsState extends CleanArchitectureView<ListAccounts, ListAccount
   @override
   Widget build(BuildContext context) {
     return PlainScaffold(
-      appBar: MyWalletAppBar(
-        title: widget._title,
-        actions: <Widget>[
-          FlatButton(
-            child: Text(isEditMode ? R.string.done : R.string.edit),
-            onPressed: () {
-              setState(() {
-                isEditMode = !isEditMode;
-              });
-            },
-          ),
-        ],
-      ),
       body: Padding(
         padding: EdgeInsets.all(10.0),
         child: ListView.builder(
             itemCount: _accounts.length,
             itemBuilder: (context, index) => CardListTile(
                 cardName: _accounts[index].name,
-                cardDescription: "Created ${_df.format(_accounts[index].created)}",
+                cardDescription: R.string.created_on(_df.format(_accounts[index].created)),
                 cardBalance: _nf.format(_accounts[index].balance),
                 cardSpent: _nf.format(_accounts[index].spent),
                 onTap: () {
-                if(isEditMode) return;
-                if(_accounts[index].type == AccountType.liability) {
-                  // open liability view
-                  Navigator.pushNamed(context, routes.LiabilityDetail(accountId: _accounts[index].id, accountName: _accounts[index].name));
-//                } else if(_accounts[index].type == AccountType.assets) {
-                  // open access view
-                } else {
-                  // open transaction account view
-                  Navigator.pushNamed(context,
-                    routes.AccountDetail(accountId: _accounts[index].id, accountName: _accounts[index].name),);
-                }
+                  if(_accounts[index].type == AccountType.liability) {
+                    // open liability view
+                    Navigator.pushNamed(context, routes.LiabilityDetail(accountId: _accounts[index].id, accountName: _accounts[index].name));
+                  } else {
+                    // open transaction account view
+                    Navigator.pushNamed(context,
+                      routes.AccountDetail(accountId: _accounts[index].id, accountName: _accounts[index].name),);
+                  }
                 },
-//              subTitle: _accounts[index].type == AccountType.liability ? "(-${_nf.format(_accounts[index].balance)})" : "${_nf.format(_accounts[index].balance ?? 0.0)}",
-//              trailing: isEditMode ? IconButton(
-//                onPressed: () {
-//                  _deleteAccount(_accounts[index]);
-//                },
-//                icon: Icon(Icons.close, color: AppTheme.pinkAccent,),
-//              ) : null,
             cardColor: Colors.orange
             )
         ),
       ),
-      floatingActionButton: isEditMode ? RoundedButton(onPressed: () => Navigator.pushNamed(context, routes.AddAccount)
-          .then((value) {
-            if(value != null) _loadAllAccounts();
-          }),
-        child: Text(R.string.create_account,),
-        color: AppTheme.pinkAccent,) : null,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 
@@ -121,37 +89,5 @@ class _ListAccountsState extends CleanArchitectureView<ListAccounts, ListAccount
     setState(() {
       _accounts = acc;
     });
-  }
-
-  void _deleteAccount(Account account) {
-    showDialog(context: context, builder: (context) => AlertDialog(
-      title: Text("${R.string.delete_account} ${account.name}"),
-      content: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            child: Icon(Icons.warning, color: Colors.yellow, size: 36.0,),
-            padding: EdgeInsets.all(10.0),
-          ),
-          Flexible(
-            child: Text(R.string.delete_account_warning),
-          ),
-        ],
-      ),
-      actions: <Widget>[
-        FlatButton(
-          child: Text(R.string.delete),
-          onPressed: () {
-            Navigator.pop(context);
-
-            presenter.deleteAccount(account);
-          },
-        ),
-        FlatButton(
-          child: Text(R.string.cancel),
-          onPressed: () => Navigator.pop(context),
-        )
-      ],
-    ));
   }
 }

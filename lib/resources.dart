@@ -1,4 +1,9 @@
 class string {
+  // dashboard
+  static const accounts = "Accounts";
+  static const budgets = "Budgets";
+  static const more = "More";
+
   // Sign Up/Sign in page
   static const sign_up = "Sign Up";
   static const display_name = "Display name";
@@ -23,6 +28,7 @@ class string {
 
   // Account
   static const create_account = "Create Account";
+  static created_on(String date) => "Created on $date";
   static const save = "Save";
   static const create_new = "Create new";
   static const with_name = "with name";

@@ -50,6 +50,11 @@ class MoreNavigator extends StatelessWidget {
 
   Widget _createMoreListing(BuildContext context) {
     return Scaffold(
+      appBar: MyWalletAppBar(
+        color: AppTheme.teal,
+        title: R.string.settings,
+        elevation: 0.0,
+      ),
       body: ListView.separated(
           itemBuilder: (context, index) => drawerListItems[index].build(context),
           separatorBuilder: (context, index) => Divider(

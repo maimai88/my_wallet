@@ -174,6 +174,8 @@ class string {
   static const change_email_address = "Change email address";
   static const validate_email_processing = "An email is sent to your email address. Please click on the link in that email to validate your account. Click below button after you have validated your email";
   static const validated = "Validated";
+
+  static const settings = "Settings";
 }
 
 

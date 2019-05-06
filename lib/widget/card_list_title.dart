@@ -1,36 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_wallet/style/app_theme.dart';
 import 'package:my_wallet/resources.dart' as R;
-
-//class CardListTile extends Card {
-//  CardListTile({
-//    Key key,
-//    double elevation = 0.5,
-//    EdgeInsets margin = const EdgeInsets.all(4.0),
-//    Clip clipBehavior = Clip.none,
-//    bool semanticContainer = true,
-//    String title,
-//    String subTitle,
-//    Function onTap,
-//    Widget trailing,
-//}) : super(
-//    key: key,
-//    elevation: elevation,
-//    clipBehavior: clipBehavior,
-//    semanticContainer: semanticContainer,
-//    color: Colors.white.withOpacity(0.2),
-//    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0), side: BorderSide(width: 1.0, color: Colors.white)),
-//    child: ListTile(
-//      title: Text(
-//        title,
-//        style: TextStyle(color: AppTheme.white),
-//      ),
-//      subtitle: subTitle == null || subTitle.isEmpty ? null : Text(subTitle),
-//      onTap: onTap,
-//      trailing: trailing,
-//    ),
-//  );
-//}
 
 class CardListTile extends StatelessWidget {
   final double _elevation;
@@ -166,7 +135,7 @@ class _CardPainter extends CustomPainter {
     final path = Path()
         ..moveTo(0.0, size.height)
         ..quadraticBezierTo(size.width/2, size.height/4, size.width/2, size.height/3*2)
-        ..quadraticBezierTo(size.width/4*3, size.height/4, size.width, size.height/8)
+        ..quadraticBezierTo(size.width, size.height/3, size.width, size.height/8)
         ..lineTo(size.width, size.height)
         ..lineTo(0.0, size.height);
 

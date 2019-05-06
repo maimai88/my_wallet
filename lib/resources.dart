@@ -192,7 +192,7 @@ class menu {
   static const budgets = "Budgets";
   static const profile = "Profile";
   static const your_profile = "Your profile";
-  static const about = "About";
+  static const apps = "Apps";
   static const about_us = "About Us";
 
   static const sign_out = "Sign Out";

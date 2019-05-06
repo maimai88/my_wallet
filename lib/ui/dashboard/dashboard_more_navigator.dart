@@ -6,6 +6,7 @@ import 'package:my_wallet/resources.dart' as R;
 
 import 'package:my_wallet/ui/user/detail/presentation/view/detail_view.dart';
 import 'package:my_wallet/ui/about/presentation/view/about_view.dart';
+import 'package:my_wallet/ui/user/logout/presentation/view/sign_out_view.dart';
 
 class MoreNavigator extends StatelessWidget {
   final GlobalKey<NavigatorState> navigatorKey;
@@ -15,23 +16,24 @@ class MoreNavigator extends StatelessWidget {
   final drawerListItems = [
     _DrawerTitle(R.menu.profile),
     _DrawerItem(R.menu.your_profile, routes.UserProfile),
-    _DrawerTitle(R.menu.about),
-    _DrawerItem(R.menu.about_us, routes.AboutUs)
+    _DrawerTitle(R.menu.apps),
+    _DrawerItem(R.menu.about_us, routes.AboutUs),
+    _DrawerItem(R.menu.sign_out, routes.SignOut)
   ];
 
   @override
   Widget build(BuildContext context) {
     return Navigator(
       key: navigatorKey,
-      onGenerateRoute: (setting) => createRoute(setting.name),
+      onGenerateRoute: (setting) => createRoute(context, setting.name),
       initialRoute: '/',
     );
   }
 
-  MaterialPageRoute createRoute(String name) {
+  MaterialPageRoute createRoute(BuildContext context, String name) {
     if (name == '/') {
       return NoTransitionPageRoute(
-          builder: (context) => _createMoreListing()
+          builder: (context) => _createMoreListing(context)
       );
     }
 
@@ -40,19 +42,22 @@ class MoreNavigator extends StatelessWidget {
         switch(name) {
           case routes.UserProfile: return UserDetail();
           case routes.AboutUs: return AboutUs();
+          case routes.SignOut: return SignOut();
         }
       },
     );
   }
 
-  Widget _createMoreListing() {
-    return ListView.separated(
-        itemBuilder: (context, index) => drawerListItems[index].build(context),
-        separatorBuilder: (context, index) => Divider(
-          height: 1.0,
-          color: AppTheme.darkBlue,
-        ),
-        itemCount: drawerListItems.length);
+  Widget _createMoreListing(BuildContext context) {
+    return Scaffold(
+      body: ListView.separated(
+          itemBuilder: (context, index) => drawerListItems[index].build(context),
+          separatorBuilder: (context, index) => Divider(
+            height: 1.0,
+            color: AppTheme.darkBlue,
+          ),
+          itemCount: drawerListItems.length),
+    );
   }
 }
 

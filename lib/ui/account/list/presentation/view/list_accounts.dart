@@ -55,6 +55,11 @@ class _ListAccountsState extends CleanArchitectureView<ListAccounts, ListAccount
   @override
   Widget build(BuildContext context) {
     return PlainScaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => Navigator.pushNamed(context, routes.AddAccount),
+        child: Icon(Icons.add),
+        backgroundColor: AppTheme.nartusOrange,
+        foregroundColor: AppTheme.white,),
       body: Padding(
         padding: EdgeInsets.all(10.0),
         child: ListView.builder(

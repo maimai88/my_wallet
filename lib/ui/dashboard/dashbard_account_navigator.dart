@@ -5,6 +5,7 @@ import 'package:my_wallet/ui/dashboard/no_transition_page_route.dart';
 // account navigator
 import 'package:my_wallet/ui/account/list/presentation/view/list_accounts.dart';
 import 'package:my_wallet/ui/account/detail/presentation/view/detail_view.dart';
+import 'package:my_wallet/ui/account/create/presentation/view/create_account_view.dart';
 
 class AccountNavigator extends StatelessWidget {
   final GlobalKey<NavigatorState> navigatorKey;
@@ -47,6 +48,10 @@ class AccountNavigator extends StatelessWidget {
           return AccountDetail(_accountId, accName);
         } catch(e) {}
       } while(false);
+    }
+
+    if(name == routes.AddAccount) {
+      return CreateAccount();
     }
 
     return PlainScaffold(

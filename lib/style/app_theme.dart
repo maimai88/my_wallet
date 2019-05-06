@@ -25,7 +25,7 @@ class AppTheme {
   static const nartusOrange = Color(0xFFFFA880);
   static const orange = Color(0xFFFF9800);
 
-  static const _bgLeftColor = Color(0xff292787);
+  static const _bgLeftColor = Color(0xff53529f);
   static const _bgRightColor = Color(0xFF30cfd0);
 
   static ThemeData appTheme = ThemeData(

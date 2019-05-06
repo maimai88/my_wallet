@@ -1134,7 +1134,7 @@ class _Database {
       try {
         map = await db.query(table, where: where, whereArgs: whereArgs, orderBy: orderBy, columns: columns);
       } catch(e, stacktrace) {
-        print("$e - Error with query for table $table with where clause $where and arguments $whereArgs for columns $columns");
+        debugPrint("$e - Error with query for table $table with where clause $where and arguments $whereArgs for columns $columns");
         print(stacktrace);
       }
 

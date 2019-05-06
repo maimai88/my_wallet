@@ -55,32 +55,40 @@ class _ListAccountsState extends CleanArchitectureView<ListAccounts, ListAccount
   @override
   Widget build(BuildContext context) {
     return PlainScaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.pushNamed(context, routes.AddAccount),
-        child: Icon(Icons.add),
-        backgroundColor: AppTheme.nartusOrange,
-        foregroundColor: AppTheme.white,),
+      floatingActionButton: RoundedButton(
+          onPressed: () => Navigator.pushNamed(context, routes.AddAccount),
+          child: Text(R.string.add_account),
+        color: Colors.orange[700],),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: Padding(
         padding: EdgeInsets.all(10.0),
         child: ListView.builder(
-            itemCount: _accounts.length,
-            itemBuilder: (context, index) => CardListTile(
-                cardName: _accounts[index].name,
-                cardDescription: R.string.created_on(_df.format(_accounts[index].created)),
-                cardBalance: _nf.format(_accounts[index].balance),
-                cardSpent: _nf.format(_accounts[index].spent),
-                onTap: () {
-                  if(_accounts[index].type == AccountType.liability) {
-                    // open liability view
-                    Navigator.pushNamed(context, routes.LiabilityDetail(accountId: _accounts[index].id, accountName: _accounts[index].name));
-                  } else {
-                    // open transaction account view
-                    Navigator.pushNamed(context,
-                      routes.AccountDetail(accountId: _accounts[index].id, accountName: _accounts[index].name),);
-                  }
-                },
-            cardColor: Colors.orange
-            )
+            itemCount: _accounts.length + 1,
+            itemBuilder: (context, index) {
+              if (index < _accounts.length) {
+                return CardListTile(
+                    cardName: _accounts[index].name,
+                    cardDescription: R.string.created_on(_df.format(_accounts[index].created)),
+                    cardBalance: _nf.format(_accounts[index].balance),
+                    cardSpent: _nf.format(_accounts[index].spent),
+                    onTap: () {
+                      if(_accounts[index].type == AccountType.liability) {
+                        // open liability view
+                        Navigator.pushNamed(context, routes.LiabilityDetail(accountId: _accounts[index].id, accountName: _accounts[index].name));
+                      } else {
+                        // open transaction account view
+                        Navigator.pushNamed(context,
+                          routes.AccountDetail(accountId: _accounts[index].id, accountName: _accounts[index].name),);
+                      }
+                    },
+                    cardColor: AppTheme.orange
+                );
+              }
+
+              return Container(
+                height: 50,
+              );
+            }
         ),
       ),
     );

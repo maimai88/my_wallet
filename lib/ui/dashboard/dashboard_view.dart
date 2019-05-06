@@ -59,9 +59,18 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
         setState(() {});
       },
       currentIndex: tabController.index,
-      selectedItemColor: AppTheme.pinkAccent,
-      unselectedItemColor: AppTheme.teal.withOpacity(0.6),
+      selectedItemColor: _generateSelectedColor(),
+      unselectedItemColor: AppTheme.darkGrey.withOpacity(0.4),
       type: BottomNavigationBarType.fixed,),
     );
+  }
+
+  Color _generateSelectedColor() {
+    switch(tabController.index) {
+      case 0: return AppTheme.darkBlue;
+      case 1: return AppTheme.pinkAccent;
+      case 2: return Colors.orange;
+      default: return AppTheme.teal;
+    }
   }
 }

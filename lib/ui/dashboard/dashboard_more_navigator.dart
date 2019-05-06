@@ -57,10 +57,7 @@ class MoreNavigator extends StatelessWidget {
       ),
       body: ListView.separated(
           itemBuilder: (context, index) => drawerListItems[index].build(context),
-          separatorBuilder: (context, index) => Divider(
-            height: 1.0,
-            color: AppTheme.darkBlue,
-          ),
+          separatorBuilder: (context, index) => drawerListItems[index].buildDivider(context),
           itemCount: drawerListItems.length),
     );
   }
@@ -72,6 +69,7 @@ abstract class _DrawerData {
   _DrawerData(this.name);
 
   Widget build(BuildContext context);
+  Widget buildDivider(BuildContext context);
 }
 
 class _DrawerTitle extends _DrawerData{
@@ -86,6 +84,14 @@ class _DrawerTitle extends _DrawerData{
       child: Text(name, style: Theme.of(context).textTheme.title.apply(color: AppTheme.white),),
     );
   }
+
+  @override
+  Widget buildDivider(BuildContext context) {
+    return Divider(
+      height: 1.0,
+      color: AppTheme.white,
+    );
+  }
 }
 
 class _DrawerItem extends _DrawerData {
@@ -96,8 +102,16 @@ class _DrawerItem extends _DrawerData {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(name, style: Theme.of(context).textTheme.subtitle.apply(color: AppTheme.darkBlue)),
+      title: Text(name, style: Theme.of(context).textTheme.subtitle.apply(color: AppTheme.darkGreen)),
       onTap: () => Navigator.pushNamed(context, routeName),
+    );
+  }
+
+  @override
+  Widget buildDivider(BuildContext context) {
+    return Divider(
+      height: 1.0,
+      color: AppTheme.darkGreen,
     );
   }
 }

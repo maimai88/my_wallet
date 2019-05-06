@@ -86,7 +86,7 @@ class _DrawerItem extends _DrawerData {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(name, style: Theme.of(context).textTheme.body1.apply(color: AppTheme.darkBlue)),
+      title: Text(name, style: Theme.of(context).textTheme.subtitle.apply(color: AppTheme.darkBlue)),
       onTap: () => Navigator.pushNamed(context, routeName),
     );
   }

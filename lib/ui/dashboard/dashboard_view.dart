@@ -40,6 +40,7 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return PlainScaffold(
       body: TabBarView(
+        physics: NeverScrollableScrollPhysics(),
         controller: tabController,
           children: [
             HomeNavigator(homeNavigatorKey),

@@ -117,9 +117,11 @@ class TransactionPage extends StatelessWidget {
                         primaryLabel: budgetCurrencyFormatter.format(budget),
                         primaryIndicatorLine1: budgetCurrencyFormatter.format(budget - total),
                         primaryIndicatorLine2: reverse ? "more" : "remaining",
+                        primaryTextColor: mainColor,
                         secondaryMax: totalDays.toDouble(),
                         secondaryValue: (totalDays - daysRemains).toDouble(),
-                        secondaryLabel: "$daysRemains days\nleft"),
+                        secondaryLabel: "$daysRemains days\nleft",
+                      secondaryTextColor: mainColor,),
                     )
                 )
               ],

@@ -21,7 +21,8 @@ void main() async {
     DeviceOrientation.portraitUp
   ]);
   await SystemChrome.setEnabledSystemUIOverlays([
-    SystemUiOverlay.top
+    SystemUiOverlay.top,
+    SystemUiOverlay.bottom
   ]);
 
   runApp(MyApp());

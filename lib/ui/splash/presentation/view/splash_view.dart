@@ -104,8 +104,6 @@ class _SplashViewState extends CleanArchitectureView<SplashView, SplashPresenter
       _errorKey.currentState.stopRetry();
     }
 
-    print("Error $e");
-
     setState(() => _error = e.toString());
   }
 

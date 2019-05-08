@@ -28,6 +28,7 @@ class routes {
   static const AddBudget = "AddBudget";
 
   static const AboutUs = "AboutUs";
+  static const SignOut = "SignOut";
 
   static const SplashView = "SplashView";
   static const Liability = "Liability";

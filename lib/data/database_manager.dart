@@ -853,8 +853,13 @@ Account _toAccount(Map<String, dynamic> map) {
   Account acc = new Account(map[_id], map[_accName], (map[_accInitialBalance] == null ? 0 : map[_accInitialBalance]) * 1.0, map[_accType] == null ? null : AccountType.all[map[_accType]], map[_accCurrency], created: map[_accCreated] == null ? null : DateTime.fromMillisecondsSinceEpoch(map[_accCreated]));
 
   if(map[_accBalance] != null) acc.balance = map[_accBalance];
+  else acc.balance = 0.0;
+
   if(map[_accSpent] != null) acc.spent = map[_accSpent];
+  else acc.spent = 0.0;
+
   if(map[_accEarned] != null) acc.earn = map[_accEarned];
+  else acc.earn = 0.0;
 
   return acc;
 }
@@ -1129,7 +1134,7 @@ class _Database {
       try {
         map = await db.query(table, where: where, whereArgs: whereArgs, orderBy: orderBy, columns: columns);
       } catch(e, stacktrace) {
-        print("$e - Error with query for table $table with where clause $where and arguments $whereArgs for columns $columns");
+        debugPrint("$e - Error with query for table $table with where clause $where and arguments $whereArgs for columns $columns");
         print(stacktrace);
       }
 

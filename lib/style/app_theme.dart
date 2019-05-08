@@ -23,8 +23,9 @@ class AppTheme {
   static const amber = Color(0xFFF57F17);
   static const darkGrey = Color(0xff454a57);
   static const nartusOrange = Color(0xFFFFA880);
+  static const orange = Color(0xFFFF9800);
 
-  static const _bgLeftColor = Color(0xFF330867);
+  static const _bgLeftColor = Color(0xff53529f);
   static const _bgRightColor = Color(0xFF30cfd0);
 
   static ThemeData appTheme = ThemeData(

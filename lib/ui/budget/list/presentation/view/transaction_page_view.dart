@@ -16,9 +16,11 @@ class TransactionPage extends StatelessWidget {
   final Color safeColor;
   final Color overColor;
   final bool reverse;
+  final Color mainColor;
 
   TransactionPage(this.title, this.total, this.budget, this.entities, Color color, {this.reverse = false})
       : assert(color != null),
+        mainColor = color,
         _gradient = LinearGradient(colors: <Color>[color, color.withOpacity(0.4)]),
         safeColor = reverse ? AppTheme.pinkAccent : AppTheme.tealAccent,
         overColor = reverse ? AppTheme.tealAccent : AppTheme.pinkAccent;
@@ -45,7 +47,7 @@ class TransactionPage extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Text(R.string.categories, style: Theme.of(context).textTheme.title.apply(color: AppTheme.teal),),
+            Text(R.string.categories, style: Theme.of(context).textTheme.title.apply(color: mainColor),),
             RaisedButton(
               onPressed: () => Navigator.pushNamed(context, routes.CreateCategory).then((categoryId) {
                 if(categoryId != null) {
@@ -53,7 +55,7 @@ class TransactionPage extends StatelessWidget {
                 }
               }),
               elevation: 4.0,
-              color: AppTheme.teal,
+              color: mainColor,
               child: Text(R.string.add),
             )
           ],
@@ -115,9 +117,11 @@ class TransactionPage extends StatelessWidget {
                         primaryLabel: budgetCurrencyFormatter.format(budget),
                         primaryIndicatorLine1: budgetCurrencyFormatter.format(budget - total),
                         primaryIndicatorLine2: reverse ? "more" : "remaining",
+                        primaryTextColor: mainColor,
                         secondaryMax: totalDays.toDouble(),
                         secondaryValue: (totalDays - daysRemains).toDouble(),
-                        secondaryLabel: "$daysRemains days\nleft"),
+                        secondaryLabel: "$daysRemains days\nleft",
+                      secondaryTextColor: mainColor,),
                     )
                 )
               ],

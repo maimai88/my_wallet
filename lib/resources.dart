@@ -1,4 +1,9 @@
 class string {
+  // dashboard
+  static const accounts = "Accounts";
+  static const budgets = "Budgets";
+  static const more = "More";
+
   // Sign Up/Sign in page
   static const sign_up = "Sign Up";
   static const display_name = "Display name";
@@ -23,6 +28,7 @@ class string {
 
   // Account
   static const create_account = "Create Account";
+  static created_on(String date) => "Created on $date";
   static const save = "Save";
   static const create_new = "Create new";
   static const with_name = "with name";
@@ -168,6 +174,8 @@ class string {
   static const change_email_address = "Change email address";
   static const validate_email_processing = "An email is sent to your email address. Please click on the link in that email to validate your account. Click below button after you have validated your email";
   static const validated = "Validated";
+
+  static const settings = "Settings";
 }
 
 
@@ -186,7 +194,7 @@ class menu {
   static const budgets = "Budgets";
   static const profile = "Profile";
   static const your_profile = "Your profile";
-  static const about = "About";
+  static const apps = "Apps";
   static const about_us = "About Us";
 
   static const sign_out = "Sign Out";

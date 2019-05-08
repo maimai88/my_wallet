@@ -186,6 +186,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.16"
+  primary_secondary_progress_bar:
+    dependency: "direct main"
+    description:
+      name: primary_secondary_progress_bar
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.3"
   quiver:
     dependency: transitive
     description:

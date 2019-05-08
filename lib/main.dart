@@ -3,29 +3,13 @@ import 'package:my_wallet/app_material.dart';
 import 'package:my_wallet/ui/home2/presentation/view/home2_view.dart';
 import 'package:my_wallet/widget/my_wallet_app_bar.dart';
 
-import 'package:my_wallet/ui/transaction/add/presentation/view/add_transaction_view.dart';
-import 'package:my_wallet/ui/transaction/list/presentation/view/transaction_list_view.dart';
-
-import 'package:my_wallet/ui/account/list/presentation/view/list_accounts.dart';
-import 'package:my_wallet/ui/account/create/presentation/view/create_account_view.dart';
-import 'package:my_wallet/ui/account/detail/presentation/view/detail_view.dart';
-import 'package:my_wallet/ui/account/transfer/presentation/view/transfer_view.dart';
-import 'package:my_wallet/ui/account/liability/detail/presentation/view/liability_view.dart';
-import 'package:my_wallet/ui/account/liability/payment/presentation/view/payment_view.dart';
-
-import 'package:my_wallet/ui/budget/category/presentation/view/create_category_view.dart';
+import 'package:my_wallet/ui/dashboard/dashboard_view.dart';
 
 import 'package:my_wallet/ui/user/login/presentation/view/login_selection_view.dart';
 import 'package:my_wallet/ui/user/login/presentation/view/login_view.dart';
 import 'package:my_wallet/ui/user/register/presentation/view/register_view.dart';
 import 'package:my_wallet/ui/user/homeprofile/main/presentation/view/homeprofile_view.dart';
-import 'package:my_wallet/ui/user/detail/presentation/view/detail_view.dart';
 import 'package:my_wallet/ui/user/verify/presentation/view/verify_view.dart';
-
-import 'package:my_wallet/ui/budget/list/presentation/view/list_view.dart';
-import 'package:my_wallet/ui/budget/detail/presentation/view/detail_view.dart';
-
-import 'package:my_wallet/ui/about/presentation/view/about_view.dart';
 
 import 'package:my_wallet/ui/splash/presentation/view/splash_view.dart';
 
@@ -36,7 +20,10 @@ void main() async {
     DeviceOrientation.portraitDown,
     DeviceOrientation.portraitUp
   ]);
-  await SystemChrome.setEnabledSystemUIOverlays([]);
+  await SystemChrome.setEnabledSystemUIOverlays([
+    SystemUiOverlay.top,
+    SystemUiOverlay.bottom
+  ]);
 
   runApp(MyApp());
 }
@@ -58,19 +45,6 @@ class MyApp extends StatelessWidget {
       onGenerateRoute: (settings) {
         return MaterialPageRoute(builder: (context) {
           switch (settings.name) {
-            case routes.AddTransaction:
-              return AddTransaction();
-              break;
-            case routes.AddAccount:
-              return CreateAccount();
-              break;
-            case routes.ListAccounts:
-              return ListAccounts("Accounts");
-              break;
-            case routes.CreateCategory:
-              return CreateCategory();
-            case routes.UserProfile:
-              return UserDetail();
             case routes.Login:
               return Login();
             case routes.LoginSelection:
@@ -80,33 +54,22 @@ class MyApp extends StatelessWidget {
             case routes.ValidationProcessing:
               return RequestValidation(isProcessing: true,);
             case routes.MyHome:
-              return MyWalletHome(key: homeKey,);
+              return Dashboard(key: homeKey);
             case routes.Register:
               return Register();
             case routes.HomeProfile:
               return HomeProfile();
-            case routes.ListBudgets:
-              return ListBudgets();
-            case routes.AboutUs:
-              return AboutUs();
             case routes.SplashView:
               return SplashView();
             default:
-              Widget paramRoute = _getParamRoute(settings.name);
-
-              if (paramRoute == null) {
-                return PlainScaffold(
-                  appBar: MyWalletAppBar(
-                    title: "Coming Soon",
-                  ),
-                  body: Center(
-                    child: Text("Unknown page ${settings.name}", style: Theme.of(context).textTheme.title.apply(color: AppTheme.darkBlue),),
-                  ),
-                );
-              }
-
-              return paramRoute;
-              break;
+              return PlainScaffold(
+                appBar: MyWalletAppBar(
+                  title: "Coming Soon",
+                ),
+                body: Center(
+                  child: Text("Unknown page ${settings.name}", style: Theme.of(context).textTheme.title.apply(color: AppTheme.darkBlue),),
+                ),
+              );
           }
         });
       },
@@ -116,194 +79,6 @@ class MyApp extends StatelessWidget {
 
     return app;
   }
-
-  Widget _getParamRoute(String name) {
-    if (name.startsWith("${routes.AddTransaction}")) {
-      List<String> ids = name.split("/");
-      // get all data out
-      int transactionId;
-      try {
-        transactionId = int.parse(ids[1]);
-
-        return AddTransaction(transactionId: transactionId,);
-      } catch(e) {
-        debugPrint("No transaction ID $name");
-      }
-
-      int accountId;
-      try {
-        accountId = int.parse(ids[2]);
-
-        return AddTransaction(accountId: accountId);
-      } catch(e) {
-        debugPrint("no account ID $name");
-      }
-
-      int categoryId;
-      try {
-        categoryId = int.parse(ids[3]);
-        return AddTransaction(categoryId: categoryId);
-      } catch(e) {
-        debugPrint("no category id $name");
-      }
-
-      return AddTransaction();
-    }
-
-    if(name.startsWith(routes.TransactionListAccount)) {
-      do {
-        // get title:
-        List<String> splits = name.split(":");
-
-        if(splits.length != 2) break;
-
-        String title = splits[1];
-        String detail = splits[0];
-
-        String accountId = detail.replaceFirst("${routes.TransactionListAccount}/", "");
-
-        if (accountId == null || accountId.isEmpty) break;
-
-        try {
-          int id = int.parse(accountId);
-          return TransactionList(title, accountId: id,);
-        } catch(e) {}
-      } while (false);
-    }
-
-    if(name.startsWith(routes.TransactionListCategory)) {
-      do {
-        // get title:
-        List<String> splits = name.split(":");
-
-        if(splits.length != 2) break;
-
-        String title = splits[1];
-        String detail = splits[0];
-
-        String categoryId = detail.replaceFirst("${routes.TransactionListCategory}/", "");
-
-        if (categoryId == null || categoryId.isEmpty) break;
-
-        try {
-          int id = int.parse(categoryId);
-          return TransactionList(title, categoryId: id,);
-        } catch(e) {}
-      } while (false);
-    }
-
-    if(name.startsWith(routes.TransactionListDate)) {
-      do {
-        // get title:
-        List<String> splits = name.split(":");
-
-        if(splits.length != 2) break;
-
-        String title = splits[1];
-        String detail = splits[0];
-
-        String date = detail.replaceFirst("${routes.TransactionListDate}/", "");
-
-        if (date == null || date.isEmpty) break;
-
-        try {
-          int millisecondsSinceEpoch = int.parse(date);
-
-          DateTime day = DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpoch);
-
-          return TransactionList(title, day: day,);
-        } catch(e) {}
-      } while (false);
-    }
-
-    if(name.startsWith(routes.AddBudget)) {
-      do {
-        // get month date/time:
-        List<String> splits = name.split(":");
-
-        if(splits.length != 2) break;
-
-        String date = splits[1];
-        String title = splits[0];
-
-        if (date == null || date.isEmpty) break;
-
-        try {
-          int millisecondsSinceEpoch = int.parse(date);
-
-          DateTime day = DateTime.fromMillisecondsSinceEpoch(millisecondsSinceEpoch);
-
-          return BudgetDetail("Budget", categoryId: int.parse(title.replaceFirst("${routes.AddBudget}/", "")), month: day,);
-        } catch(e) {}
-      } while (false);
-    }
-
-    if(name.startsWith(routes.Accounts)) {
-      do {
-        String data = name.replaceFirst("${routes.Accounts}/", "");
-
-        if(data == null) break;
-        if(data.isEmpty) break;
-
-        List<String> splits = data.split(":");
-
-        String strAccId = splits[0];
-        String accName = splits[1];
-
-        try {
-          int _accountId = int.parse(strAccId);
-          return AccountDetail(_accountId, accName);
-        } catch(e) {}
-      } while(false);
-    }
-
-    if(name.startsWith(routes.TransferAccount)) {
-      List<String> splits = name.split("/"); //  "$TransferAccount/from:$accountId/name:$accountName";;
-
-      // get account ID:
-      var id = int.parse(splits[1].split(":")[1]);
-      // get account name
-      var accName = splits[2].split(":")[1];
-
-      return AccountTransfer(id, accName);
-    }
-
-    if(name.startsWith(routes.Liability)) {
-      List<String> splits = name.split("/"); //  "$TransferAccount/from:$accountId/name:$accountName";;
-
-      // get account ID:
-      var id = int.parse(splits[1].split(":")[1]);
-      // get account name
-      var accName = splits[2].split(":")[1];
-
-      return LiabilityView(id, accName);
-    }
-
-    if(name.startsWith(routes.Pay)) {
-      List<String> splits = name.split("/"); //  "$TransferAccount/from:$accountId/name:$accountName";;
-
-      // get account ID:
-      var id = int.parse(splits[1].split(":")[1]);
-      // get account name
-      var accName = splits[2].split(":")[1];
-
-      return PayLiability(id, accName);
-    }
-
-    if(name.startsWith(routes.CreateCategory)) {
-      List<String> splits = name.split("/"); //  "$TransferAccount/from:$accountId/name:$accountName";;
-
-      // get category ID:
-      var id = int.parse(splits[1].split(":")[1]);
-      // get category name
-      var accName = splits[2].split(":")[1];
-
-      return CreateCategory(title: "Edit Category", id: id, name: accName);
-    }
-
-    return null;
-  }
-
 }
 
 class LifecycleEventHandler extends WidgetsBindingObserver {

@@ -7,6 +7,7 @@ import io.flutter.plugins.firebase.core.FirebaseCorePlugin;
 import be.appmire.flutterkeychain.FlutterKeychainPlugin;
 import io.flutter.plugins.packageinfo.PackageInfoPlugin;
 import io.flutter.plugins.pathprovider.PathProviderPlugin;
+import com.example.primary_secondary_progress_bar.PrimarySecondaryProgressBarPlugin;
 import com.tekartik.sqflite.SqflitePlugin;
 
 /**
@@ -23,6 +24,7 @@ public final class GeneratedPluginRegistrant {
     FlutterKeychainPlugin.registerWith(registry.registrarFor("be.appmire.flutterkeychain.FlutterKeychainPlugin"));
     PackageInfoPlugin.registerWith(registry.registrarFor("io.flutter.plugins.packageinfo.PackageInfoPlugin"));
     PathProviderPlugin.registerWith(registry.registrarFor("io.flutter.plugins.pathprovider.PathProviderPlugin"));
+    PrimarySecondaryProgressBarPlugin.registerWith(registry.registrarFor("com.example.primary_secondary_progress_bar.PrimarySecondaryProgressBarPlugin"));
     SqflitePlugin.registerWith(registry.registrarFor("com.tekartik.sqflite.SqflitePlugin"));
   }
 

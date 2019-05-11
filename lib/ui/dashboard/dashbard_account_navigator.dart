@@ -26,7 +26,7 @@ class AccountNavigator extends StatelessWidget {
 
   MaterialPageRoute createRoute(String name) {
     if (name == '/') {
-      return NoTransitionPageRoute(builder: (context) => ListAccounts("Accounts"));
+      return NoTransitionPageRoute(builder: (context) => ListAccounts());
     }
 
     return MaterialPageRoute(

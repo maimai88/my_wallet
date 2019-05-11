@@ -1,6 +1,6 @@
 import 'package:my_wallet/ca/data/ca_repository.dart';
 
-import 'package:my_wallet/data/database_manager.dart' as db;
+import 'package:my_wallet/data/local/database_manager.dart' as db;
 import 'package:my_wallet/data/firebase/database.dart' as fd;
 
 import 'package:my_wallet/ui/budget/detail/data/detail_entity.dart';
@@ -20,13 +20,6 @@ class BudgetDetailRepository extends CleanArchitectureRepository {
 
   Future<List<Budget>> findCollapsingBudgets(int catId, DateTime start, DateTime end) {
     return _dbRepo.findCollapsingBudgets(catId, start, end);
-  }
-
-  Future<bool> saveBudget(List<Budget> ids, int catId, double amount, DateTime startMonth, DateTime endMonth) async {
-    // 
-    await _fbRepo.saveBudget(ids, catId, amount, startMonth, endMonth);
-
-    return true;
   }
 
   Future<int> generateBudgetId() {
@@ -60,11 +53,11 @@ class BudgetDetailDatabaseRepository {
   }
 
   Future<Budget> loadBudgetThisMonth(int categoryId, DateTime from, DateTime to) async {
-    return await db.findBudget(catId: categoryId,start: from, end: to);
+    return await db.queryBudget(catId: categoryId,start: from, end: to);
   }
 
   Future<List<Budget>> findCollapsingBudgets(int catId, DateTime start, DateTime end) async {
-    var curBudget = await db.findCollapsingBudgets(catId: catId,start: start, end: end);
+    var curBudget = await db.queryCollapsingBudgets(catId: catId,start: start, end: end);
 
     return curBudget;
   }
@@ -73,25 +66,32 @@ class BudgetDetailDatabaseRepository {
     return db.generateBudgetId();
   }
 
-  Future<int> insertBudget(Budget budget) {
-    return db.insertBudget(budget);
+  Future<int> insertBudget(Budget budget) async {
+    db.startTransaction();
+    db.insertBudget(budget);
+    await db.execute();
+
+    return budget.id;
   }
 
-  Future<int> updateBudget(Budget budget) {
-    return db.updateBudget(budget);
+  Future<int> updateBudget(Budget budget) async {
+    db.startTransaction();
+    db.updateBudget(budget);
+    await db.execute();
+
+    return budget.id;
   }
 
-  Future<int> deleteBudget(Budget budget) {
-    return db.deleteBudget(budget.id);
+  Future<int> deleteBudget(Budget budget) async {
+    db.startTransaction();
+    db.deleteBudget(budget.id);
+    await db.execute();
+
+    return budget.id;
   }
 }
 
 class BudgetDetailFirebaseRepository {
-  Future<bool> saveBudget(List<Budget> ids, int catId, double amount, DateTime startMonth, DateTime endMonth) async {
-//    return fd.addBudget(budget);
-    return true;
-  }
-
   Future<bool> insertBudget(Budget budget) {
     return fd.addBudget(budget);
   }

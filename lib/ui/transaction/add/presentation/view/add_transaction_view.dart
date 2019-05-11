@@ -1,7 +1,7 @@
 import 'package:my_wallet/ca/presentation/view/ca_state.dart';
 import 'package:my_wallet/ui/transaction/add/presentation/view/add_transaction_data_view.dart';
 import 'package:my_wallet/ui/transaction/add/presentation/presenter/add_transaction_presenter.dart';
-import 'package:my_wallet/data/data_observer.dart' as observer;
+import 'package:my_wallet/data/local/data_observer.dart' as observer;
 import 'package:flutter/cupertino.dart';
 import 'package:my_wallet/ui/transaction/add/data/add_transaction_entity.dart';
 import 'package:intl/intl.dart';

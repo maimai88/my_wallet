@@ -1,4 +1,4 @@
-import 'package:my_wallet/data/firebase/common.dart';
+import 'package:my_wallet/data/firebase/fb_common.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';

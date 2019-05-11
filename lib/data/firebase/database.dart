@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:my_wallet/data/database_manager.dart' as db;
-import 'package:my_wallet/data/firebase/common.dart';
+import 'package:my_wallet/data/local/database_manager.dart' as db;
+import 'package:my_wallet/data/firebase/fb_common.dart';
 
 import 'package:flutter/foundation.dart';
 
@@ -20,7 +20,6 @@ bool _isDbSetup = false;
 FirebaseApp _app;
 
 Map<String, StreamSubscription> subs = {};
-Timer _timerSync;
 
 Future<void> init(FirebaseApp app, {String homeProfile}) async {
   if (_isInit) return;
@@ -67,147 +66,61 @@ Future<void> setupDatabase(final String homeKey) async {
 }
 
 Future<void> _addSubscriptions() async {
-  subs.putIfAbsent(tblAccount, () => _firestore.collection(tblAccount).snapshots().listen((f) => f.documentChanges.forEach((change) {
-    debugPrint("on $tblAccount data changed $change");
-    if(change == null) return;
-    if(change.document == null) return;
+  for(String table in allTables) {
+    subs.putIfAbsent(table, () => _firestore.collection(table).snapshots().listen((f) async {
+      if(f.documentChanges != null && f.documentChanges.length > 0) {
+        db.startTransaction();
+        f.documentChanges.forEach((change) {
+          if(change == null) return;
+          if(change.document == null) return;
 
-    switch(change.type) {
-      case DocumentChangeType.added: _onAccountAdded(change.document); break;
-      case DocumentChangeType.modified: _onAccountChanged(change.document); break;
-      case DocumentChangeType.removed: _onAccountRemoved(change.document); break;
-    }
-  })));
-
-  subs.putIfAbsent(tblBudget, () =>_firestore.collection(tblBudget).snapshots().listen((f) => f.documentChanges.forEach((change) {
-    debugPrint("on $tblBudget data changed $change");
-    if(change == null) return;
-    if(change.document == null) return;
-
-    switch(change.type) {
-      case DocumentChangeType.added: _onBudgetAdded(change.document); break;
-      case DocumentChangeType.modified: _onBudgetChanged(change.document); break;
-      case DocumentChangeType.removed: _onBudgetRemoved(change.document); break;
-    }
-  })));
-
-  subs.putIfAbsent(tblCategory, () => _firestore.collection(tblCategory).snapshots().listen((f) => f.documentChanges.forEach((change) {
-    debugPrint("on $tblCategory data changed $change");
-    if(change == null) return;
-    if(change.document == null) return;
-
-    switch(change.type) {
-      case DocumentChangeType.added: _onCategoryAdded(change.document); break;
-      case DocumentChangeType.modified: _onCategoryChanged(change.document); break;
-      case DocumentChangeType.removed: _onCategoryRemoved(change.document); break;
-    }
-  })));
-
-  subs.putIfAbsent(tblTransaction, () => _firestore.collection(tblTransaction).snapshots().listen((f) => f.documentChanges.forEach((change) {
-    debugPrint("on $tblTransaction data changed $change");
-    if(change == null) return;
-    if(change.document == null) return;
-
-    switch(change.type) {
-      case DocumentChangeType.added: _onTransactionAdded(change.document); break;
-      case DocumentChangeType.modified: _onTransactionChanged(change.document); break;
-      case DocumentChangeType.removed: _onTransactionRemoved(change.document); break;
-    }
-  })));
-
-  subs.putIfAbsent(tblUser, () => _firestore.collection(tblUser).snapshots().listen((f) => f.documentChanges.forEach((change) {
-    debugPrint("on $tblUser data changed $change");
-
-    if(change == null) return;
-    if(change.document == null) return;
-
-    switch(change.type) {
-      case DocumentChangeType.added: _onUserAdded(change.document); break;
-      case DocumentChangeType.modified: _onUserChanged(change.document); break;
-      case DocumentChangeType.removed: _onUserRemoved(change.document); break;
-    }
-  })));
-
-  subs.putIfAbsent(tblTransfer, () => _firestore.collection(tblTransfer).snapshots().listen((f) => f.documentChanges.forEach((change) {
-    debugPrint("on $tblTransfer data changed $change");
-
-    if(change == null) return;
-    if(change.document == null) return;
-
-    switch(change.type) {
-      case DocumentChangeType.added: _onTransferAdded(change.document); break;
-      case DocumentChangeType.modified: _onTransferChanged(change.document); break;
-      case DocumentChangeType.removed: _onTransferRemoved(change.document); break;
-    }
-  })));
-
-  subs.putIfAbsent(tblDischargeOfLiability, () => _firestore.collection(tblDischargeOfLiability).snapshots().listen((f) => f.documentChanges.forEach((change) {
-    debugPrint("on $tblDischargeOfLiability data changed $change");
-
-    if(change == null) return;
-    if(change.document == null) return;
-
-    switch(change.type) {
-      case DocumentChangeType.added: _onDischargeOfLiabilityAdded(change.document); break;
-      case DocumentChangeType.modified: _onDischargeOfLiabilityChanged(change.document); break;
-      case DocumentChangeType.removed: _onDischargeOfLiabilityRemoved(change.document); break;
-    }
-  })));
-
-  _delaySync(initiate: true);
-
-  do {
-    await Future.delayed(Duration(seconds: 2), () {
-      debugPrint("Waiting for time sync");
-    });
-  } while(_timerSync != null);
+          print("Change ${change.type} with ID ${change.document.documentID} in table $table");
+          switch(change.type) {
+            case DocumentChangeType.added: _onAdded(table, change.document); break;
+            case DocumentChangeType.modified: _onModified(table, change.document); break;
+            case DocumentChangeType.removed: _onRemoved(table, change.document); break;
+          }
+        });
+        await db.execute();
+      }
+    }));
+  }
 }
 
-void _delaySync({bool initiate = false}) {
-  if(!initiate) {
-    if (_timerSync == null) return;
-    if (!_timerSync.isActive) return;
+void _onAdded(String table, DocumentSnapshot document) {
+  switch (table) {
+    case tblAccount: return _onAccountAdded(document);
+    case tblBudget: return _onBudgetAdded(document);
+    case tblCategory: return _onCategoryAdded(document);
+    case tblDischargeOfLiability: return _onDischargeOfLiabilityAdded(document);
+    case tblTransfer: return _onTransferAdded(document);
+    case tblTransaction: return _onTransactionAdded(document);
+    case tblUser: _onUserAdded(document);
   }
+}
 
-  if(_timerSync != null) {
-    _timerSync.cancel();
+void _onModified(String table, DocumentSnapshot document) {
+  switch (table) {
+    case tblAccount: return _onAccountChanged(document);
+    case tblBudget: return _onBudgetChanged(document);
+    case tblCategory: return _onCategoryChanged(document);
+    case tblDischargeOfLiability: return _onDischargeOfLiabilityChanged(document);
+    case tblTransfer: return _onTransferChanged(document);
+    case tblTransaction: return _onTransactionChanged(document);
+    case tblUser: _onUserChanged(document);
   }
+}
 
-  _timerSync = new Timer(Duration(seconds: 3), () async {
-    Map<String, String> tables = {
-      tblAccount : "table_accounts",
-      tblTransaction : "table_transactions",
-      tblCategory : "table_categories",
-      tblUser : "table_user",
-      tblBudget : "table_budget",
-      tblTransfer : "table_transfer"
-    };
-    for(String table in tables.keys) {
-      List<String> ids = await db.queryOutOfSync(table);
-      if(ids != null && ids.isNotEmpty) {
-        for(String id in ids) {
-          var snapshot = await _firestore.collection(table).document(id).get();
-
-          // only care of deleted items
-          if(snapshot.data == null) {
-            debugPrint("table $table has item ${snapshot.documentID} deleted");
-
-            switch(table) {
-              case tblAccount: db.deleteAccount(_toId(snapshot)); break;
-              case tblTransaction: db.deleteTransaction(_toId(snapshot)); break;
-              case tblCategory: db.deleteCategory(_toId(snapshot)); break;
-              case tblUser: db.deleteUser(snapshot.documentID); break;
-              case tblTransfer: db.deleteTransfer(_toId(snapshot)); break;
-              case tblBudget: db.deleteBudget(_toId(snapshot)); break;
-            }
-          }
-        }
-      }
-    }
-
-    // remove this timer after sync is done
-    _timerSync = null;
-  });
+void _onRemoved(String table, DocumentSnapshot document) {
+  switch (table) {
+    case tblAccount: return _onAccountRemoved(document);
+    case tblBudget: return _onBudgetRemoved(document);
+    case tblCategory: return _onCategoryRemoved(document);
+    case tblDischargeOfLiability: return _onDischargeOfLiabilityRemoved(document);
+    case tblTransfer: return _onTransferRemoved(document);
+    case tblTransaction: return _onTransactionRemoved(document);
+    case tblUser: _onUserRemoved(document);
+  }
 }
 
 // ####################################################################################################
@@ -218,10 +131,8 @@ Map<String, dynamic> _AccountToMap(Account acc) {
     fldType: acc.type.id,
     fldInitlaBalance: acc.initialBalance,
     fldCreated: acc.created.millisecondsSinceEpoch,
-    fldCurrency: acc.currency,
-    fldBalance: acc.balance,
-    fldSpent: acc.spent,
-    fldEarn: acc.earn};
+    fldCurrency: acc.currency
+  };
 }
 
 Account _snapshotToAccount(DocumentSnapshot snapshot) {
@@ -234,7 +145,7 @@ Account _snapshotToAccount(DocumentSnapshot snapshot) {
     double.parse("${initialBalance == null ? '0' : initialBalance}"),
     snapshot.data[fldType] == null ? null : AccountType.all[snapshot.data[fldType]],
     snapshot.data[fldCurrency],
-    created: created == null ? null : DateTime.fromMillisecondsSinceEpoch(created),);
+    created == null ? null : DateTime.fromMillisecondsSinceEpoch(created),);
 }
 
 Map<String, dynamic> _CategoryToMap(AppCategory cat) {
@@ -340,8 +251,6 @@ int _toId(DocumentSnapshot snapshot) {
 }
 
 void _onAccountAdded(DocumentSnapshot document) {
-  _delaySync();
-
   if(document.data == null) {
     var id = _toId(document);
 
@@ -349,12 +258,10 @@ void _onAccountAdded(DocumentSnapshot document) {
 
     return;
   }
-  db.insertAccount(_snapshotToAccount(document)).catchError((e) => _onAccountChanged(document));
+  db.insertAccount(_snapshotToAccount(document));
 }
 
 void _onAccountChanged(DocumentSnapshot document) {
-  _delaySync();
-
   if(document.data == null) {
     var id = _toId(document);
 
@@ -366,14 +273,10 @@ void _onAccountChanged(DocumentSnapshot document) {
 }
 
 void _onAccountRemoved(DocumentSnapshot document) {
-  _delaySync();
-
   db.deleteAccount(_toId(document));
 }
 
 void _onCategoryAdded(DocumentSnapshot document) {
-  _delaySync();
-
   if(document.data == null) {
     var id = _toId(document);
 
@@ -381,12 +284,14 @@ void _onCategoryAdded(DocumentSnapshot document) {
 
     return;
   }
-  db.insertCagetory(_snapshotToCategory(document)).catchError((e) => _onCategoryChanged(document));
+  try {
+    db.insertCategory(_snapshotToCategory(document));
+  } catch(e) {
+    _onCategoryChanged(document);
+  }
 }
 
 void _onCategoryChanged(DocumentSnapshot document) {
-  _delaySync();
-
   if(document.data == null) {
     var id = _toId(document);
 
@@ -399,14 +304,10 @@ void _onCategoryChanged(DocumentSnapshot document) {
 }
 
 void _onCategoryRemoved(DocumentSnapshot document) {
-  _delaySync();
-
   db.deleteCategory(_toId(document));
 }
 
 void _onTransactionAdded(DocumentSnapshot document) {
-  _delaySync();
-
   if(document.data == null) {
     var id = _toId(document);
 
@@ -415,12 +316,14 @@ void _onTransactionAdded(DocumentSnapshot document) {
     return;
   }
 
-  db.insertTransaction(_snapshotToTransaction(document)).catchError((e) => _onTransactionChanged(document));
+  try {
+    db.insertTransaction(_snapshotToTransaction(document));
+  } catch(e) {
+    _onTransactionChanged(document);
+  }
 }
 
 void _onTransactionChanged(DocumentSnapshot document) {
-  _delaySync();
-
   if(document.data == null) {
     var id = _toId(document);
 
@@ -432,14 +335,10 @@ void _onTransactionChanged(DocumentSnapshot document) {
 }
 
 void _onTransactionRemoved(DocumentSnapshot document) {
-  _delaySync();
-
   db.deleteTransaction(_toId(document));
 }
 
 void _onUserAdded(DocumentSnapshot document) {
-  _delaySync();
-
   if(document.data == null) {
     var id = _toId(document);
 
@@ -447,12 +346,14 @@ void _onUserAdded(DocumentSnapshot document) {
 
     return;
   }
-  db.insertUser(snapshotToUser(document)).catchError((e) => _onUserChanged(document));
+  try {
+    db.insertUser(snapshotToUser(document));
+  } catch(e) {
+    _onUserChanged(document);
+  }
 }
 
 void _onUserChanged(DocumentSnapshot document) {
-  _delaySync();
-
   if(document.data == null) {
     var id = _toId(document);
 
@@ -464,14 +365,10 @@ void _onUserChanged(DocumentSnapshot document) {
 }
 
 void _onUserRemoved(DocumentSnapshot document) {
-  _delaySync();
-
   db.deleteUser(document.data[fldUuid]);
 }
 
 void _onBudgetAdded(DocumentSnapshot document) {
-  _delaySync();
-
   if(document.data == null) {
     var id = _toId(document);
 
@@ -479,25 +376,23 @@ void _onBudgetAdded(DocumentSnapshot document) {
 
     return;
   }
-  db.insertBudget(_snapshotToBudget(document)).catchError((e) => _onBudgetChanged(document));
+  try {
+    db.insertBudget(_snapshotToBudget(document));
+  } catch(e) {
+    _onBudgetChanged(document);
+  }
 }
 
 void _onBudgetChanged(DocumentSnapshot document) {
-  _delaySync();
-
   if(document.data == null) return;
   db.updateBudget(_snapshotToBudget(document));
 }
 
 void _onBudgetRemoved(DocumentSnapshot document) {
-  _delaySync();
-
   db.deleteBudget(_toId(document));
 }
 
 void _onTransferAdded(DocumentSnapshot document) {
-  _delaySync();
-
   if(document.data == null) {
     var id = _toId(document);
 
@@ -506,12 +401,14 @@ void _onTransferAdded(DocumentSnapshot document) {
     return;
   }
 
-  db.insertTransfer(_snapshotToTransfer(document)).catchError((e) => _onTransferChanged(document));
+  try {
+    db.insertTransfer(_snapshotToTransfer(document));
+  } catch(e) {
+    _onTransferChanged(document);
+  }
 }
 
 void _onTransferChanged(DocumentSnapshot document) {
-  _delaySync();
-
   if(document.data == null) {
     var id = _toId(document);
 
@@ -524,14 +421,10 @@ void _onTransferChanged(DocumentSnapshot document) {
 }
 
 void _onTransferRemoved(DocumentSnapshot document) {
-  _delaySync();
-
   db.deleteTransfer(_toId(document));
 }
 
 void _onDischargeOfLiabilityAdded(DocumentSnapshot document) {
-  _delaySync();
-
   if(document.data == null) {
     var id = _toId(document);
 
@@ -540,12 +433,14 @@ void _onDischargeOfLiabilityAdded(DocumentSnapshot document) {
     return;
   }
 
-  db.insertDischargeOfLiability(_snapshotToDischargeOfLiability(document)).catchError((e) => _onDischargeOfLiabilityChanged(document));
+  try {
+    db.insertDischargeOfLiability(_snapshotToDischargeOfLiability(document));
+  } catch(e) {
+    _onDischargeOfLiabilityChanged(document);
+  }
 }
 
 void _onDischargeOfLiabilityChanged(DocumentSnapshot document) {
-  _delaySync();
-
   if(document.data == null) {
     var id = _toId(document);
 
@@ -558,8 +453,6 @@ void _onDischargeOfLiabilityChanged(DocumentSnapshot document) {
 }
 
 void _onDischargeOfLiabilityRemoved(DocumentSnapshot document) {
-  _delaySync();
-
   db.deleteDischargeOfLiability(_toId(document));
 
 }

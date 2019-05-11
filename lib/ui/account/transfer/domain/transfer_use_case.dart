@@ -3,6 +3,8 @@ import 'package:my_wallet/ca/domain/ca_use_case.dart';
 import 'package:my_wallet/ui/account/transfer/data/transfer_repository.dart';
 import 'package:my_wallet/shared_pref/shared_preference.dart';
 
+import 'package:my_wallet/data/data.dart' show Transfer;
+
 class AccountTransferUseCase extends CleanArchitectureUseCase<AccountTransferRepository> {
   AccountTransferUseCase() : super(AccountTransferRepository());
 
@@ -10,7 +12,7 @@ class AccountTransferUseCase extends CleanArchitectureUseCase<AccountTransferRep
     execute(repo.loadAccountDetails(fromAccountId), next, error);
   }
 
-  void transferAmount(Account fromAccount, Account toAccount, double amount, onNext<bool> next, onError error) {
+  void transferAmount(AccountEntity fromAccount, AccountEntity toAccount, double amount, onNext<bool> next, onError error) {
     execute(Future(() async{
       var id = await repo.generateTransferId();
 

@@ -1,40 +1,39 @@
 import 'package:my_wallet/data/data.dart';
-import 'package:my_wallet/data/database_manager.dart' as db;
-import 'package:my_wallet/data/firebase/database.dart' as fb;
+import 'package:my_wallet/ui/account/list/data/list_account_entity.dart';
+import 'package:my_wallet/data/local/database_manager.dart' as db;
 import 'package:my_wallet/ca/data/ca_repository.dart';
 
 class ListAccountsRepository extends CleanArchitectureRepository {
   final _ListAccountsDatabaseRepository _dbRepo = _ListAccountsDatabaseRepository();
-  final _ListAccountsFirebaseRepository _fbRepo = _ListAccountsFirebaseRepository();
 
-  Future<List<Account>> loadAllAccounts() {
-    return _dbRepo.loadAllAccounts();
-  }
+  Future<List<AccountEntity>> loadAllAccounts() async {
+    List<Account> accounts = await _dbRepo.loadAllAccounts();
 
-  Future<bool> deleteAccount(Account acc) {
-    _fbRepo.deleteAccount(acc);
+    if(accounts != null) {
+      List<AccountEntity> entities = [];
 
-    return _dbRepo.deleteAccount(acc);
-  }
+      final from = DateTime.fromMillisecondsSinceEpoch(0);
+      final to = DateTime.now();
 
-  Future<List<AppTransaction>> loadAllTransaction(int accountId) {
-    return _dbRepo.loadAllTransaction(accountId);
-  }
+      for(Account account in accounts) {
+        var spent = await db.sumAllTransactionBetweenDateByType(from, to, TransactionType.typeExpense, accountId: account.id);
+        var earn = await db.sumAllTransactionBetweenDateByType(from, to, TransactionType.typeIncome, accountId: account.id);
 
-  Future<void> deleteAllTransaction(List<AppTransaction> transactions) {
-    _fbRepo.deleteAllTransaction(transactions);
+        entities.add(AccountEntity(
+            account.id,
+            account.name,
+            account.created,
+            account.initialBalance + earn - spent,
+            spent,
+            account.type == AccountType.liability
+        ));
 
-    return _dbRepo.deleteAllTransaction(transactions);
-  }
+      }
 
-  Future<List<Transfer>> loadAllTransfers(int accountId) {
-    return _dbRepo.loadAllTransfers(accountId);
-  }
+      return entities;
+    }
 
-  Future<void> deleteAllTransfer(List<Transfer> transfer) {
-    _fbRepo.deleteAllTransfer(transfer);
-
-    return _dbRepo.deleteAllTransfer(transfer);
+    return null;
   }
 }
 
@@ -44,36 +43,10 @@ class _ListAccountsDatabaseRepository {
   }
 
   Future<List<AppTransaction>> loadAllTransaction(int accountId) {
-    return db.queryAllTransactionForAccount(accountId);
-  }
-
-  Future<bool> deleteAccount(Account acc) async {
-    return (await db.deleteAccount(acc.id)) >= 0;
-  }
-
-  Future<void> deleteAllTransaction(List<AppTransaction> transactions) {
-    return db.deleteTransactions(transactions.map((f) => f.id).toList());
+    return db.queryTransactions(accountId: accountId);
   }
 
   Future<List<Transfer>> loadAllTransfers(int accountId) {
     return db.queryTransfer(account: accountId);
-  }
-
-  Future<void> deleteAllTransfer(List<Transfer> transfer) {
-    return db.deleteTransfers(transfer.map((f) => f.id).toList());
-  }
-}
-
-class _ListAccountsFirebaseRepository {
-  Future<bool> deleteAccount(Account acc) async {
-    return await fb.deleteAccount(acc);
-  }
-
-  Future<void> deleteAllTransaction(List<AppTransaction> transaction) {
-    return fb.deleteAllTransaction(transaction);
-  }
-
-  Future<void> deleteAllTransfer(List<Transfer> transfer) {
-    return fb.deleteAllTransfer(transfer);
   }
 }

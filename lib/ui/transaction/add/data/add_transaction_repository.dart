@@ -1,5 +1,5 @@
 import 'package:my_wallet/ca/data/ca_repository.dart';
-import 'package:my_wallet/data/database_manager.dart' as _db;
+import 'package:my_wallet/data/local/database_manager.dart' as _db;
 import 'package:my_wallet/data/firebase/database.dart' as _fm;
 import 'package:my_wallet/ui/transaction/add/domain/add_transaction_exception.dart';
 import 'package:my_wallet/ui/transaction/add/data/add_transaction_entity.dart';
@@ -99,9 +99,9 @@ class _AddTransactionDatabaseRepository {
   }
 
   Future<Account> loadAccount(int accountId) async {
-    var accounts = await _db.queryAccounts(id: accountId);
+    var account = await _db.queryAccount(accountId);
     
-    return accounts == null || accounts.isEmpty ? null : accounts.first;
+    return account;
   }
 
   Future<Account> loadLastUsedAccountForCategory(int categoryId) {
@@ -119,16 +119,13 @@ class _AddTransactionDatabaseRepository {
   }
 
   Future<TransactionDetail> loadTransactionDetail(int id) async {
-    List<AppTransaction> transactions = await _db.queryTransactions(id: id);
+    List<AppTransaction> transactions = await _db.queryTransactions(transactionId: id);
 
     if(transactions == null || transactions.isEmpty) throw AddTransactionException(R.string.transaction_not_found(id));
 
     AppTransaction transaction = transactions[0];
 
-    List<Account> accounts = await _db.queryAccounts(id: transaction.accountId);
-
-    Account account;
-    if(accounts != null && accounts.isNotEmpty) account = accounts[0];
+    Account account = await _db.queryAccount(transaction.accountId);
 
     List<AppCategory> categories = await _db.queryCategory(id: transaction.categoryId);
 
@@ -180,14 +177,16 @@ class _AddTransactionDatabaseRepository {
 
   // private helper
   Future<UserDetail> _getUserWithUid(String uid) async {
-    List<User> users = await _db.queryUser(uuid: uid);
+    User user = await _db.queryUser(uid);
 
-    User user = users != null && users.isNotEmpty ? users[0] : null;
+    if(user != null) {
+      var firstName = user.displayName.contains(" ") ? user.displayName.substring(0, user.displayName.indexOf(" ")) : user.displayName;
+      firstName = "${firstName.substring(0, 1).toUpperCase()}${firstName.substring(1, firstName.length)}";
 
-    var firstName = user.displayName.contains(" ") ? user.displayName.substring(0, user.displayName.indexOf(" ")) : user.displayName;
-    firstName = "${firstName.substring(0, 1).toUpperCase()}${firstName.substring(1, firstName.length)}";
+      return UserDetail(user.uuid, firstName);
+    }
 
-    return user == null ? null : UserDetail(user.uuid, firstName);
+    return null;
   }
 
   Future<bool> saveTransaction(
@@ -201,8 +200,9 @@ class _AddTransactionDatabaseRepository {
       bool newTransaction) async {
     var uuid = await SharedPreferences.getUserUUID();
 
+    _db.startTransaction();
     if(newTransaction) {
-      return (await _db.insertTransaction(AppTransaction(
+      _db.insertTransaction(AppTransaction(
           id,
           _date,
           _account.id,
@@ -210,9 +210,9 @@ class _AddTransactionDatabaseRepository {
           _amount,
           _desc,
           _type,
-          uuid))) >= 0;
+          uuid));
     } else {
-      return (await _db.updateTransaction(AppTransaction(
+      _db.updateTransaction(AppTransaction(
           id,
           _date,
           _account.id,
@@ -220,17 +220,27 @@ class _AddTransactionDatabaseRepository {
           _amount,
           _desc,
           _type,
-          uuid))) >= 0;
+          uuid));
     }
+    _db.execute();
+
+    return true;
   }
 
   Future<bool> deleteTransaction(int id) async {
-    return (await _db.deleteTransaction(id)) >= 0;
+    _db.startTransaction();
+    _db.deleteTransaction(id);
+    _db.execute();
+
+    return true;
   }
 
   Future<bool> updateAccount(Account acc) async {
+    _db.startTransaction();
+    _db.updateAccount(acc);
+    _db.execute();
 
-    return (await _db.updateAccount(acc)) >= 0;
+    return true;
   }
 }
 

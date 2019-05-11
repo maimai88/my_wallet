@@ -25,14 +25,14 @@ class PayLiabilityUseCase extends CleanArchitectureUseCase<PayLiabilityRepositor
 
       String userUid = await SharedPreferences.getUserUUID();
 
-      DischargeOfLiability discharge = DischargeOfLiability(id, date, liabilityId, fromAccount.id, category.id, dischargeLiability, userUid);
-
-      await repo.saveDischargeOfLiability(discharge);
+      DischargeOfLiability dischargeOfLiability = DischargeOfLiability(id, date, liabilityId, fromAccount.id, category.id, dischargeLiability, userUid);
+      AppTransaction interestTransaction;
+      DischargeOfLiability additionalPaymentOfLiability;
 
       // TODO save interest and additional payment
       if(interest > 0) {
         // save interest as expenses
-        AppTransaction interestTransaction = AppTransaction(
+        interestTransaction = AppTransaction(
             id,
             date,
             fromAccount.id,
@@ -41,17 +41,20 @@ class PayLiabilityUseCase extends CleanArchitectureUseCase<PayLiabilityRepositor
             "Liability interest",
             TransactionType.expenses,
             userUid);
-        await repo.saveInterestTransaction(interestTransaction);
       }
 
       if(additionalPayment > 0) {
         // save Additional payment as part of Discharge of liability
         var additionalPaymentId = await repo.generateDischargeLiabilityId();
 
-        DischargeOfLiability additionalPaymentOfLiability = DischargeOfLiability(additionalPaymentId, date, liabilityId, fromAccount.id, category.id, additionalPayment, userUid);
-
-        await repo.saveDischargeOfLiability(additionalPaymentOfLiability);
+        additionalPaymentOfLiability = DischargeOfLiability(additionalPaymentId, date, liabilityId, fromAccount.id, category.id, additionalPayment, userUid);
       }
+
+      await repo.saveDischargeOfLiability(
+          dischargeOfLiability,
+          interest: interestTransaction,
+          additionalPayment: additionalPaymentOfLiability
+      );
 
     }), next, error);
   }

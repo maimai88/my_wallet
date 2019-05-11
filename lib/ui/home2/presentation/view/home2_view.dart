@@ -4,7 +4,7 @@ import 'package:my_wallet/ui/home2/presentation/view/home2_data_view.dart';
 import 'package:my_wallet/ui/home2/presentation/presenter/home2_presenter.dart';
 import 'package:my_wallet/ca/presentation/view/ca_state.dart';
 
-import 'package:my_wallet/data/data_observer.dart' as observer;
+import 'package:my_wallet/data/local/data_observer.dart' as observer;
 
 import 'package:intl/intl.dart';
 

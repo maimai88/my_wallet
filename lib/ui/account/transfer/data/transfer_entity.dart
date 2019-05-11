@@ -1,9 +1,14 @@
-import 'package:my_wallet/data/data.dart';
-export 'package:my_wallet/data/data.dart';
-
 class TransferEntity {
-  final Account fromAccount;
-  final List<Account> toAccounts;
+  final AccountEntity fromAccount;
+  final List<AccountEntity> toAccounts;
 
   TransferEntity(this.fromAccount, this.toAccounts);
+}
+
+class AccountEntity {
+  final int id;
+  final String name;
+  final double balance;
+
+  AccountEntity(this.id, this.name, this.balance);
 }

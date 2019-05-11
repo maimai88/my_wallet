@@ -91,10 +91,6 @@ class Account {
   final DateTime created;
   final AccountType type;
   final String currency;
-  // internal use
-  double balance;
-  double spent;
-  double earn;
 
   Account(
       this.id,
@@ -102,12 +98,7 @@ class Account {
       this.initialBalance,
       this.type,
       this.currency,
-  {
-    this.created,
-    this.balance,
-    this.spent,
-    this.earn
-  }
+      this.created
       );
 }
 

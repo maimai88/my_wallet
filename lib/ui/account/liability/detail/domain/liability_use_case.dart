@@ -4,7 +4,7 @@ import 'package:my_wallet/ui/account/liability/detail/data/liability_repository.
 class LiabilityUseCase extends CleanArchitectureUseCase<LiabilityRepository> {
   LiabilityUseCase() : super(LiabilityRepository());
 
-  void loadAccountInfo(int id, onNext<Account> next, onError error) {
+  void loadAccountInfo(int id, onNext<LiabilityEntity> next, onError error) {
     execute(repo.loadAccountInfo(id), next,error);
   }
 }

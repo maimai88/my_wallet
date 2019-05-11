@@ -30,10 +30,10 @@ enum _TransferSteps {
 class _AccountTransferState extends CleanArchitectureView<AccountTransfer, AccountTransferPresenter> implements AccountTransferDataView {
   _AccountTransferState() : super(AccountTransferPresenter());
 
-  List<Account> _accounts = [];
+  List<AccountEntity> _accounts = [];
   double _amount;
-  Account _toAccount;
-  Account _fromAccount;
+  AccountEntity _toAccount;
+  AccountEntity _fromAccount;
 
   final GlobalKey<_SelectAccountState> _selectAccountKey = GlobalKey();
   final GlobalKey<_EnterAmountState> _amountKey = GlobalKey();
@@ -107,7 +107,7 @@ class _AccountTransferState extends CleanArchitectureView<AccountTransfer, Accou
     )).then((_) => Navigator.pop(context));
   }
 
-  void _onAccountSelected(Account account) {
+  void _onAccountSelected(AccountEntity account) {
     _toAccount = account;
     _controller.animateToPage(1, duration: _pageAnimationDuration, curve: Curves.ease).then((_) {
       if (_amountKey.currentContext != null) {
@@ -161,9 +161,9 @@ class _AccountTransferState extends CleanArchitectureView<AccountTransfer, Accou
 }
 
 class _SelectAccount extends StatefulWidget {
-  final List<Account> accounts;
-  final Account _toAccount;
-  final Function(Account account) onAccountSelected;
+  final List<AccountEntity> accounts;
+  final AccountEntity _toAccount;
+  final Function(AccountEntity account) onAccountSelected;
 
   _SelectAccount(key, this._toAccount, this.accounts, this.onAccountSelected) : super(key: key);
 
@@ -174,8 +174,8 @@ class _SelectAccount extends StatefulWidget {
 }
 
 class _SelectAccountState extends State<_SelectAccount> {
-  List<Account> _accounts;
-  Account _selected;
+  List<AccountEntity> _accounts;
+  AccountEntity _selected;
   final _nf = NumberFormat("\$#,###.##");
 
   @override
@@ -230,13 +230,13 @@ class _SelectAccountState extends State<_SelectAccount> {
     );
   }
 
-  void updateAccountList(Account toAccount, List<Account> accounts) {
+  void updateAccountList(AccountEntity toAccount, List<AccountEntity> accounts) {
     setState(() {
       setupAccount(toAccount, accounts);
     });
   }
 
-  void setupAccount(Account toAccount, List<Account> accounts) {
+  void setupAccount(AccountEntity toAccount, List<AccountEntity> accounts) {
     this._accounts = accounts;
     if (toAccount != null) {
       _selected = toAccount;
@@ -246,7 +246,7 @@ class _SelectAccountState extends State<_SelectAccount> {
 }
 
 class _EnterAmount extends StatefulWidget {
-  final Account toAccount;
+  final AccountEntity toAccount;
   final Function(double amount) onAmountEntered;
   final Function onAccountReselect;
 
@@ -259,7 +259,7 @@ class _EnterAmount extends StatefulWidget {
 }
 
 class _EnterAmountState extends State<_EnterAmount> {
-  Account _toAccount;
+  AccountEntity _toAccount;
   final _nf = NumberFormat("\$#,###.##");
   var _amount = 0.0;
 
@@ -271,7 +271,7 @@ class _EnterAmountState extends State<_EnterAmount> {
     _toAccount = widget.toAccount;
   }
 
-  void setupToAccount(Account toAccount) {
+  void setupToAccount(AccountEntity toAccount) {
     setState(() => _toAccount = toAccount);
   }
 
@@ -335,8 +335,8 @@ class _EnterAmountState extends State<_EnterAmount> {
 }
 
 class _Confirm extends StatefulWidget {
-  final Account toAccount;
-  final Account fromAccount;
+  final AccountEntity toAccount;
+  final AccountEntity fromAccount;
   final double amount;
   final Function saveTransaction;
 
@@ -349,8 +349,8 @@ class _Confirm extends StatefulWidget {
 }
 
 class _ConfirmState extends State<_Confirm> {
-  Account toAccount;
-  Account fromAccount;
+  AccountEntity toAccount;
+  AccountEntity fromAccount;
   double amount;
   final _nf = NumberFormat("\$#,###.##");
 
@@ -423,8 +423,8 @@ class _ConfirmState extends State<_Confirm> {
   }
 
   void updateDetail(
-      Account _toAccount,
-      Account _fromAccount,
+      AccountEntity _toAccount,
+      AccountEntity _fromAccount,
       double _amount
       ) {
     setState(() {

@@ -4,7 +4,7 @@ import 'package:my_wallet/app_material.dart';
 import 'package:my_wallet/ui/account/detail/presentation/presenter/detail_presenter.dart';
 import 'package:my_wallet/ui/account/detail/presentation/view/detail_data_view.dart';
 
-import 'package:my_wallet/data/data_observer.dart' as observer;
+import 'package:my_wallet/data/local/data_observer.dart' as observer;
 import 'package:my_wallet/style/routes.dart';
 import 'package:intl/intl.dart';
 
@@ -29,7 +29,7 @@ class _AccountDetailState extends CleanArchitectureView<AccountDetail, AccountDe
   final _nf = NumberFormat("\$#,###.##");
   final _df = DateFormat("dd MMM, yyyy HH:mm");
 
-  Account _account;
+  AccountDetailEntity _account;
 
   @override
   void init() {
@@ -63,7 +63,7 @@ class _AccountDetailState extends CleanArchitectureView<AccountDetail, AccountDe
           children: <Widget>[
             DataRowView(R.string.account, _account == null ? "" : _account.name),
             DataRowView(R.string.created, _account == null ? "" : _df.format(_account.created)),
-            DataRowView(R.string.type, _account == null ? "" : _account.type.name),
+            DataRowView(R.string.type, _account == null ? "" : _account.type),
             DataRowView(R.string.balance, _account == null ? "" : _nf.format(_account.balance)),
             DataRowView(R.string.spent, _account == null ? "" : _nf.format(_account.spent)),
             DataRowView(R.string.earn, _account == null ? "" : _nf.format(_account.earn)),
@@ -96,7 +96,7 @@ class _AccountDetailState extends CleanArchitectureView<AccountDetail, AccountDe
   }
 
   @override
-  void onAccountLoaded(Account account) {
+  void onAccountLoaded(AccountDetailEntity account) {
     setState(() => _account = account);
   }
 

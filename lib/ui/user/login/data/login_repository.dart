@@ -1,7 +1,7 @@
 import 'package:my_wallet/ca/data/ca_repository.dart';
 import 'package:my_wallet/data/firebase/authentication.dart' as fm;
 import 'package:my_wallet/data/firebase/database.dart' as fdb;
-import 'package:my_wallet/data/database_manager.dart' as db;
+import 'package:my_wallet/data/local/database_manager.dart' as db;
 import 'package:my_wallet/data/data.dart';
 import 'package:my_wallet/utils.dart' as Utils;
 import 'package:my_wallet/shared_pref/shared_preference.dart';
@@ -129,6 +129,8 @@ class _LoginFirebaseRepository {
 
 class _LoginDatabaseRepository {
   Future<void> saveUser(User user) {
-    return db.insertUser(user);
+    db.startTransaction();
+    db.insertUser(user);
+    return db.execute();
   }
 }

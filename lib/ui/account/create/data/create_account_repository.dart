@@ -1,5 +1,5 @@
 import 'package:my_wallet/data/data.dart';
-import 'package:my_wallet/data/database_manager.dart' as db;
+import 'package:my_wallet/data/local/database_manager.dart' as db;
 import 'package:my_wallet/ui/account/create/domain/create_account_exception.dart';
 import 'package:my_wallet/data/firebase/database.dart' as fm;
 import 'package:my_wallet/ca/data/ca_repository.dart';
@@ -18,7 +18,7 @@ class CreateAccountRepository extends CleanArchitectureRepository {
       double balance,
       AccountType type,
       ) {
-    var account = Account(id, name, balance, type, "\$", created: DateTime.now());
+    var account = Account(id, name, balance, type, "\$", DateTime.now());
     _fbRepo.createAccountToFirebase(account);
 
     return _dbRepo.createAccount(account);
@@ -47,7 +47,12 @@ class _CreateAccountDatabaseRepository {
   }
 
   Future<bool> createAccount(Account account) async {
-    return (await db.insertAccount(account)) >= 0;
+    return Future(() {
+      db.startTransaction();
+      db.insertAccount(account);
+
+      return true;
+    });
   }
 }
 

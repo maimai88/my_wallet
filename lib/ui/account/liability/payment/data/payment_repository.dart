@@ -2,7 +2,7 @@ import 'package:my_wallet/ca/data/ca_repository.dart';
 import 'package:my_wallet/data/data.dart';
 export 'package:my_wallet/data/data.dart';
 
-import 'package:my_wallet/data/database_manager.dart' as db;
+import 'package:my_wallet/data/local/database_manager.dart' as db;
 import 'package:my_wallet/data/firebase/database.dart' as fdb;
 
 class PayLiabilityRepository extends CleanArchitectureRepository {
@@ -21,15 +21,25 @@ class PayLiabilityRepository extends CleanArchitectureRepository {
     return _dbRepo.generateDischargeLiabilityId();
   }
 
-  Future<bool> saveDischargeOfLiability(DischargeOfLiability discharge) {
+  Future<bool> saveDischargeOfLiability(
+      DischargeOfLiability discharge,
+      {AppTransaction interest,
+        DischargeOfLiability additionalPayment}) {
     _fbRepo.saveDischargeOfLiability(discharge);
-    return _dbRepo.saveDischargeOfLiability(discharge);
-  }
 
-  Future<bool> saveInterestTransaction(AppTransaction interest) {
-    _fbRepo.saveInterestTransaction(interest);
+    if(interest != null) {
+      _fbRepo.saveInterestTransaction(interest);
+    }
 
-    return _dbRepo.saveInterestTransaction(interest);
+    if(additionalPayment != null) {
+      _fbRepo.saveDischargeOfLiability(additionalPayment);
+    }
+
+    return _dbRepo.saveDischargeOfLiability(
+      discharge,
+      interest: interest,
+      additionalPayment: additionalPayment
+    );
   }
 }
 
@@ -46,12 +56,26 @@ class _PayLiabilityDatabaseRepository {
     return db.generateDischargeLiabilityId();
   }
 
-  Future<bool> saveDischargeOfLiability(DischargeOfLiability discharge) async {
-    return (await db.insertDischargeOfLiability(discharge)) > 0;
-  }
+  Future<bool> saveDischargeOfLiability(DischargeOfLiability discharge,
+      {
+        AppTransaction interest,
+        DischargeOfLiability additionalPayment
+      }) async {
+    db.startTransaction();
 
-  Future<bool> saveInterestTransaction(AppTransaction interest) async {
-    return (await db.insertTransaction(interest)) > 0;
+    db.insertDischargeOfLiability(discharge);
+
+    if(interest != null) {
+      db.insertTransaction(interest);
+    }
+
+    if(additionalPayment != null) {
+      db.insertDischargeOfLiability(additionalPayment);
+    }
+
+    await db.execute();
+
+    return true;
   }
 }
 

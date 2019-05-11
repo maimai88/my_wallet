@@ -10,7 +10,7 @@ class AccountTransferPresenter extends CleanArchitecturePresenter<AccountTransfe
     useCase.loadAccountDetails(fromAccountId, dataView.onAccountListUpdated, dataView.onAccountListQueryFailed);
   }
 
-  void transferAmount(Account fromAccount, Account toAccount, double amount) {
+  void transferAmount(AccountEntity fromAccount, AccountEntity toAccount, double amount) {
     useCase.transferAmount(fromAccount, toAccount, amount, dataView.onAccountTransferSuccess, dataView.onAccountTransferFailed);
   }
 }

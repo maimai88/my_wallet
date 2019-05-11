@@ -10,7 +10,7 @@ import 'package:my_wallet/data/firebase/authentication.dart' as auth;
 
 import 'package:firebase_core/firebase_core.dart';
 
-import 'package:my_wallet/data/database_manager.dart' as db;
+import 'package:my_wallet/data/local/database_manager.dart' as db;
 
 import 'package:package_info/package_info.dart';
 

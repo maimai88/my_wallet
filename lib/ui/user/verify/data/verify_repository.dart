@@ -4,7 +4,7 @@ import 'package:my_wallet/data/firebase/authentication.dart' as auth;
 import 'package:my_wallet/data/firebase/authentication.dart' as fm;
 import 'package:my_wallet/shared_pref/shared_preference.dart';
 import 'package:my_wallet/data/firebase/database.dart' as fdb;
-import 'package:my_wallet/data/database_manager.dart' as db;
+import 'package:my_wallet/data/local/database_manager.dart' as db;
 
 import 'package:my_wallet/data/data.dart';
 export 'package:my_wallet/data/data.dart';

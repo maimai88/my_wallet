@@ -3,8 +3,10 @@ import 'package:my_wallet/ca/data/ca_repository.dart';
 import 'package:my_wallet/ui/account/transfer/data/transfer_entity.dart';
 export 'package:my_wallet/ui/account/transfer/data/transfer_entity.dart';
 
-import 'package:my_wallet/data/database_manager.dart' as _db;
+import 'package:my_wallet/data/local/database_manager.dart' as _db;
 import 'package:my_wallet/data/firebase/database.dart' as _fdb;
+
+import 'package:my_wallet/data/data.dart';
 
 class AccountTransferRepository extends CleanArchitectureRepository {
   _AccountTransferDatabaseRepository _dbRepo = _AccountTransferDatabaseRepository();
@@ -26,18 +28,26 @@ class AccountTransferRepository extends CleanArchitectureRepository {
 
 class _AccountTransferDatabaseRepository {
   Future<TransferEntity> loadAccountDetails(int fromAccountId) async {
-    Account fromAccount;
-    List<Account> toAccounts;
+    AccountEntity fromAccount;
+    List<AccountEntity> toAccounts;
 
     do {
       // load From account info
-      var fromAccounts = await _db.queryAccounts(id: fromAccountId);
+      var account = await _db.queryAccount(fromAccountId);
 
-      if(fromAccounts == null || fromAccounts.isEmpty) throw Exception("Account with ID $fromAccountId is invalid");
+      if(account == null) throw Exception("Account with ID $fromAccountId is invalid");
 
-      fromAccount = fromAccounts.first;
+      fromAccount = AccountEntity(account.id, account.name, await _calculateBalance(account.id, account.initialBalance));
 
-      toAccounts = await _db.queryAccountsExcept([fromAccountId]);
+      var accounts = await _db.queryAccountsExcept([fromAccountId]);
+
+      if(accounts != null) {
+        toAccounts = [];
+
+        accounts.forEach((f) async {
+          toAccounts.add(AccountEntity(f.id, f.name, await _calculateBalance(f.id, f.initialBalance)));
+        });
+      }
     } while (false);
 
     return TransferEntity(fromAccount, toAccounts);
@@ -48,8 +58,24 @@ class _AccountTransferDatabaseRepository {
   }
 
   Future<bool> transferAmount(Transfer transfer) async {
-    return (await _db.insertTransfer(transfer)) > 0;
+    _db.startTransaction();
+    _db.insertTransfer(transfer);
+
+    await _db.execute();
+
+    return true;
   }
+
+  Future<double> _calculateBalance(int accountId, double initialBalance) async {
+    final from = DateTime.fromMillisecondsSinceEpoch(0);
+    final to = DateTime.now();
+
+    var spent = await _db.sumAllTransactionBetweenDateByType(from, to, TransactionType.typeExpense);
+    var earn = await _db.sumAllTransactionBetweenDateByType(from, to, TransactionType.typeIncome);
+
+    return initialBalance + earn - spent;
+  }
+
 }
 
 class _AccountTransferFirebaseRepository {

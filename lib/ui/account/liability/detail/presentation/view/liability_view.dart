@@ -2,7 +2,7 @@ import 'package:my_wallet/ca/presentation/view/ca_state.dart';
 
 import 'package:my_wallet/ui/account/liability/detail/presentation/presenter/liability_presenter.dart';
 
-import 'package:my_wallet/data/data_observer.dart' as observer;
+import 'package:my_wallet/data/local/data_observer.dart' as observer;
 import 'package:intl/intl.dart';
 
 import 'package:my_wallet/resources.dart' as R;
@@ -26,7 +26,7 @@ class _LiabilityState extends CleanArchitectureView<LiabilityView, LiabilityPres
   final _nf = NumberFormat("\$#,###.##");
   final _df = DateFormat("dd MMM, yyyy HH:mm");
 
-  Account _account;
+  LiabilityEntity _account;
 
   @override
   void init() {
@@ -66,7 +66,7 @@ class _LiabilityState extends CleanArchitectureView<LiabilityView, LiabilityPres
             children: <Widget>[
               DataRowView(R.string.account, _account == null ? "" : _account.name),
               DataRowView(R.string.created, _account == null ? "" : _df.format(_account.created)),
-              DataRowView(R.string.type, _account == null ? "" : _account.type.name),
+              DataRowView(R.string.type, _account == null ? "" : _account.type),
               DataRowView(R.string.total_liability, _account == null ? "" : _nf.format(_account.initialBalance)),
               DataRowView(R.string.balance, _account == null ? "" : _nf.format(_account.balance)),
               RoundedButton(
@@ -94,7 +94,7 @@ class _LiabilityState extends CleanArchitectureView<LiabilityView, LiabilityPres
   }
 
   @override
-  void onAccountLoaded(Account acc) {
+  void onAccountLoaded(LiabilityEntity acc) {
     setState(() => _account = acc);
   }
 

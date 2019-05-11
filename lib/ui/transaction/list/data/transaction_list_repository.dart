@@ -1,4 +1,4 @@
-import 'package:my_wallet/data/database_manager.dart' as db;
+import 'package:my_wallet/data/local/database_manager.dart' as db;
 import 'package:my_wallet/utils.dart' as Utils;
 import 'package:my_wallet/ca/data/ca_repository.dart';
 import 'package:my_wallet/ui/transaction/list/data/transaction_list_entity.dart';
@@ -35,13 +35,13 @@ class _TransactionListDatabaseRepository {
 
     List<AppTransaction> transactions = [];
     if(accountId != null) {
-      transactions = await db.queryTransactionForAccount(accountId, day);
+      transactions = await db.queryTransactions(accountId: accountId, day: day);
       transfers = await db.queryTransfer(account: accountId, day: day);
       discharge = await db.queryDischargeOfLiability(account: accountId, day: day);
     }
 
     if(categoryId != null) {
-      transactions = await db.queryTransactionForCategory(categoryId, day);
+      transactions = await db.queryTransactions(categoryId: categoryId, day: day);
     }
 
     if(accountId == null && categoryId == null && day != null) {
@@ -69,10 +69,9 @@ class _TransactionListDatabaseRepository {
         }
 
         // get user initial
-        List<User> users = await db.queryUser(uuid: trans.userUid);
+        User user = await db.queryUser(trans.userUid);
 
-        if(users != null && users.isNotEmpty) {
-          User user = users[0];
+        if(user != null) {
           var initial = _buildUserInitial(user);
 
           total += TransactionType.isExpense(trans.type) ? trans.amount : 0.0;
@@ -84,28 +83,26 @@ class _TransactionListDatabaseRepository {
     if(transfers != null && transfers.isNotEmpty) {
       for(Transfer transfer in transfers) {
         // get user initial
-        List<User> users = await db.queryUser(uuid: transfer.userUuid);
-        User user = users[0];
+        User user = await db.queryUser(transfer.userUuid);
         var initial = _buildUserInitial(user);
 
-        List<Account> from = await db.queryAccounts(id: transfer.fromAccount);
-        List<Account> to = await db.queryAccounts(id: transfer.toAccount);
+        Account from = await db.queryAccount(transfer.fromAccount);
+        Account to = await db.queryAccount(transfer.toAccount);
 
-        entities.add(TransactionEntity(transfer.id, initial, R.string.transfer, "${R.string.from} ${from[0].name} ${R.string.to} ${to[0].name}", transfer.amount, transfer.transferDate, user.color, AppTheme.blueGrey.value, TransactionType.moneyTransfer));
+        entities.add(TransactionEntity(transfer.id, initial, R.string.transfer, "${R.string.from} ${from.name} ${R.string.to} ${to.name}", transfer.amount, transfer.transferDate, user.color, AppTheme.blueGrey.value, TransactionType.moneyTransfer));
       }
     }
 
     if(discharge != null && discharge.isNotEmpty) {
       for (DischargeOfLiability dischargeOfLiability in discharge) {
         // get user initial
-        List<User> users = await db.queryUser(uuid: dischargeOfLiability.userUid);
-        User user = users[0];
+        User user = await db.queryUser(dischargeOfLiability.userUid);
         var initial = _buildUserInitial(user);
 
-        List<Account> from = await db.queryAccounts(id: dischargeOfLiability.accountId);
-        List<Account> to = await db.queryAccounts(id: dischargeOfLiability.liabilityId);
+        Account from = await db.queryAccount(dischargeOfLiability.accountId);
+        Account to = await db.queryAccount(dischargeOfLiability.liabilityId);
 
-        entities.add(TransactionEntity(dischargeOfLiability.id, initial, R.string.discharge_of_liability, "${R.string.from} ${from[0].name} ${R.string.to} ${to[0].name}", dischargeOfLiability.amount, dischargeOfLiability.dateTime, user.color, AppTheme.blueGrey.value, TransactionType.dischargeOfLiability));
+        entities.add(TransactionEntity(dischargeOfLiability.id, initial, R.string.discharge_of_liability, "${R.string.from} ${from.name} ${R.string.to} ${to.name}", dischargeOfLiability.amount, dischargeOfLiability.dateTime, user.color, AppTheme.blueGrey.value, TransactionType.dischargeOfLiability));
 
       }
     }
@@ -121,7 +118,7 @@ class _TransactionListDatabaseRepository {
     // sort transactions by date
     entities.sort((a, b) => a.dateTime.millisecondsSinceEpoch - b.dateTime.millisecondsSinceEpoch);
 
-    var budget = await db.findBudget(start: Utils.firstMomentOfMonth(day == null ? DateTime.now() : day), end: Utils.lastDayOfMonth(day == null ? DateTime.now() : day), catId: categoryId);
+    var budget = await db.queryBudget(start: Utils.firstMomentOfMonth(day == null ? DateTime.now() : day), end: Utils.lastDayOfMonth(day == null ? DateTime.now() : day), catId: categoryId);
     var fraction = budget == null || budget.budgetPerMonth == 0 ? 1.0 : total/budget.budgetPerMonth;
     return TransactionListEntity(entities, dateExpenses, total, fraction);
   }

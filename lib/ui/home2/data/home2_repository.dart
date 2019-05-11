@@ -1,6 +1,6 @@
 import 'package:my_wallet/ca/data/ca_repository.dart';
 import 'package:my_wallet/ui/home2/data/home2_entity.dart';
-import 'package:my_wallet/data/database_manager.dart' as _db;
+import 'package:my_wallet/data/local/database_manager.dart' as _db;
 import 'package:my_wallet/data/firebase/database.dart' as _fdb;
 
 import 'package:my_wallet/utils.dart' as Utils;
@@ -67,7 +67,7 @@ class _MyWalletHomeDatabaseRepository {
 
     if (cats != null && cats.isNotEmpty) {
       for(AppCategory cat in cats) {
-        var budget = await _db.findBudget(start: start, end: end, catId: cat.id);
+        var budget = await _db.queryBudget(start: start, end: end, catId: cat.id);
 
         var transaction = cat.categoryType == CategoryType.expense ? cat.expense : cat.income;
 
@@ -125,7 +125,7 @@ class _ChartTitleRepository extends CleanArchitectureRepository{
 
     var income = await _db.sumAllTransactionBetweenDateByType(from, to, TransactionType.typeIncome) ?? 0;
     var expenses = await _db.sumAllTransactionBetweenDateByType(from, to, TransactionType.typeExpense) ?? 0;
-    var budget = await _db.querySumAllBudgetForMonth(from, to, CategoryType.expense);
+    var budget = await _db.querySumAllBudgetForCategoryInMonth(from, to, CategoryType.expense);
 
     return ChartTitleEntity(expenses, income, budget == 0 ? 0.0 : expenses < budget ? expenses / budget : 1.0);
   }
@@ -158,7 +158,7 @@ class _ChartBudgetRepository extends CleanArchitectureRepository {
 
     var expenseThisMonth = await _db.sumAllTransactionBetweenDateByType(start, today, TransactionType.typeExpense) ?? 0.0;
 
-    var monthlyBudget = await _db.querySumAllBudgetForMonth(start, Utils.lastDayOfMonth(start), CategoryType.expense) ?? 0.0;
+    var monthlyBudget = await _db.querySumAllBudgetForCategoryInMonth(start, Utils.lastDayOfMonth(start), CategoryType.expense) ?? 0.0;
 
     return ChartBudgetEntity(monthlyBudget - expenseThisMonth, monthlyBudget, 1 - (monthlyBudget == 0 ? 0.0 : expenseThisMonth < monthlyBudget ? expenseThisMonth / monthlyBudget : 1.0));
   }

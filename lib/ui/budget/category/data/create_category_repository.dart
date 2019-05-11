@@ -1,5 +1,5 @@
 import 'package:my_wallet/data/data.dart';
-import 'package:my_wallet/data/database_manager.dart' as db;
+import 'package:my_wallet/data/local/database_manager.dart' as db;
 import 'package:my_wallet/ui/budget/category/domain/create_category_exception.dart';
 import 'dart:math';
 import 'package:my_wallet/data/firebase/database.dart' as fm;
@@ -69,11 +69,19 @@ class _CreateCategoryDatabaseRepository {
   }
 
   Future<bool> saveCategory(int id, String name, String color, CategoryType categoryType, int group) async {
-    return (await db.insertCagetory(AppCategory(id, name, color, categoryType, group: group))) >= 0;
+    db.startTransaction();
+    db.insertCategory(AppCategory(id, name, color, categoryType, group: group));
+    await db.execute();
+
+    return true;
   }
 
   Future<bool> updateCategory(int id, String name, String colorHex, CategoryType type, int group) async {
-    return (await db.updateCategory(AppCategory(id, name, colorHex, type, group: group))) >= 0;
+    db.startTransaction();
+    db.updateCategory(AppCategory(id, name, colorHex, type, group: group));
+    await db.execute();
+
+    return true;
   }
 }
 

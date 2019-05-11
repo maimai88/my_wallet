@@ -1,12 +1,12 @@
-import 'package:my_wallet/data/database_manager.dart' as db;
+import 'package:my_wallet/data/local/database_manager.dart' as db;
 
-const tableAccount = "table_accounts";
-const tableTransactions = "table_transactions";
-const tableCategory = "table_categories";
-const tableBudget = "table_budget";
-const tableUser = "table_user";
-const tableTransfer = "table_transfer";
-const tableDischargeLiability = "table_discharge_liability";
+const tableAccount = db.tblAccount;
+const tableTransactions = db.tblTransaction;
+const tableCategory = db.tblCategory;
+const tableBudget = db.tblBudget;
+const tableUser = db.tblUser;
+const tableTransfer = db.tblTransfer;
+const tableDischargeLiability = db.tblDischargeOfLiability;
 
 abstract class DatabaseObservable {
   void onDatabaseUpdate(String table);

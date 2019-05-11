@@ -5,7 +5,7 @@ import 'package:my_wallet/ui/account/detail/data/detail_repository.dart';
 class AccountDetailUseCase extends CleanArchitectureUseCase<AccountDetailRepository> {
   AccountDetailUseCase() : super(AccountDetailRepository());
 
-  void loadAccount(int accountId, onNext<Account> next, onError error) {
-    execute<Account>(repo.loadAccount(accountId), next, error);
+  void loadAccount(int accountId, onNext<AccountDetailEntity> next, onError error) {
+    execute(repo.loadAccount(accountId), next, error);
   }
 }

@@ -93,14 +93,14 @@ class LifecycleEventHandler extends WidgetsBindingObserver {
       case AppLifecycleState.inactive:
       case AppLifecycleState.paused:
       case AppLifecycleState.suspending:
-        if(homeKey.currentContext != null) {
-          homeKey.currentState.onPaused();
-        }
+//        if(homeKey.currentContext != null) {
+//          homeKey.currentState.onPaused();
+//        }
         break;
       case AppLifecycleState.resumed:
-        if(homeKey.currentContext != null) {
-          homeKey.currentState.onResume();
-        }
+//        if(homeKey.currentContext != null) {
+//          homeKey.currentState.onResume();
+//        }
         break;
     }
   }

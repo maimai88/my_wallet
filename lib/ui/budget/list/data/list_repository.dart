@@ -3,7 +3,7 @@ import 'package:my_wallet/ca/data/ca_repository.dart';
 import 'package:my_wallet/ui/budget/list/data/list_entity.dart';
 export 'package:my_wallet/ui/budget/list/data/list_entity.dart';
 
-import 'package:my_wallet/data/database_manager.dart' as db;
+import 'package:my_wallet/data/local/database_manager.dart' as db;
 import 'package:my_wallet/data/data.dart';
 
 export 'package:my_wallet/data/data.dart';
@@ -16,8 +16,8 @@ class ListBudgetsRepository extends CleanArchitectureRepository{
     List<BudgetEntity> income = await db.queryCategoryWithBudgetAndTransactionsForMonth<BudgetEntity>(month, CategoryType.income, (cat, budgetPerMonth, transaction) => BudgetEntity(cat.id, cat.name, cat.colorHex, transaction, budgetPerMonth, CategoryType.income));
     List<BudgetEntity> expense = await db.queryCategoryWithBudgetAndTransactionsForMonth<BudgetEntity>(month, CategoryType.expense, (cat, budgetPerMonth, transaction) => BudgetEntity(cat.id, cat.name, cat.colorHex, transaction, budgetPerMonth, CategoryType.expense));
 
-    var incomeBudget = await db.querySumAllBudgetForMonth(start, end, CategoryType.income);
-    var expenseBudget = await db.querySumAllBudgetForMonth(start, end, CategoryType.expense);
+    var incomeBudget = await db.querySumAllBudgetForCategoryInMonth(start, end, CategoryType.income);
+    var expenseBudget = await db.querySumAllBudgetForCategoryInMonth(start, end, CategoryType.expense);
 
     var totalIncome = await db.sumAllTransactionBetweenDateByType(start, end, TransactionType.typeIncome);
     var totalExpense = await db.sumAllTransactionBetweenDateByType(start, end, TransactionType.typeExpense);
@@ -34,7 +34,7 @@ class ListBudgetsRepository extends CleanArchitectureRepository{
   }
 
   Future<double> queryBudgetAmount(DateTime from, DateTime to) async{
-    var budget = await db.querySumAllBudgetForMonth(from, to, CategoryType.expense);
+    var budget = await db.querySumAllBudgetForCategoryInMonth(from, to, CategoryType.expense);
     return budget == null ? 0.0 : budget;
   }
 

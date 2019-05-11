@@ -3,7 +3,7 @@ import 'package:my_wallet/ui/transaction/list/data/transaction_list_entity.dart'
 import 'package:intl/intl.dart';
 import 'package:my_wallet/ca/presentation/view/ca_state.dart';
 import 'package:my_wallet/ui/transaction/list/presentation/view/transaction_list_data_view.dart';
-import 'package:my_wallet/data/data_observer.dart' as observer;
+import 'package:my_wallet/data/local/data_observer.dart' as observer;
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart';
 import 'package:flutter_calendar_carousel/classes/event_list.dart';
 

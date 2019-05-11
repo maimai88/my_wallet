@@ -69,58 +69,64 @@ Future<void> _addSubscriptions() async {
   for(String table in allTables) {
     subs.putIfAbsent(table, () => _firestore.collection(table).snapshots().listen((f) async {
       if(f.documentChanges != null && f.documentChanges.length > 0) {
-        db.startTransaction();
-        f.documentChanges.forEach((change) {
+        final batchIdentifier = db.startTransaction();
+        f.documentChanges.forEach((change) async {
           if(change == null) return;
           if(change.document == null) return;
 
           print("Change ${change.type} with ID ${change.document.documentID} in table $table");
           switch(change.type) {
-            case DocumentChangeType.added: _onAdded(table, change.document); break;
-            case DocumentChangeType.modified: _onModified(table, change.document); break;
-            case DocumentChangeType.removed: _onRemoved(table, change.document); break;
+            case DocumentChangeType.added: await _onAdded(table, change.document, batchIdentifier); break;
+            case DocumentChangeType.modified: await _onModified(table, change.document, batchIdentifier); break;
+            case DocumentChangeType.removed: await _onRemoved(table, change.document, batchIdentifier); break;
           }
         });
-        await db.execute();
+        await db.execute(batchIdentifier: batchIdentifier);
       }
     }));
   }
 }
 
-void _onAdded(String table, DocumentSnapshot document) {
+Future<void> _onAdded(String table, DocumentSnapshot document, String batchIdentifier) {
   switch (table) {
-    case tblAccount: return _onAccountAdded(document);
-    case tblBudget: return _onBudgetAdded(document);
-    case tblCategory: return _onCategoryAdded(document);
-    case tblDischargeOfLiability: return _onDischargeOfLiabilityAdded(document);
-    case tblTransfer: return _onTransferAdded(document);
-    case tblTransaction: return _onTransactionAdded(document);
-    case tblUser: _onUserAdded(document);
+    case tblAccount: return _onAccountAdded(document, batchIdentifier);
+    case tblBudget: return _onBudgetAdded(document, batchIdentifier);
+    case tblCategory: return _onCategoryAdded(document, batchIdentifier);
+    case tblDischargeOfLiability: return _onDischargeOfLiabilityAdded(document, batchIdentifier);
+    case tblTransfer: return _onTransferAdded(document, batchIdentifier);
+    case tblTransaction: return _onTransactionAdded(document, batchIdentifier);
+    case tblUser: return _onUserAdded(document, batchIdentifier);
   }
+
+  throw Exception("Table $table is not defined");
 }
 
-void _onModified(String table, DocumentSnapshot document) {
+Future<void> _onModified(String table, DocumentSnapshot document, String batchIdentifier) {
   switch (table) {
-    case tblAccount: return _onAccountChanged(document);
-    case tblBudget: return _onBudgetChanged(document);
-    case tblCategory: return _onCategoryChanged(document);
-    case tblDischargeOfLiability: return _onDischargeOfLiabilityChanged(document);
-    case tblTransfer: return _onTransferChanged(document);
-    case tblTransaction: return _onTransactionChanged(document);
-    case tblUser: _onUserChanged(document);
+    case tblAccount: return _onAccountChanged(document, batchIdentifier);
+    case tblBudget: return _onBudgetChanged(document, batchIdentifier);
+    case tblCategory: return _onCategoryChanged(document, batchIdentifier);
+    case tblDischargeOfLiability: return _onDischargeOfLiabilityChanged(document, batchIdentifier);
+    case tblTransfer: return _onTransferChanged(document, batchIdentifier);
+    case tblTransaction: return _onTransactionChanged(document, batchIdentifier);
+    case tblUser: return _onUserChanged(document, batchIdentifier);
   }
+
+  throw Exception("Table $table is not defined");
 }
 
-void _onRemoved(String table, DocumentSnapshot document) {
+Future<void> _onRemoved(String table, DocumentSnapshot document, String batchIdentifier) {
   switch (table) {
-    case tblAccount: return _onAccountRemoved(document);
-    case tblBudget: return _onBudgetRemoved(document);
-    case tblCategory: return _onCategoryRemoved(document);
-    case tblDischargeOfLiability: return _onDischargeOfLiabilityRemoved(document);
-    case tblTransfer: return _onTransferRemoved(document);
-    case tblTransaction: return _onTransactionRemoved(document);
-    case tblUser: _onUserRemoved(document);
+    case tblAccount: return _onAccountRemoved(document, batchIdentifier);
+    case tblBudget: return _onBudgetRemoved(document, batchIdentifier);
+    case tblCategory: return _onCategoryRemoved(document, batchIdentifier);
+    case tblDischargeOfLiability: return _onDischargeOfLiabilityRemoved(document, batchIdentifier);
+    case tblTransfer: return _onTransferRemoved(document, batchIdentifier);
+    case tblTransaction: return _onTransactionRemoved(document, batchIdentifier);
+    case tblUser: return _onUserRemoved(document, batchIdentifier);
   }
+
+  throw Exception("Table $table is not defined");
 }
 
 // ####################################################################################################
@@ -250,211 +256,164 @@ int _toId(DocumentSnapshot snapshot) {
   return int.parse(snapshot.documentID);
 }
 
-void _onAccountAdded(DocumentSnapshot document) {
+Future<void> _onAccountAdded(DocumentSnapshot document, String batchIdentifier) {
   if(document.data == null) {
     var id = _toId(document);
 
-    if(id != null) _onAccountRemoved(document);
-
-    return;
+    if(id != null) return _onAccountRemoved(document, batchIdentifier);
   }
-  db.insertAccount(_snapshotToAccount(document));
+  return db.insertAccount(_snapshotToAccount(document), batchIdentifier: batchIdentifier);
 }
 
-void _onAccountChanged(DocumentSnapshot document) {
+Future<void> _onAccountChanged(DocumentSnapshot document, String batchIdentifier) {
   if(document.data == null) {
     var id = _toId(document);
 
-    if(id != null) _onAccountRemoved(document);
-
-    return;
+    if(id != null) return _onAccountRemoved(document, batchIdentifier);
   }
-    db.updateAccount(_snapshotToAccount(document));
+  return db.updateAccount(_snapshotToAccount(document), batchIdentifier: batchIdentifier);
 }
 
-void _onAccountRemoved(DocumentSnapshot document) {
-  db.deleteAccount(_toId(document));
+Future<void> _onAccountRemoved(DocumentSnapshot document, String batchIdentifier) {
+  return db.deleteAccount(_toId(document), batchIdentifier: batchIdentifier);
 }
 
-void _onCategoryAdded(DocumentSnapshot document) {
+Future<void> _onCategoryAdded(DocumentSnapshot document, String batchIdentifier) {
   if(document.data == null) {
     var id = _toId(document);
 
-    if(id != null) _onCategoryRemoved(document);
-
-    return;
+    if(id != null) return _onCategoryRemoved(document, batchIdentifier);
   }
-  try {
-    db.insertCategory(_snapshotToCategory(document));
-  } catch(e) {
-    _onCategoryChanged(document);
-  }
+  return db.insertCategory(_snapshotToCategory(document), batchIdentifier: batchIdentifier);
 }
 
-void _onCategoryChanged(DocumentSnapshot document) {
+Future<void> _onCategoryChanged(DocumentSnapshot document, String batchIdentifier) {
   if(document.data == null) {
     var id = _toId(document);
 
-    if(id != null) _onCategoryRemoved(document);
-
-    return;
+    if(id != null) return _onCategoryRemoved(document, batchIdentifier);
   }
 
-  db.updateCategory(_snapshotToCategory(document));
+  return db.updateCategory(_snapshotToCategory(document), batchIdentifier: batchIdentifier);
 }
 
-void _onCategoryRemoved(DocumentSnapshot document) {
-  db.deleteCategory(_toId(document));
+Future<void> _onCategoryRemoved(DocumentSnapshot document, String batchIdentifier) {
+  return db.deleteCategory(_toId(document), batchIdentifier: batchIdentifier);
 }
 
-void _onTransactionAdded(DocumentSnapshot document) {
+Future<void> _onTransactionAdded(DocumentSnapshot document, String batchIdentifier) {
   if(document.data == null) {
     var id = _toId(document);
 
-    if(id != null) _onTransactionRemoved(document);
-
-    return;
+    if(id != null) return _onTransactionRemoved(document, batchIdentifier);
   }
 
-  try {
-    db.insertTransaction(_snapshotToTransaction(document));
-  } catch(e) {
-    _onTransactionChanged(document);
-  }
+  return db.insertTransaction(_snapshotToTransaction(document), batchIdentifier: batchIdentifier);
 }
 
-void _onTransactionChanged(DocumentSnapshot document) {
+Future<void> _onTransactionChanged(DocumentSnapshot document, String batchIdentifier) {
   if(document.data == null) {
     var id = _toId(document);
 
-    if(id != null) _onTransactionRemoved(document);
-
-    return;
+    if(id != null) return _onTransactionRemoved(document, batchIdentifier);
   }
-  db.updateTransaction(_snapshotToTransaction(document));
+  return db.updateTransaction(_snapshotToTransaction(document), batchIdentifier: batchIdentifier);
 }
 
-void _onTransactionRemoved(DocumentSnapshot document) {
-  db.deleteTransaction(_toId(document));
+Future<void> _onTransactionRemoved(DocumentSnapshot document, String batchIdentifier) {
+  return db.deleteTransaction(_toId(document), batchIdentifier: batchIdentifier);
 }
 
-void _onUserAdded(DocumentSnapshot document) {
+Future<void> _onUserAdded(DocumentSnapshot document, String batchIdentifier) {
   if(document.data == null) {
     var id = _toId(document);
 
-    if(id != null) _onUserRemoved(document);
-
-    return;
+    if(id != null) return _onUserRemoved(document, batchIdentifier);
   }
-  try {
-    db.insertUser(snapshotToUser(document));
-  } catch(e) {
-    _onUserChanged(document);
-  }
+  return db.insertUser(snapshotToUser(document), batchIdentifier: batchIdentifier);
 }
 
-void _onUserChanged(DocumentSnapshot document) {
+Future<void> _onUserChanged(DocumentSnapshot document, String batchIdentifier) {
   if(document.data == null) {
     var id = _toId(document);
 
-    if(id != null) _onUserRemoved(document);
-
-    return;
+    if(id != null) return _onUserRemoved(document, batchIdentifier);
   }
-  db.updateUser(snapshotToUser(document));
+  return db.updateUser(snapshotToUser(document), batchIdentifier: batchIdentifier);
 }
 
-void _onUserRemoved(DocumentSnapshot document) {
-  db.deleteUser(document.data[fldUuid]);
+Future<void> _onUserRemoved(DocumentSnapshot document, String batchIdentifier) {
+  return db.deleteUser(document.data[fldUuid], batchIdentifier: batchIdentifier);
 }
 
-void _onBudgetAdded(DocumentSnapshot document) {
+Future<void> _onBudgetAdded(DocumentSnapshot document, String batchIdentifier) {
   if(document.data == null) {
     var id = _toId(document);
 
-    if(id != null) _onBudgetRemoved(document);
-
-    return;
+    if(id != null) return _onBudgetRemoved(document, batchIdentifier);
   }
-  try {
-    db.insertBudget(_snapshotToBudget(document));
-  } catch(e) {
-    _onBudgetChanged(document);
+  return db.insertBudget(_snapshotToBudget(document), batchIdentifier: batchIdentifier);
+}
+
+Future<void> _onBudgetChanged(DocumentSnapshot document, String batchIdentifier) {
+  if(document.data == null) {
+    final id = _toId(document);
+
+    if(id != null) return _onBudgetRemoved(document, batchIdentifier);
   }
+  return db.updateBudget(_snapshotToBudget(document), batchIdentifier: batchIdentifier);
 }
 
-void _onBudgetChanged(DocumentSnapshot document) {
-  if(document.data == null) return;
-  db.updateBudget(_snapshotToBudget(document));
+Future<void> _onBudgetRemoved(DocumentSnapshot document, String batchIdentifier) {
+  return db.deleteBudget(_toId(document), batchIdentifier: batchIdentifier);
 }
 
-void _onBudgetRemoved(DocumentSnapshot document) {
-  db.deleteBudget(_toId(document));
-}
-
-void _onTransferAdded(DocumentSnapshot document) {
+Future<void> _onTransferAdded(DocumentSnapshot document, String batchIdentifier) {
   if(document.data == null) {
     var id = _toId(document);
 
-    if(id != null) _onTransferRemoved(document);
-
-    return;
+    if(id != null) return _onTransferRemoved(document, batchIdentifier);
   }
 
-  try {
-    db.insertTransfer(_snapshotToTransfer(document));
-  } catch(e) {
-    _onTransferChanged(document);
-  }
+  return db.insertTransfer(_snapshotToTransfer(document), batchIdentifier: batchIdentifier);
 }
 
-void _onTransferChanged(DocumentSnapshot document) {
+Future<void> _onTransferChanged(DocumentSnapshot document, String batchIdentifier) {
   if(document.data == null) {
     var id = _toId(document);
 
-    if(id != null) _onTransferRemoved(document);
-
-    return;
+    if(id != null) return _onTransferRemoved(document, batchIdentifier);
   }
 
-  db.updateTransfer(_snapshotToTransfer(document));
+  return db.updateTransfer(_snapshotToTransfer(document), batchIdentifier: batchIdentifier);
 }
 
-void _onTransferRemoved(DocumentSnapshot document) {
-  db.deleteTransfer(_toId(document));
+Future<void> _onTransferRemoved(DocumentSnapshot document, String batchIdentifier) {
+  return db.deleteTransfer(_toId(document), batchIdentifier: batchIdentifier);
 }
 
-void _onDischargeOfLiabilityAdded(DocumentSnapshot document) {
+Future<void> _onDischargeOfLiabilityAdded(DocumentSnapshot document, String batchIdentifier) {
   if(document.data == null) {
     var id = _toId(document);
 
-    if(id != null) _onDischargeOfLiabilityRemoved(document);
-
-    return;
+    if(id != null) return _onDischargeOfLiabilityRemoved(document, batchIdentifier);
   }
 
-  try {
-    db.insertDischargeOfLiability(_snapshotToDischargeOfLiability(document));
-  } catch(e) {
-    _onDischargeOfLiabilityChanged(document);
-  }
+  return db.insertDischargeOfLiability(_snapshotToDischargeOfLiability(document), batchIdentifier: batchIdentifier);
 }
 
-void _onDischargeOfLiabilityChanged(DocumentSnapshot document) {
+Future<void> _onDischargeOfLiabilityChanged(DocumentSnapshot document, String batchIdentifier) {
   if(document.data == null) {
     var id = _toId(document);
 
-    if(id != null) _onDischargeOfLiabilityRemoved(document);
-
-    return;
+    if(id != null) return _onDischargeOfLiabilityRemoved(document, batchIdentifier);
   }
 
-  db.updateDischargeOfLiability(_snapshotToDischargeOfLiability(document));
+  return db.updateDischargeOfLiability(_snapshotToDischargeOfLiability(document), batchIdentifier: batchIdentifier);
 }
 
-void _onDischargeOfLiabilityRemoved(DocumentSnapshot document) {
-  db.deleteDischargeOfLiability(_toId(document));
-
+Future<void> _onDischargeOfLiabilityRemoved(DocumentSnapshot document, String batchIdentifier) {
+  return db.deleteDischargeOfLiability(_toId(document));
 }
 // ####################################################################################################
 // Account

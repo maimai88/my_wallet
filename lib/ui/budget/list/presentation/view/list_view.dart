@@ -35,7 +35,7 @@ class _ListBudgetsState extends CleanArchitectureView<ListBudgets, ListBudgetsPr
   }
 
   @override
-  void onDatabaseUpdate(String table) {
+  void onDatabaseUpdate(List<String> tables) {
     loadData();
   }
 

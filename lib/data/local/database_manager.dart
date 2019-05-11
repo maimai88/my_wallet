@@ -1091,8 +1091,14 @@ class _Database {
   Future<void> deleteTable(String name) async {}
 
   void _notifyObservers(List<String> tables) {
+    Set<DatabaseObservable> observables = new Set();
+
     tables.forEach((table) {
-      if (_watchers[table] != null) _watchers[table].forEach((f) => f.onDatabaseUpdate(table));
+      if (_watchers[table] != null) _watchers[table].forEach((f) => observables.add(f));
+    });
+
+    observables.forEach((f) {
+      f.onDatabaseUpdate(tables);
     });
   }
 

@@ -160,7 +160,7 @@ class _TransactionListState extends CleanArchitectureView<TransactionList, Trans
   }
 
   @override
-  void onDatabaseUpdate(String table) {
+  void onDatabaseUpdate(List<String> tables) {
     _loadData();
   }
 

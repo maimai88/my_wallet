@@ -87,7 +87,7 @@ class _AccountDetailState extends CleanArchitectureView<AccountDetail, AccountDe
     );
   }
 
-  void onDatabaseUpdate(String table) {
+  void onDatabaseUpdate(List<String> tables) {
     _loadData();
   }
 

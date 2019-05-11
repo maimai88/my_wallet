@@ -9,7 +9,7 @@ const tableTransfer = db.tblTransfer;
 const tableDischargeLiability = db.tblDischargeOfLiability;
 
 abstract class DatabaseObservable {
-  void onDatabaseUpdate(String table);
+  void onDatabaseUpdate(List<String> tables);
 }
 
 void registerDatabaseObservable(List<String> tables, DatabaseObservable observable) {

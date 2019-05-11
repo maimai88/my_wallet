@@ -34,7 +34,7 @@ class _LiabilityState extends CleanArchitectureView<LiabilityView, LiabilityPres
   }
 
   @override
-  void onDatabaseUpdate(String table) {
+  void onDatabaseUpdate(List<String> tables) {
     _loadData();
   }
 

@@ -57,22 +57,24 @@ class _AddTransactionState extends CleanArchitectureView<AddTransaction, AddTran
   }
 
   @override
-  void onDatabaseUpdate(String table) {
-    debugPrint("on database update $table");
+  void onDatabaseUpdate(List<String> tables) {
+    tables.forEach((table) {
+      debugPrint("on database update $tables");
 
-    if(table == observer.tableAccount) {
-      presenter.loadAccounts();
-    }
-
-    if (table == observer.tableCategory) presenter.loadCategory(_type);
-
-    if(table == observer.tableTransactions || table == observer.tableUser) {
-      if(widget.transactionId == null) {
-        presenter.loadCurrentUserName();
-      } else if(!_isSaving){
-        presenter.loadTransactionDetail(widget.transactionId);
+      if (table == observer.tableAccount) {
+        presenter.loadAccounts();
       }
-    }
+
+      if (table == observer.tableCategory) presenter.loadCategory(_type);
+
+      if (table == observer.tableTransactions || table == observer.tableUser) {
+        if (widget.transactionId == null) {
+          presenter.loadCurrentUserName();
+        } else if (!_isSaving) {
+          presenter.loadTransactionDetail(widget.transactionId);
+        }
+      }
+    });
   }
 
   @override

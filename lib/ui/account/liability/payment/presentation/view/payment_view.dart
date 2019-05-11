@@ -53,9 +53,11 @@ class _PayLiabilityState extends CleanArchitectureView<PayLiability, PayLiabilit
   }
 
   @override
-  void onDatabaseUpdate(String table) {
-    if(table == observer.tableAccount) _loadAccounts();
-    if(table == observer.tableCategory) _loadCategories();
+  void onDatabaseUpdate(List<String> tables) {
+    tables.forEach((table) {
+      if (table == observer.tableAccount) _loadAccounts();
+      if (table == observer.tableCategory) _loadCategories();
+    });
   }
 
   @override

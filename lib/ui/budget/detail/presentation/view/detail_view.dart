@@ -47,10 +47,12 @@ class _BudgetDetailState extends CleanArchitectureView<BudgetDetail, BudgetDetai
   }
 
   @override
-  void onDatabaseUpdate(String table) {
+  void onDatabaseUpdate(List<String> tables) {
     if(_savingBudget) return;
 
-    if(table == observer.tableCategory) loadData();
+    tables.forEach((table) {
+      if (table == observer.tableCategory) loadData();
+    });
   }
 
   @override

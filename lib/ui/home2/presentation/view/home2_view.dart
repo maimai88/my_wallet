@@ -91,7 +91,7 @@ class MyWalletState extends CleanArchitectureView<MyWalletHome, MyWalletHomePres
     }
   }
 
-  void onDatabaseUpdate(String table) {
+  void onDatabaseUpdate(List<String> tables) {
     _loadDetails();
   }
 

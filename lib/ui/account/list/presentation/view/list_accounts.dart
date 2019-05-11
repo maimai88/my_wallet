@@ -46,7 +46,7 @@ class _ListAccountsState extends CleanArchitectureView<ListAccounts, ListAccount
   }
 
   @override
-  void onDatabaseUpdate(String table) {
+  void onDatabaseUpdate(List<String> tables) {
     presenter.loadAllAccounts();
   }
 

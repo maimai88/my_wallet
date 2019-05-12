@@ -23,7 +23,7 @@ class MyWalletState extends CleanArchitectureView<MyWalletHome, MyWalletHomePres
     with TickerProviderStateMixin
     implements MyWalletHomeDataView, observer.DatabaseObservable {
   MyWalletState() : super(MyWalletHomePresenter());
-  final _titleStyle = TextStyle(color: AppTheme.blueGrey, fontSize: 14.0, fontWeight: FontWeight.bold);
+  final _titleStyle = TextStyle(color: AppTheme.white70, fontSize: 14.0, fontWeight: FontWeight.bold);
 
   final _overviewRatio = 0.15;
   final _chartRatio = 0.5;
@@ -31,8 +31,6 @@ class MyWalletState extends CleanArchitectureView<MyWalletHome, MyWalletHomePres
 
   final _tables = [observer.tableTransactions, observer.tableCategory];
   final _iconSize = 45.0;
-
-  GlobalKey _resumeDialogKey;
 
   List<ExpenseEntity> _homeEntities = [];
 
@@ -227,41 +225,6 @@ class MyWalletState extends CleanArchitectureView<MyWalletHome, MyWalletHomePres
 
     return CustomScrollView(
         slivers: list);
-  }
-
-  void onResume() {
-    if(_resumeDialogKey == null) {
-      _resumeDialogKey = new GlobalKey();
-      showDialog(
-          barrierDismissible: false,
-          context: context,
-          builder: (context) =>
-              AlertDialog(
-                key: _resumeDialogKey,
-                title: Row(
-                  children: <Widget>[
-                    CircularProgressIndicator(),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 12.0),
-                      child: Text(R.string.syncing),
-                    )
-                  ],
-                ),
-              )
-      );
-    }
-
-    presenter.resumeDatabase();
-  }
-
-  void onResumeDone(bool done) {
-    if(_resumeDialogKey != null && _resumeDialogKey.currentContext != null) Navigator.of(context).pop();
-
-    _resumeDialogKey = null;
-  }
-
-  void onPaused() {
-    presenter.dispose();
   }
 }
 

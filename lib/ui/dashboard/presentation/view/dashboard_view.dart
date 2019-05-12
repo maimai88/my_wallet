@@ -1,26 +1,31 @@
-import 'package:my_wallet/app_material.dart';
+import 'package:my_wallet/ca/presentation/view/ca_state.dart';
+
+import 'package:my_wallet/ui/dashboard/presentation/presenter/dashboad_presenter.dart';
+import 'package:my_wallet/ui/dashboard/presentation/view/dashboard_data_view.dart';
 
 import 'package:my_wallet/resources.dart' as R;
 // home navigator
-import 'package:my_wallet/ui/dashboard/dashboard_home_navigator.dart';
+import 'package:my_wallet/ui/dashboard/presentation/view/dashboard_home_navigator.dart';
 
 // account navigator
-import 'package:my_wallet/ui/dashboard/dashbard_account_navigator.dart';
+import 'package:my_wallet/ui/dashboard/presentation/view/dashbard_account_navigator.dart';
 
 // profile navigator
-import 'package:my_wallet/ui/dashboard/dashbard_budget_navigator.dart';
+import 'package:my_wallet/ui/dashboard/presentation/view/dashbard_budget_navigator.dart';
 
 // more navigator
-import 'package:my_wallet/ui/dashboard/dashboard_more_navigator.dart';
+import 'package:my_wallet/ui/dashboard/presentation/view/dashboard_more_navigator.dart';
 
 class Dashboard extends StatefulWidget {
   Dashboard({key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _DashboardState();
+  State<StatefulWidget> createState() => DashboardState();
 }
 
-class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
+class DashboardState extends CleanArchitectureView<Dashboard, DashboardPresenter> with TickerProviderStateMixin implements DashboardDataView {
+
+  DashboardState() : super(DashboardPresenter());
 
   GlobalKey<NavigatorState> homeNavigatorKey;
   GlobalKey<NavigatorState> accountNavigatorKey;
@@ -30,10 +35,17 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
   TabController tabController;
 
   @override
+  void init() {
+    presenter.dataView = this;
+  }
+
+  @override
   void initState() {
     super.initState();
 
     tabController = TabController(length: 4, vsync: this);
+
+    print("DASHBOARD ==> initState()");
   }
 
   @override
@@ -72,5 +84,13 @@ class _DashboardState extends State<Dashboard> with TickerProviderStateMixin {
       case 2: return Colors.orange;
       default: return AppTheme.teal;
     }
+  }
+
+  void onPaused() {
+    presenter.pauseSubscription();
+  }
+
+  void onResume() {
+    presenter.resumeSubscription();
   }
 }

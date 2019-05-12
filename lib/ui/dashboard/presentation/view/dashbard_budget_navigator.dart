@@ -1,6 +1,6 @@
 import 'package:my_wallet/app_material.dart';
 
-import 'package:my_wallet/ui/dashboard/no_transition_page_route.dart';
+import 'package:my_wallet/ui/dashboard/presentation/view/no_transition_page_route.dart';
 
 import 'package:my_wallet/ui/budget/list/presentation/view/list_view.dart';
 import 'package:my_wallet/ui/budget/detail/presentation/view/detail_view.dart';

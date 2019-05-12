@@ -4,5 +4,4 @@ import 'package:my_wallet/ui/home2/data/home2_entity.dart';
 
 abstract class MyWalletHomeDataView extends DataView {
   void onExpensesDetailLoaded(HomeEntity value);
-  void onResumeDone(bool result);
 }

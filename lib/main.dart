@@ -1,9 +1,8 @@
 import 'package:my_wallet/app_material.dart';
 
-import 'package:my_wallet/ui/home2/presentation/view/home2_view.dart';
 import 'package:my_wallet/widget/my_wallet_app_bar.dart';
 
-import 'package:my_wallet/ui/dashboard/dashboard_view.dart';
+import 'package:my_wallet/ui/dashboard/presentation/view/dashboard_view.dart';
 
 import 'package:my_wallet/ui/user/login/presentation/view/login_selection_view.dart';
 import 'package:my_wallet/ui/user/login/presentation/view/login_view.dart';
@@ -31,7 +30,7 @@ void main() async {
 
 class MyApp extends StatelessWidget {
 
-  final GlobalKey<MyWalletState> homeKey = GlobalKey();
+  final GlobalKey<DashboardState> homeKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +84,7 @@ class LifecycleEventHandler extends WidgetsBindingObserver {
   LifecycleEventHandler(this.app, this.homeKey);
 
   final MaterialApp app;
-  final GlobalKey<MyWalletState> homeKey;
+  final GlobalKey<DashboardState> homeKey;
 
   @override
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
@@ -93,14 +92,16 @@ class LifecycleEventHandler extends WidgetsBindingObserver {
       case AppLifecycleState.inactive:
       case AppLifecycleState.paused:
       case AppLifecycleState.suspending:
-//        if(homeKey.currentContext != null) {
-//          homeKey.currentState.onPaused();
-//        }
+        if(homeKey.currentState != null) {
+          print("Pause home");
+          homeKey.currentState.onPaused();
+        }
         break;
       case AppLifecycleState.resumed:
-//        if(homeKey.currentContext != null) {
-//          homeKey.currentState.onResume();
-//        }
+        if(homeKey.currentState != null) {
+          print("resume home");
+          homeKey.currentState.onResume();
+        }
         break;
     }
   }

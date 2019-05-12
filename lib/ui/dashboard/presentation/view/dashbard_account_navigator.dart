@@ -1,6 +1,6 @@
 import 'package:my_wallet/app_material.dart';
 
-import 'package:my_wallet/ui/dashboard/no_transition_page_route.dart';
+import 'package:my_wallet/ui/dashboard/presentation/view/no_transition_page_route.dart';
 
 // account navigator
 import 'package:my_wallet/ui/account/list/presentation/view/list_accounts.dart';

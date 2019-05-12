@@ -63,9 +63,6 @@ class _TransactionListState extends CleanArchitectureView<TransactionList, Trans
     var platform = Theme.of(context).platform;
 
     return PlainScaffold(
-      appBar: MyWalletAppBar(
-        title: widget.title,
-      ),
       floatingActionButton: Padding(
         padding: EdgeInsets.all(platform == TargetPlatform.iOS ? 10.0 : 0.0),
         child: RoundedButton(
@@ -80,59 +77,150 @@ class _TransactionListState extends CleanArchitectureView<TransactionList, Trans
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      body: ListView.builder(
-          itemCount: _entities.length + 2,
-          itemBuilder: (context, index) {
-            if(index == 0) return Container(
-              child: CalendarCarousel(
-                onDayPressed: (day, events) {
-                  setState(() => _day = day);
-                  _loadData();
-                },
-                onCalendarChanged: (day) {
-                  if(day.month == _day.month && day.year == day.year) {
-                    // same month? load current selected day
-                    _loadData();
-                  } else {
-                    // different, just load generic all data for the month 
-                    _loadData(day: day);
-                  }
-                },
-                selectedDateTime: _day,
-                markedDatesMap: _markedDates,
-                weekendTextStyle: Theme.of(context).textTheme.title.apply(color: AppTheme.pinkAccent),
-                height: 430.0,
-                todayButtonColor: AppTheme.fadedRed,
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            title: Text(widget.title, style: TextStyle(color: AppTheme.white),),
+            floating: false,
+            centerTitle: true,
+            pinned: true,
+            expandedHeight: 10,
+            flexibleSpace: Container(
+              decoration: BoxDecoration(
+                gradient: AppTheme.bgGradient
               ),
-            );
-
-            if(index == 1) return Container(
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: CalendarCarousel(
+              onDayPressed: (day, events) {
+                setState(() => _day = day);
+                _loadData();
+              },
+              onCalendarChanged: (day) {
+                if(day.month == _day.month && day.year == day.year) {
+                  // same month? load current selected day
+                  _loadData();
+                } else {
+                  // different, just load generic all data for the month
+                  _loadData(day: day);
+                }
+              },
+              selectedDateTime: _day,
+              markedDatesMap: _markedDates,
+              weekendTextStyle: Theme.of(context).textTheme.title.apply(color: AppTheme.pinkAccent),
+              height: 430.0,
+              todayButtonColor: AppTheme.fadedRed,
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Container(
               alignment: Alignment.centerRight,
               padding: EdgeInsets.all(8.0),
               child: Text("${R.string.total_expenses} ${moneyFormatter.format(_total)}", style: TextStyle(color: AppTheme.darkBlue),),
               color: AppTheme.blueGrey.withOpacity(0.2),
-            );
-
-            var item = _entities[index - 2];
-
-            return Container(
-              child: ListTile(
-                title: Text("${item.categoryName}${item.transactionDesc != null && item.transactionDesc.isNotEmpty ? " (${item.transactionDesc})" : ""}", style: Theme.of(context).textTheme.body2.apply(color: AppTheme.darkBlue),),
-                leading: CircleAvatar(
-                  child: Text(item.userInitial, style: Theme.of(context).textTheme.title.apply(color: AppTheme.white),),
-                  backgroundColor: Color(item.userColor),
+            ),
+          ),
+          SliverList(
+            delegate: SliverChildBuilderDelegate((context, index) {
+              final item = _entities[index];
+              return Container(
+                child: ListTile(
+                  title: Text("${item.categoryName}${item.transactionDesc != null && item.transactionDesc.isNotEmpty ? " (${item.transactionDesc})" : ""}", style: Theme.of(context).textTheme.body2.apply(color: AppTheme.darkBlue),),
+                  leading: CircleAvatar(
+                    child: Text(item.userInitial, style: Theme.of(context).textTheme.title.apply(color: AppTheme.white),),
+                    backgroundColor: Color(item.userColor),
+                  ),
+                  subtitle: Text(fullDateTimeFormatter.format(item.dateTime), style: Theme.of(context).textTheme.body2.apply(color: Colors.grey),),
+                  trailing: Text("${moneyFormatter.format(item.amount)}", style: TextStyle(color: Color(item.transactionColor)),),
+                  onTap: () {
+                    if(item.isUsualTransaction) Navigator.pushNamed(context, routes.AddTransactionWithParam(transactionId: item.id));
+                  },
                 ),
-                subtitle: Text(fullDateTimeFormatter.format(item.dateTime), style: Theme.of(context).textTheme.body2.apply(color: Colors.grey),),
-                trailing: Text("${moneyFormatter.format(item.amount)}", style: TextStyle(color: Color(item.transactionColor)),),
-                onTap: () {
-                  if(item.isUsualTransaction) Navigator.pushNamed(context, routes.AddTransactionWithParam(transactionId: item.id));
-                },
-              ),
-              color: index % 2 == 0 ? Colors.white : Colors.grey.withOpacity(0.2),
-            );
-          }
+                color: index % 2 == 0 ? Colors.white : Colors.grey.withOpacity(0.2),
+              );
+            },
+            childCount: _entities.length),
+          ),
+          SliverToBoxAdapter(
+            child: Container(
+              height: 50,
+            ),
+          )
+        ],
       ),
     );
+//    return PlainScaffold(
+//      appBar: MyWalletAppBar(
+//        title: widget.title,
+//      ),
+//      floatingActionButton: Padding(
+//        padding: EdgeInsets.all(platform == TargetPlatform.iOS ? 10.0 : 0.0),
+//        child: RoundedButton(
+//          onPressed: () => Navigator.pushNamed(context, routes.AddTransactionWithParam(accountId: widget.accountId, categoryId: widget.categoryId)),
+//          child: Container(
+//            margin: EdgeInsets.all(10.0),
+//            child: Text(
+//              R.string.add_transaction,
+//            ),
+//          ),
+//          color: AppTheme.pinkAccent,
+//        ),
+//      ),
+//      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+//      body: ListView.builder(
+//          itemCount: _entities.length + 2,
+//          itemBuilder: (context, index) {
+//            if(index == 0) return Container(
+//              child: CalendarCarousel(
+//                onDayPressed: (day, events) {
+//                  setState(() => _day = day);
+//                  _loadData();
+//                },
+//                onCalendarChanged: (day) {
+//                  if(day.month == _day.month && day.year == day.year) {
+//                    // same month? load current selected day
+//                    _loadData();
+//                  } else {
+//                    // different, just load generic all data for the month
+//                    _loadData(day: day);
+//                  }
+//                },
+//                selectedDateTime: _day,
+//                markedDatesMap: _markedDates,
+//                weekendTextStyle: Theme.of(context).textTheme.title.apply(color: AppTheme.pinkAccent),
+//                height: 430.0,
+//                todayButtonColor: AppTheme.fadedRed,
+//              ),
+//            );
+//
+//            if(index == 1) return Container(
+//              alignment: Alignment.centerRight,
+//              padding: EdgeInsets.all(8.0),
+//              child: Text("${R.string.total_expenses} ${moneyFormatter.format(_total)}", style: TextStyle(color: AppTheme.darkBlue),),
+//              color: AppTheme.blueGrey.withOpacity(0.2),
+//            );
+//
+//            var item = _entities[index - 2];
+//
+//            return Container(
+//              child: ListTile(
+//                title: Text("${item.categoryName}${item.transactionDesc != null && item.transactionDesc.isNotEmpty ? " (${item.transactionDesc})" : ""}", style: Theme.of(context).textTheme.body2.apply(color: AppTheme.darkBlue),),
+//                leading: CircleAvatar(
+//                  child: Text(item.userInitial, style: Theme.of(context).textTheme.title.apply(color: AppTheme.white),),
+//                  backgroundColor: Color(item.userColor),
+//                ),
+//                subtitle: Text(fullDateTimeFormatter.format(item.dateTime), style: Theme.of(context).textTheme.body2.apply(color: Colors.grey),),
+//                trailing: Text("${moneyFormatter.format(item.amount)}", style: TextStyle(color: Color(item.transactionColor)),),
+//                onTap: () {
+//                  if(item.isUsualTransaction) Navigator.pushNamed(context, routes.AddTransactionWithParam(transactionId: item.id));
+//                },
+//              ),
+//              color: index % 2 == 0 ? Colors.white : Colors.grey.withOpacity(0.2),
+//            );
+//          }
+//      ),
+//    );
   }
 
   @override

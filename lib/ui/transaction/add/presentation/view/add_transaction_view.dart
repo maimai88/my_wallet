@@ -4,7 +4,6 @@ import 'package:my_wallet/ui/transaction/add/presentation/presenter/add_transact
 import 'package:my_wallet/data/local/data_observer.dart' as observer;
 import 'package:flutter/cupertino.dart';
 import 'package:my_wallet/ui/transaction/add/data/add_transaction_entity.dart';
-import 'package:intl/intl.dart';
 
 import 'package:flutter/scheduler.dart';
 
@@ -25,8 +24,6 @@ class AddTransaction extends StatefulWidget {
 
 class _AddTransactionState extends CleanArchitectureView<AddTransaction, AddTransactionPresenter> implements AddTransactionDataView, observer.DatabaseObservable {
   _AddTransactionState() : super(AddTransactionPresenter());
-
-  var _numberFormat = NumberFormat("\$#,##0.00");
 
   final tables = [observer.tableAccount, observer.tableCategory, observer.tableUser, observer.tableTransactions];
 
@@ -130,7 +127,7 @@ class _AddTransactionState extends CleanArchitectureView<AddTransaction, AddTran
                   ),
                   ConversationRow(
                       widget.transactionId == null ? R.string.of : R.string.value_of,
-                      _numberFormat.format(_amount),
+                      moneyFormatter.format(_amount),
                       dataColor: TransactionType.isIncome(_type) ? AppTheme.tealAccent : TransactionType.isExpense(_type) ? AppTheme.pinkAccent : AppTheme.blueGrey,
                       style: Theme.of(context).textTheme.display2,
                   ),

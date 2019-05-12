@@ -1,6 +1,5 @@
 import 'package:my_wallet/app_material.dart';
 import 'package:my_wallet/utils.dart';
-import 'package:intl/intl.dart';
 import 'package:my_wallet/ui/budget/list/data/list_entity.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:my_wallet/ui/budget/budget_config.dart';
@@ -24,8 +23,6 @@ class TransactionPage extends StatelessWidget {
         _gradient = LinearGradient(colors: <Color>[color, color.withOpacity(0.4)]),
         safeColor = reverse ? AppTheme.pinkAccent : AppTheme.tealAccent,
         overColor = reverse ? AppTheme.tealAccent : AppTheme.pinkAccent;
-
-  final _df = DateFormat("${DateFormat.MONTH}");
 
   @override
   Widget build(BuildContext context) {
@@ -99,7 +96,7 @@ class TransactionPage extends StatelessWidget {
                             budgetCurrencyFormatter.format(total),
                             style: Theme.of(context).textTheme.display1.apply(color: AppTheme.white),
                           ),
-                          Text("spent in ${_df.format(DateTime.now())}")
+                          Text("spent in ${monthOnlyFormatter.format(DateTime.now())}")
                         ],
                       ),
                       alignment: Alignment.centerRight,

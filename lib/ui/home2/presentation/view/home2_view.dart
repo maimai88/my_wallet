@@ -6,8 +6,6 @@ import 'package:my_wallet/ca/presentation/view/ca_state.dart';
 
 import 'package:my_wallet/data/local/data_observer.dart' as observer;
 
-import 'package:intl/intl.dart';
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:charts_flutter/flutter.dart';
 
@@ -26,7 +24,6 @@ class MyWalletState extends CleanArchitectureView<MyWalletHome, MyWalletHomePres
     implements MyWalletHomeDataView, observer.DatabaseObservable {
   MyWalletState() : super(MyWalletHomePresenter());
   final _titleStyle = TextStyle(color: AppTheme.blueGrey, fontSize: 14.0, fontWeight: FontWeight.bold);
-  DateFormat _df = DateFormat("MMM, yyyy");
 
   final _overviewRatio = 0.15;
   final _chartRatio = 0.5;
@@ -38,9 +35,6 @@ class MyWalletState extends CleanArchitectureView<MyWalletHome, MyWalletHomePres
   GlobalKey _resumeDialogKey;
 
   List<ExpenseEntity> _homeEntities = [];
-
-  NumberFormat _nf = NumberFormat("\$#,##0.00");
-  NumberFormat _percentage = NumberFormat("#,##0.00%");
 
   // overview
   double _totalOverview = 0.0;
@@ -138,7 +132,7 @@ class MyWalletState extends CleanArchitectureView<MyWalletHome, MyWalletHomePres
             width: MediaQuery.of(context).size.width,
             child: Center(
               child: Text(
-                _df.format(DateTime.now()),
+                monthYearFormatter.format(DateTime.now()),
                 style: Theme.of(context).textTheme.title,
               ),
             ),
@@ -147,23 +141,20 @@ class MyWalletState extends CleanArchitectureView<MyWalletHome, MyWalletHomePres
           background: ListView(
             physics: NeverScrollableScrollPhysics(),
             children: <Widget>[
-              HomeOverview(_titleStyle, MediaQuery.of(context).size.height * _overviewRatio, _totalOverview, _nf),
+              HomeOverview(_titleStyle, MediaQuery.of(context).size.height * _overviewRatio, _totalOverview),
               Container(
                 alignment: Alignment.center,
                 child: Column(
                   children: <Widget>[
                     ChartTitleView(
                         _tabController,
-                        _chartTitleEntity,
-                        _nf,
-                        _percentage/*,
-                        height: MediaQuery.of(context).size.height * _chartRatio * 0.25*/),
+                        _chartTitleEntity),
                     Container(
                       height: MediaQuery.of(context).size.height * _chartRatio * 0.75,
                       child: TabBarView(controller: _tabController, children: [
                         TransactionChart(_incomeEntity),
                         TransactionChart(_expenseEntity),
-                        ChartBudgetView(_budgetEntity, _nf)
+                        ChartBudgetView(_budgetEntity)
                       ]),
                     )
                   ],
@@ -219,16 +210,15 @@ class MyWalletState extends CleanArchitectureView<MyWalletHome, MyWalletHomePres
                   text: TextSpan(
                       children: [
                         TextSpan(
-                          text: _nf.format(_homeEntities[index].transaction),
+                          text: moneyFormatter.format(_homeEntities[index].transaction),
                           style: TextStyle(color: AppTheme.darkBlue),
                         ),
                         TextSpan(
-                          text: "\n(${_nf.format(_homeEntities[index].remain)})",
+                          text: "\n(${moneyFormatter.format(_homeEntities[index].remain)})",
                           style: TextStyle(color: _homeEntities[index].remain >= 0 ? AppTheme.tealAccent : AppTheme.red),
                         )
                       ]
                   ))
-            //Text(_nf.format(_homeEntities[index].transaction), style: TextStyle(color: _homeEntities[index].transaction > _homeEntities[index].budget ? AppTheme.red : AppTheme.darkBlue),),
           ),
         );
       },
@@ -281,9 +271,8 @@ class HomeOverview extends StatelessWidget {
   final double _total;
   final double _height;
   final TextStyle _titleStyle;
-  final NumberFormat _nf;
 
-  HomeOverview(this._titleStyle, this._height, this._total, this._nf);
+  HomeOverview(this._titleStyle, this._height, this._total);
 
   @override
   Widget build(BuildContext context) {
@@ -295,7 +284,7 @@ class HomeOverview extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Text(R.string.saving_this_month, style: _titleStyle,),
-          Text("${_nf.format(_total)}", style: Theme.of(context).textTheme.headline.apply(fontSizeFactor: 1.8, color: _total <= 0 ? AppTheme.pinkAccent : AppTheme.tealAccent),)
+          Text("${moneyFormatter.format(_total)}", style: Theme.of(context).textTheme.headline.apply(fontSizeFactor: 1.8, color: _total <= 0 ? AppTheme.pinkAccent : AppTheme.tealAccent),)
         ],
       ),
     );
@@ -306,10 +295,8 @@ class HomeOverview extends StatelessWidget {
 class ChartTitleView extends StatelessWidget {
   final ChartTitleEntity _entity;
   final TabController _controller;
-  final NumberFormat _nf;
-  final NumberFormat _percentage;
 
-  ChartTitleView(this._controller, this._entity, this._nf, this._percentage);
+  ChartTitleView(this._controller, this._entity);
 
   @override
   Widget build(BuildContext context) {
@@ -329,7 +316,7 @@ class ChartTitleView extends StatelessWidget {
                 style: textStyle.apply(color: AppTheme.tealAccent),
                 maxLines: 1,
               ),
-              Text("${_entity == null ? "\$0.00" : _nf.format(_entity.incomeAmount)}", style: subTitleStyle,)
+              Text("${_entity == null ? "\$0.00" : moneyFormatter.format(_entity.incomeAmount)}", style: subTitleStyle,)
             ],
           ),
         ),
@@ -343,7 +330,7 @@ class ChartTitleView extends StatelessWidget {
                 style: textStyle.apply(color: AppTheme.pinkAccent),
                 maxLines: 1,
               ),
-              Text("${_entity == null ? "\$0.00" : _nf.format(_entity.expensesAmount)}", style: subTitleStyle,)
+              Text("${_entity == null ? "\$0.00" : moneyFormatter.format(_entity.expensesAmount)}", style: subTitleStyle,)
             ],
           ),
         ),
@@ -356,7 +343,7 @@ class ChartTitleView extends StatelessWidget {
                 style: textStyle.apply(color: AppTheme.brightGreen),
                 maxLines: 1,
               ),
-              Text("${_entity == null ? "0.00%" : _percentage.format(_entity.budgetPercentage)}", style: subTitleStyle,)
+              Text("${_entity == null ? "0.00%" : percentageFormatter.format(_entity.budgetPercentage)}", style: subTitleStyle,)
             ],
           ),
         ),
@@ -412,9 +399,8 @@ class TransactionChart extends StatelessWidget {
 
 class ChartBudgetView extends StatelessWidget {
   final ChartBudgetEntity _entity;
-  final NumberFormat _nf;
 
-  ChartBudgetView(this._entity, this._nf);
+  ChartBudgetView(this._entity);
 
   @override
   Widget build(BuildContext context) {
@@ -438,7 +424,7 @@ class ChartBudgetView extends StatelessWidget {
           Container(
             alignment: Alignment.center,
             decoration: BoxDecoration(shape: BoxShape.circle, border: Border.all(color: Colors.pinkAccent, width: 3.0)),
-            child: Text(_entity == null ? "\$0.00" : _nf.format(_entity.spent), style: Theme.of(context).textTheme.display2,),
+            child: Text(_entity == null ? "\$0.00" : moneyFormatter.format(_entity.spent), style: Theme.of(context).textTheme.display2,),
           ),
         ],
       ),

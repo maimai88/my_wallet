@@ -4,7 +4,6 @@ import 'package:my_wallet/ui/account/liability/payment/presentation/view/payment
 import 'package:my_wallet/ui/account/liability/payment/presentation/presenter/payment_presenter.dart';
 
 import 'package:my_wallet/data/local/data_observer.dart' as observer;
-import 'package:intl/intl.dart';
 
 import 'package:my_wallet/resources.dart' as R;
 
@@ -22,10 +21,6 @@ class PayLiability extends StatefulWidget {
 
 class _PayLiabilityState extends CleanArchitectureView<PayLiability, PayLiabilityPresenter> implements PayLiabilityDataView, observer.DatabaseObservable {
   _PayLiabilityState() : super(PayLiabilityPresenter());
-
-  final _nf = NumberFormat("\$#,###.##");
-  final _dateFormat = DateFormat("dd MMM, yyyy");
-  final _timeFormat = DateFormat("HH:mm");
 
   final GlobalKey<BottomViewContentState<Account>> _accountKey = GlobalKey();
   final GlobalKey<BottomViewContentState<AppCategory>> _categoryKey = GlobalKey();
@@ -106,23 +101,23 @@ class _PayLiabilityState extends CleanArchitectureView<PayLiability, PayLiabilit
                     ),
                     Row(
                       children: <Widget>[
-                        ConversationRow(R.string.on, _dateFormat.format(_date)),
-                        ConversationRow(R.string.at, _timeFormat.format(_date))
+                        ConversationRow(R.string.on, fullDateFormatter.format(_date)),
+                        ConversationRow(R.string.at, timeFormatter.format(_date))
                       ],
                     ),
                     ConversationRow(
                       R.string.discharge_liability,
-                      _nf.format(_dischargeLiability),
+                      moneyFormatter.format(_dischargeLiability),
                       onPressed: _changeDischargeLiability,
                     ),
                     ConversationRow(
                       R.string.interest,
-                      _nf.format(_interest),
+                      moneyFormatter.format(_interest),
                       onPressed: _changeInterest,
                     ),
                     ConversationRow(
                       R.string.additional_payment,
-                      _nf.format(_additionalPayment),
+                      moneyFormatter.format(_additionalPayment),
                       onPressed: _changeAdditionalPayment,
                     )
                   ],
@@ -319,7 +314,6 @@ class _AmountInput extends StatefulWidget {
 
 class _AmountInputState extends State<_AmountInput> {
 
-  final _nf = NumberFormat("\$#,###.##");
   double number = 0.0;
   final GlobalKey<NumberInputPadState> _numPadKey = GlobalKey();
 
@@ -346,7 +340,7 @@ class _AmountInputState extends State<_AmountInput> {
                   children: <Widget>[
                     ConversationRow(
                         widget._caption,
-                        _nf.format(number)
+                        moneyFormatter.format(number)
                     )
                   ],
                 ),

@@ -6,7 +6,6 @@ import 'package:my_wallet/ui/account/detail/presentation/view/detail_data_view.d
 
 import 'package:my_wallet/data/local/data_observer.dart' as observer;
 import 'package:my_wallet/style/routes.dart';
-import 'package:intl/intl.dart';
 
 import 'package:my_wallet/resources.dart' as R;
 
@@ -26,8 +25,6 @@ class _AccountDetailState extends CleanArchitectureView<AccountDetail, AccountDe
   _AccountDetailState() : super(AccountDetailPresenter());
 
   final _tables = [observer.tableAccount, observer.tableTransactions];
-  final _nf = NumberFormat("\$#,###.##");
-  final _df = DateFormat("dd MMM, yyyy HH:mm");
 
   AccountDetailEntity _account;
 
@@ -62,11 +59,11 @@ class _AccountDetailState extends CleanArchitectureView<AccountDetail, AccountDe
         child: ListView(
           children: <Widget>[
             DataRowView(R.string.account, _account == null ? "" : _account.name),
-            DataRowView(R.string.created, _account == null ? "" : _df.format(_account.created)),
+            DataRowView(R.string.created, _account == null ? "" : dateTimeFormatter.format(_account.created)),
             DataRowView(R.string.type, _account == null ? "" : _account.type),
-            DataRowView(R.string.balance, _account == null ? "" : _nf.format(_account.balance)),
-            DataRowView(R.string.spent, _account == null ? "" : _nf.format(_account.spent)),
-            DataRowView(R.string.earn, _account == null ? "" : _nf.format(_account.earn)),
+            DataRowView(R.string.balance, _account == null ? "" : moneyFormatter.format(_account.balance)),
+            DataRowView(R.string.spent, _account == null ? "" : moneyFormatter.format(_account.spent)),
+            DataRowView(R.string.earn, _account == null ? "" : moneyFormatter.format(_account.earn)),
             RoundedButton(
               onPressed: () {
                 if(_account != null) Navigator.pushNamed(context, routes.TransactionList(_account.name, accountId: _account.id));

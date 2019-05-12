@@ -1,4 +1,3 @@
-import 'package:intl/intl.dart';
 import 'package:my_wallet/ui/account/list/presentation/presenter/list_accounts_presenter.dart';
 import 'package:my_wallet/ca/presentation/view/ca_state.dart';
 import 'package:my_wallet/ui/account/list/presentation/view/list_account_dataview.dart';
@@ -22,9 +21,6 @@ class _ListAccountsState extends CleanArchitectureView<ListAccounts, ListAccount
   var tables = [observer.tableAccount];
 
   List<AccountEntity> _accounts = [];
-
-  final NumberFormat _nf = NumberFormat("#,##0.00");
-  final DateFormat _df = DateFormat("dd MMM, yyyy");
 
   @override
   void init() {
@@ -66,9 +62,9 @@ class _ListAccountsState extends CleanArchitectureView<ListAccounts, ListAccount
               if (index < _accounts.length) {
                 return CardListTile(
                     cardName: _accounts[index].name,
-                    cardDescription: R.string.created_on(_df.format(_accounts[index].created)),
-                    cardBalance: _nf.format(_accounts[index].balance),
-                    cardSpent: _nf.format(_accounts[index].spent),
+                    cardDescription: R.string.created_on(fullDateFormatter.format(_accounts[index].created)),
+                    cardBalance: moneyFormatter.format(_accounts[index].balance),
+                    cardSpent: moneyFormatter.format(_accounts[index].spent),
                     onTap: () {
                       if(_accounts[index].isLiability) {
                         // open liability view

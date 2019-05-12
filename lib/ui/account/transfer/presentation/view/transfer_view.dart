@@ -5,8 +5,6 @@ import 'package:my_wallet/ui/account/transfer/presentation/presenter/transfer_pr
 
 import 'package:my_wallet/app_material.dart';
 
-import 'package:intl/intl.dart';
-
 import 'package:my_wallet/resources.dart' as R;
 
 class AccountTransfer extends StatefulWidget {
@@ -176,7 +174,6 @@ class _SelectAccount extends StatefulWidget {
 class _SelectAccountState extends State<_SelectAccount> {
   List<AccountEntity> _accounts;
   AccountEntity _selected;
-  final _nf = NumberFormat("\$#,###.##");
 
   @override
   void initState() {
@@ -207,7 +204,7 @@ class _SelectAccountState extends State<_SelectAccount> {
                       .textTheme
                       .title
                       .apply(color: AppTheme.darkBlue)),
-                  subtitle: Text(_nf.format(_accounts[index].balance), style: Theme
+                  subtitle: Text(moneyFormatter.format(_accounts[index].balance), style: Theme
                       .of(context)
                       .textTheme
                       .body1
@@ -260,7 +257,6 @@ class _EnterAmount extends StatefulWidget {
 
 class _EnterAmountState extends State<_EnterAmount> {
   AccountEntity _toAccount;
-  final _nf = NumberFormat("\$#,###.##");
   var _amount = 0.0;
 
   final GlobalKey<NumberInputPadState> _numberInputKey = GlobalKey();
@@ -277,7 +273,7 @@ class _EnterAmountState extends State<_EnterAmount> {
 
   @override
   Widget build(BuildContext context) {
-    var split = _nf.format(_amount).replaceAll("\$", "").split(".");
+    var split = moneyFormatter.format(_amount).replaceAll("\$", "").split(".");
 
     return Column(
       mainAxisSize: MainAxisSize.max,
@@ -297,7 +293,7 @@ class _EnterAmountState extends State<_EnterAmount> {
                 ),
                 ConversationRow(
                   R.string.amount,
-                  _nf.format(_amount),
+                  moneyFormatter.format(_amount),
                   style: Theme
                       .of(context)
                       .textTheme
@@ -352,7 +348,6 @@ class _ConfirmState extends State<_Confirm> {
   AccountEntity toAccount;
   AccountEntity fromAccount;
   double amount;
-  final _nf = NumberFormat("\$#,###.##");
 
   @override
   void initState() {
@@ -376,7 +371,7 @@ class _ConfirmState extends State<_Confirm> {
         ),
         ConversationRow(
           R.string.amount,
-          _nf.format(amount == null ? 0.0 : amount),
+          moneyFormatter.format(amount == null ? 0.0 : amount),
           style: Theme
               .of(context)
               .textTheme
@@ -392,7 +387,7 @@ class _ConfirmState extends State<_Confirm> {
             ),
             ConversationRow(
               R.string.has,
-              _nf.format((toAccount == null ? 0.0 : toAccount.balance) + (amount == null ? 0.0 : amount)),
+              moneyFormatter.format((toAccount == null ? 0.0 : toAccount.balance) + (amount == null ? 0.0 : amount)),
               style: Theme
                   .of(context)
                   .textTheme
@@ -404,7 +399,7 @@ class _ConfirmState extends State<_Confirm> {
             ),
             ConversationRow(
               R.string.has,
-              _nf.format((fromAccount == null ? 0.0 : fromAccount.balance) - (amount == null ? 0.0 : amount)),
+              moneyFormatter.format((fromAccount == null ? 0.0 : fromAccount.balance) - (amount == null ? 0.0 : amount)),
               style: Theme
                   .of(context)
                   .textTheme

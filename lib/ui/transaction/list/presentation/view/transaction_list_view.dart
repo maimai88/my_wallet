@@ -1,6 +1,5 @@
 import 'package:my_wallet/ui/transaction/list/presentation/presenter/transaction_list_presenter.dart';
 import 'package:my_wallet/ui/transaction/list/data/transaction_list_entity.dart';
-import 'package:intl/intl.dart';
 import 'package:my_wallet/ca/presentation/view/ca_state.dart';
 import 'package:my_wallet/ui/transaction/list/presentation/view/transaction_list_data_view.dart';
 import 'package:my_wallet/data/local/data_observer.dart' as observer;
@@ -33,9 +32,6 @@ class _TransactionListState extends CleanArchitectureView<TransactionList, Trans
   DateTime _day;
   var _total = 0.0;
   var _fraction = 1.0;
-
-  NumberFormat _nf = NumberFormat("\$#,##0.00");
-  DateFormat _df = DateFormat("dd MMM, yyyy HH:mm:ss");
 
   @override
   void init() {
@@ -113,7 +109,7 @@ class _TransactionListState extends CleanArchitectureView<TransactionList, Trans
             if(index == 1) return Container(
               alignment: Alignment.centerRight,
               padding: EdgeInsets.all(8.0),
-              child: Text("${R.string.total_expenses} ${_nf.format(_total)}", style: TextStyle(color: AppTheme.darkBlue),),
+              child: Text("${R.string.total_expenses} ${moneyFormatter.format(_total)}", style: TextStyle(color: AppTheme.darkBlue),),
               color: AppTheme.blueGrey.withOpacity(0.2),
             );
 
@@ -126,8 +122,8 @@ class _TransactionListState extends CleanArchitectureView<TransactionList, Trans
                   child: Text(item.userInitial, style: Theme.of(context).textTheme.title.apply(color: AppTheme.white),),
                   backgroundColor: Color(item.userColor),
                 ),
-                subtitle: Text(_df.format(item.dateTime), style: Theme.of(context).textTheme.body2.apply(color: Colors.grey),),
-                trailing: Text("${_nf.format(item.amount)}", style: TextStyle(color: Color(item.transactionColor)),),
+                subtitle: Text(fullDateTimeFormatter.format(item.dateTime), style: Theme.of(context).textTheme.body2.apply(color: Colors.grey),),
+                trailing: Text("${moneyFormatter.format(item.amount)}", style: TextStyle(color: Color(item.transactionColor)),),
                 onTap: () {
                   if(item.isUsualTransaction) Navigator.pushNamed(context, routes.AddTransactionWithParam(transactionId: item.id));
                 },
@@ -148,7 +144,7 @@ class _TransactionListState extends CleanArchitectureView<TransactionList, Trans
 
       if(list.dates != null || list.dates.isNotEmpty) {
         Map<DateTime, List<String>> events = {};
-        list.dates.forEach((date, spent) => events.putIfAbsent(date, () => [_nf.format(spent)]));
+        list.dates.forEach((date, spent) => events.putIfAbsent(date, () => [moneyFormatter.format(spent)]));
 
         this._markedDates = EventList(
             events: events

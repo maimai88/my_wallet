@@ -35,7 +35,6 @@ class _BudgetDetailState extends CleanArchitectureView<BudgetDetail, BudgetDetai
   AppCategory _category;
   double _amount = 0.0;
 
-  NumberFormat _nf = NumberFormat("\$##0.00");
 
   void loadData() {
     presenter.loadCategoryBudget(widget.categoryId, _from, _to);
@@ -101,13 +100,13 @@ class _BudgetDetailState extends CleanArchitectureView<BudgetDetail, BudgetDetai
                     ),
                         ConversationRow(
                           R.string.from,
-                          df.format(_from),
+                          monthYearFormatter.format(_from),
                           dataColor: AppTheme.darkBlue,
                           onPressed: _showFromMonth,
                         ),
                     ConversationRow(
                       R.string.to,
-                      _to == null ? R.string.forever : df.format(_to),
+                      _to == null ? R.string.forever : monthYearFormatter.format(_to),
                       dataColor: AppTheme.darkBlue,
                       onPressed: _showToMonth,
                       trail: _to == null ? null : IconButton(
@@ -116,7 +115,7 @@ class _BudgetDetailState extends CleanArchitectureView<BudgetDetail, BudgetDetai
                     ),
                     ConversationRow(
                       R.string.at_max,
-                      _nf.format(_amount),
+                      moneyFormatter.format(_amount),
                       style: Theme.of(context).textTheme.display2,
                     )
                   ],

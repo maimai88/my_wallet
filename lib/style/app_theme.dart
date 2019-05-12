@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:intl/intl.dart';
+
 class AppTheme {
   static const darkBlue = Color(0xFF292787);
   static const blue = Color(0xFF3E3C93);
@@ -179,3 +181,15 @@ class _MyWalletPageTransitionBuilder extends PageTransitionsBuilder {
     );
   }
 }
+
+final moneyFormatter = NumberFormat("\$#,###.##");
+final roundedMoneyFormatter = NumberFormat("#,###");
+final percentageFormatter = NumberFormat("#,##0.00%");
+
+final fullDateFormatter = DateFormat("dd MMM, yyyy");
+final monthOnlyFormatter = DateFormat(DateFormat.MONTH);
+final monthYearFormatter = DateFormat("MMM, yyyy");
+final timeFormatter = DateFormat("HH:mm");
+final dateTimeFormatter = DateFormat("dd MMM, yyyy HH:mm");
+final fullDateTimeFormatter = DateFormat("dd MMM, yyyy HH:mm:ss");
+

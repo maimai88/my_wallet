@@ -4,8 +4,6 @@ import 'package:my_wallet/ca/presentation/view/ca_state.dart';
 import 'package:my_wallet/ui/account/create/presentation/presenter/create_account_presenter.dart';
 import 'package:my_wallet/ui/account/create/presentation/view/create_account_dataview.dart';
 
-import 'package:intl/intl.dart';
-
 import 'package:my_wallet/resources.dart' as R;
 
 class CreateAccount extends StatefulWidget {
@@ -19,8 +17,6 @@ class _CreateAccountState extends CleanArchitectureView<CreateAccount, CreateAcc
   _CreateAccountState() : super(CreateAccountPresenter());
 
   final GlobalKey<NumberInputPadState> _numPadKey = GlobalKey();
-
-  final _nf = NumberFormat("\$#,##0.00");
 
   AccountType _type = AccountType.paymentAccount;
   String _name = "";
@@ -67,7 +63,7 @@ class _CreateAccountState extends CleanArchitectureView<CreateAccount, CreateAcc
                       onPressed: _showAccountNameDialog,),
                     ConversationRow(
                       R.string.and_initial_amount,
-                      _nf.format(_amount),
+                      moneyFormatter.format(_amount),
                       dataColor: AppTheme.brightPink,
                       style: Theme.of(context).textTheme.display2,),
                   ],

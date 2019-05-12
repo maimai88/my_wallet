@@ -61,29 +61,38 @@ Future<void> setupDatabase(final String homeKey) async {
       await db.dropAllTables();
     }
 
-    await _addSubscriptions();
+//    await _addSubscriptions();
   });
 }
 
 Future<void> _addSubscriptions() async {
   for(String table in allTables) {
-    subs.putIfAbsent(table, () => _firestore.collection(table).snapshots().listen((f) async {
-      if(f.documentChanges != null && f.documentChanges.length > 0) {
-        final batchIdentifier = db.startTransaction();
-        f.documentChanges.forEach((change) async {
-          if(change == null) return;
-          if(change.document == null) return;
+    if (!subs.containsKey(table)) {
+      subs.putIfAbsent(table, () =>
+          _firestore.collection(table).snapshots().listen((f) async {
+            if (f.documentChanges != null && f.documentChanges.length > 0) {
+              final batchIdentifier = await db.startTransaction();
+              f.documentChanges.forEach((change) async {
+                if (change == null) return;
+                if (change.document == null) return;
 
-          //print("Change ${change.type} with ID ${change.document.documentID} in table $table");
-          switch(change.type) {
-            case DocumentChangeType.added: await _onAdded(table, change.document, batchIdentifier); break;
-            case DocumentChangeType.modified: await _onModified(table, change.document, batchIdentifier); break;
-            case DocumentChangeType.removed: await _onRemoved(table, change.document, batchIdentifier); break;
-          }
-        });
-        await db.execute(batchIdentifier: batchIdentifier);
-      }
-    }));
+                //print("Change ${change.type} with ID ${change.document.documentID} in table $table");
+                switch (change.type) {
+                  case DocumentChangeType.added:
+                    await _onAdded(table, change.document, batchIdentifier);
+                    break;
+                  case DocumentChangeType.modified:
+                    await _onModified(table, change.document, batchIdentifier);
+                    break;
+                  case DocumentChangeType.removed:
+                    await _onRemoved(table, change.document, batchIdentifier);
+                    break;
+                }
+              });
+              await db.execute(batchIdentifier: batchIdentifier);
+            }
+          }));
+    }
   }
 }
 

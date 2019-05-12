@@ -128,9 +128,11 @@ class _LoginFirebaseRepository {
 }
 
 class _LoginDatabaseRepository {
-  Future<void> saveUser(User user) {
-    db.startTransaction();
+  Future<void> saveUser(User user) async {
+    await db.startTransaction();
     db.insertUser(user);
-    return db.execute();
+    await db.execute();
+
+    return;
   }
 }

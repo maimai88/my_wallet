@@ -58,7 +58,7 @@ class _AccountTransferDatabaseRepository {
   }
 
   Future<bool> transferAmount(Transfer transfer) async {
-    _db.startTransaction();
+    await _db.startTransaction();
     _db.insertTransfer(transfer);
 
     await _db.execute();

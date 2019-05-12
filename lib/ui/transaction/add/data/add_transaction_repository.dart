@@ -200,7 +200,7 @@ class _AddTransactionDatabaseRepository {
       bool newTransaction) async {
     var uuid = await SharedPreferences.getUserUUID();
 
-    _db.startTransaction();
+    await _db.startTransaction();
     if(newTransaction) {
       _db.insertTransaction(AppTransaction(
           id,
@@ -222,23 +222,23 @@ class _AddTransactionDatabaseRepository {
           _type,
           uuid));
     }
-    _db.execute();
+    await _db.execute();
 
     return true;
   }
 
   Future<bool> deleteTransaction(int id) async {
-    _db.startTransaction();
+    await _db.startTransaction();
     _db.deleteTransaction(id);
-    _db.execute();
+    await _db.execute();
 
     return true;
   }
 
   Future<bool> updateAccount(Account acc) async {
-    _db.startTransaction();
+    await _db.startTransaction();
     _db.updateAccount(acc);
-    _db.execute();
+    await _db.execute();
 
     return true;
   }

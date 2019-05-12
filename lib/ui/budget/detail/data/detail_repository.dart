@@ -67,7 +67,7 @@ class BudgetDetailDatabaseRepository {
   }
 
   Future<int> insertBudget(Budget budget) async {
-    db.startTransaction();
+    await db.startTransaction();
     db.insertBudget(budget);
     await db.execute();
 
@@ -75,7 +75,7 @@ class BudgetDetailDatabaseRepository {
   }
 
   Future<int> updateBudget(Budget budget) async {
-    db.startTransaction();
+    await db.startTransaction();
     db.updateBudget(budget);
     await db.execute();
 
@@ -83,7 +83,7 @@ class BudgetDetailDatabaseRepository {
   }
 
   Future<int> deleteBudget(Budget budget) async {
-    db.startTransaction();
+    await db.startTransaction();
     db.deleteBudget(budget.id);
     await db.execute();
 

@@ -61,7 +61,7 @@ class _PayLiabilityDatabaseRepository {
         AppTransaction interest,
         DischargeOfLiability additionalPayment
       }) async {
-    db.startTransaction();
+    await db.startTransaction();
 
     db.insertDischargeOfLiability(discharge);
 

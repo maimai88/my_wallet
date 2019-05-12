@@ -46,6 +46,8 @@ class DashboardState extends CleanArchitectureView<Dashboard, DashboardPresenter
     tabController = TabController(length: 4, vsync: this);
 
     print("DASHBOARD ==> initState()");
+
+    onResume();
   }
 
   @override

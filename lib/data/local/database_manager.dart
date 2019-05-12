@@ -72,7 +72,7 @@ Future<void> dropAllTables() {
   return _db._deleteDb();
 }
 
-String startTransaction() {
+Future<String> startTransaction() {
   return _db.startTransaction();
 }
 
@@ -1037,12 +1037,14 @@ class _Database {
   }
 
   Future<bool> isExist(String table, String column, dynamic value) async {
+    if(!db.isOpen) db = await _openDatabase();
     var row = await db.query(table, where: "$column = ?", whereArgs: [value]);
 
     return row.length > 0;
   }
 
   Future<int> _generateId(String table) async {
+    if(!db.isOpen) db = await _openDatabase();
     int id = 0;
 
     var ids = await db.rawQuery("SELECT MAX($_id) FROM $table");
@@ -1054,7 +1056,9 @@ class _Database {
     return id == null ? 0 : id + 1;
   }
 
-  String startTransaction() {
+  Future<String> startTransaction() async {
+    if(!db.isOpen) db = await _openDatabase();
+
     if(_batch == null) _batch = {};
 
     Batch batch = db.batch();
@@ -1065,12 +1069,14 @@ class _Database {
   }
 
   Future<List<Map<String, dynamic>>> _executeSql(String sql) async {
+    if(!db.isOpen) db = await _openDatabase();
     var result = await db.rawQuery(sql);
 
     return result;
   }
 
   Future<List<Map<String, dynamic>>> _query(String table, {String where, List whereArgs, String orderBy, List<String> columns}) async {
+    if(!db.isOpen) db = await _openDatabase();
     List<Map<String, dynamic>> map;
     try {
       map = await db.query(table, where: where, whereArgs: whereArgs, orderBy: orderBy, columns: columns);
@@ -1082,6 +1088,7 @@ class _Database {
   }
 
   Future<void> _deleteDb() async {
+    if(!db.isOpen) db = await _openDatabase();
     String path = db.path;
 
     await db.close();

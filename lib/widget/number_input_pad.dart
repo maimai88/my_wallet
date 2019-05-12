@@ -1,4 +1,3 @@
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter/material.dart';
 
 class NumberInputPad extends StatefulWidget {
@@ -44,24 +43,23 @@ class NumberInputPadState extends State<NumberInputPad> {
     FocusScope.of(context).requestFocus(new FocusNode());
 
     final numbers = [
-      "1", "2", "3", "C",
-      "4", "5", "6", "7",
-      "8", "9", "0", "."];
+      "1", "2", "3",
+      "4", "5", "6",
+      "7", "8", "9",
+      ".", "0", "C",];
 
     return Align(
-//      key: fullScreenKey,
       alignment: Alignment.bottomCenter,
-      child: _showNumPad ? StaggeredGridView.countBuilder(
+      child: _showNumPad ? GridView.count(
+        crossAxisCount: 3,
+        childAspectRatio: 2,
         key: stickyKey,
         shrinkWrap: true,
         primary: false,
-        crossAxisCount: 4,
-        itemCount: numbers.length,
-        itemBuilder: (BuildContext context, int index) => _createButton(numbers[index], _onButtonClick),
-        staggeredTileBuilder: (int index) => new StaggeredTile.count(_isDoubleWidth(index) ? 2 : 1, _isDoubleHeight(index) ? 3 : 1),
-        crossAxisSpacing: 0.3,
+        children: numbers.map((f) => _createButton(f, _onButtonClick)).toList(),
       ) : null,
     );
+
   }
 
   Widget _createButton(String title, ValueChanged<String> f, {double width, double height}) {

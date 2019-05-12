@@ -41,11 +41,19 @@ class CleanArchitectureUseCase<T extends CleanArchitectureRepository> {
   }
 
   void clearSubscription(String key) {
-    print("clear subscription $key");
     StreamSubscription subscription = _streamSubscription.remove(key);
 
     if(subscription != null) {
       subscription.cancel();
     }
+  }
+
+  @mustCallSuper
+  void dispose() {
+    if(_streamSubscription != null) {
+      _streamSubscription.forEach((key, value) async => await value.cancel());
+    }
+
+    _streamSubscription.clear();
   }
 }

@@ -22,4 +22,12 @@ abstract class CleanArchitectureView<ST extends StatefulWidget, T extends CleanA
   void setState(fn) {
     if(this.mounted) super.setState(fn);
   }
+
+  @mustCallSuper
+  @override
+  void dispose() {
+    super.dispose();
+
+    presenter.dispose();
+  }
 }

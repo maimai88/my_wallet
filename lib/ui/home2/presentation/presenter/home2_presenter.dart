@@ -13,8 +13,4 @@ class MyWalletHomePresenter extends CleanArchitecturePresenter<MyWalletHomeUseCa
   void resumeDatabase() {
     useCase.resumeDatabase(dataView.onResumeDone);
   }
-
-  void dispose() {
-    useCase.suspenseStream();
-  }
 }

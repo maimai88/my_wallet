@@ -9,8 +9,9 @@ class ListAccountsRepository extends CleanArchitectureRepository {
   Future<List<AccountEntity>> loadAllAccounts() async {
     List<Account> accounts = await _dbRepo.loadAllAccounts();
 
+    List<AccountEntity> entities = [];
+
     if(accounts != null) {
-      List<AccountEntity> entities = [];
 
       final from = DateTime.fromMillisecondsSinceEpoch(0);
       final to = DateTime.now();
@@ -30,10 +31,9 @@ class ListAccountsRepository extends CleanArchitectureRepository {
 
       }
 
-      return entities;
     }
 
-    return null;
+    return entities;
   }
 }
 

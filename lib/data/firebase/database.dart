@@ -74,7 +74,7 @@ Future<void> _addSubscriptions() async {
           if(change == null) return;
           if(change.document == null) return;
 
-          print("Change ${change.type} with ID ${change.document.documentID} in table $table");
+          //print("Change ${change.type} with ID ${change.document.documentID} in table $table");
           switch(change.type) {
             case DocumentChangeType.added: await _onAdded(table, change.document, batchIdentifier); break;
             case DocumentChangeType.modified: await _onModified(table, change.document, batchIdentifier); break;

@@ -29,8 +29,4 @@ class MyWalletHomeUseCase extends CleanArchitectureUseCase<MyWalletHomeRepositor
       next(false);
     });
   }
-
-  void suspenseStream() {
-    execute(repo.dispose(), (_) {}, (_) {});
-  }
 }

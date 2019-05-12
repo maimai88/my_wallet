@@ -47,13 +47,6 @@ class MyWalletHomeRepository extends CleanArchitectureRepository {
 
     return true;
   }
-
-  Future<bool> dispose() async {
-    await _dbRepo.dispose();
-    await _fbRepo.dispose();
-
-    return true;
-  }
 }
 
 class _MyWalletHomeDatabaseRepository {
@@ -87,10 +80,6 @@ class _MyWalletHomeDatabaseRepository {
 
   Future<void> resume() {
     return _db.resume();
-  }
-
-  Future<void> dispose() {
-    return _db.dispose();
   }
 }
 

@@ -991,7 +991,7 @@ class _Database {
 
   Future<Database> _openDatabase() async {
     String dbPath = join((await getApplicationDocumentsDirectory()).path, "MyWalletDb");
-    return await openDatabase(dbPath, version: 11, onCreate: (Database db, int version) async {
+    return await openDatabase(dbPath, version: 12, onCreate: (Database db, int version) async {
       await _privateDbHelper._executeCreateDatabase(db);
     }, onUpgrade: (Database db, int oldVersion, int newVersion) async {
       // on upgrade? delete all tables and create all new

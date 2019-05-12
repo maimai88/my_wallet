@@ -6,4 +6,9 @@ class CleanArchitecturePresenter<T extends CleanArchitectureUseCase, DV extends 
   DV dataView;
 
   CleanArchitecturePresenter(this.useCase);
+
+  @mustCallSuper
+  void dispose() {
+    useCase.dispose();
+  }
 }

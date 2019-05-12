@@ -121,7 +121,7 @@ class TransactionPage extends StatelessWidget {
                         secondaryMax: totalDays.toDouble(),
                         secondaryValue: (totalDays - daysRemains).toDouble(),
                         secondaryLabel: "$daysRemains days\nleft",
-                      secondaryTextColor: mainColor,),
+                      secondaryTextColor: AppTheme.white,),
                     )
                 )
               ],

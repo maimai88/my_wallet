@@ -284,7 +284,9 @@ class HomeOverview extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           Text(R.string.saving_this_month, style: _titleStyle,),
-          Text("${moneyFormatter.format(_total)}", style: Theme.of(context).textTheme.headline.apply(fontSizeFactor: 1.8, color: _total <= 0 ? AppTheme.pinkAccent : AppTheme.tealAccent),)
+          AutoSizeText("${moneyFormatter.format(_total)}",
+            style: Theme.of(context).textTheme.headline.apply(fontSizeFactor: 1.8, color: _total <= 0 ? AppTheme.pinkAccent : AppTheme.tealAccent),
+            maxLines: 1,)
         ],
       ),
     );
@@ -316,7 +318,10 @@ class ChartTitleView extends StatelessWidget {
                 style: textStyle.apply(color: AppTheme.tealAccent),
                 maxLines: 1,
               ),
-              Text("${_entity == null ? "\$0.00" : moneyFormatter.format(_entity.incomeAmount)}", style: subTitleStyle,)
+              AutoSizeText(
+                "${_entity == null ? "\$0.00" : moneyFormatter.format(_entity.incomeAmount)}",
+                style: subTitleStyle,
+                maxLines: 1,)
             ],
           ),
         ),
@@ -330,7 +335,9 @@ class ChartTitleView extends StatelessWidget {
                 style: textStyle.apply(color: AppTheme.pinkAccent),
                 maxLines: 1,
               ),
-              Text("${_entity == null ? "\$0.00" : moneyFormatter.format(_entity.expensesAmount)}", style: subTitleStyle,)
+              AutoSizeText("${_entity == null ? "\$0.00" : moneyFormatter.format(_entity.expensesAmount)}",
+                style: subTitleStyle,
+                maxLines: 1,)
             ],
           ),
         ),

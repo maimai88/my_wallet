@@ -39,7 +39,7 @@ dependencies:
   firebase_auth: any
   cloud_firestore: any
   flutter_keychain: any
-  primary_secondary_progress_bar: any
+  primary_secondary_progress_bar: ^0.1.0
 
 dev_dependencies:
   flutter_test:

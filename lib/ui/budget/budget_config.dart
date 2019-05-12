@@ -1,7 +1,3 @@
-import 'package:intl/intl.dart';
-
-final budgetCurrencyFormatter = NumberFormat("\$##0");
-
 enum Month {
   January,
   February,

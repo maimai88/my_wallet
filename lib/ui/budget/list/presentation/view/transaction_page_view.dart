@@ -2,8 +2,8 @@ import 'package:my_wallet/app_material.dart';
 import 'package:my_wallet/utils.dart';
 import 'package:my_wallet/ui/budget/list/data/list_entity.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-import 'package:my_wallet/ui/budget/budget_config.dart';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:my_wallet/resources.dart' as R;
 
 class TransactionPage extends StatelessWidget {
@@ -92,9 +92,10 @@ class TransactionPage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.end,
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: <Widget>[
-                          Text(
-                            budgetCurrencyFormatter.format(total),
+                          AutoSizeText(
+                            moneyFormatter.format(total),
                             style: Theme.of(context).textTheme.display1.apply(color: AppTheme.white),
+                            maxLines: 1,
                           ),
                           Text("spent in ${monthOnlyFormatter.format(DateTime.now())}")
                         ],
@@ -111,9 +112,9 @@ class TransactionPage extends StatelessWidget {
                         context,
                         primaryValue: total,
                         primaryMax: max(budget, total),
-                        primaryLabel: budgetCurrencyFormatter.format(budget),
-                        primaryIndicatorLine1: budgetCurrencyFormatter.format(budget - total),
-                        primaryIndicatorLine2: reverse ? "more" : "remaining",
+                        primaryLabel: moneyFormatter.format(budget),
+                        primaryIndicatorLine1: moneyFormatter.format(budget - total),
+                        primaryIndicatorLine2: (budget - total < 0) ? "over" : reverse ? "more" : "remaining",
                         primaryTextColor: mainColor,
                         secondaryMax: totalDays.toDouble(),
                         secondaryValue: (totalDays - daysRemains).toDouble(),
@@ -142,9 +143,9 @@ class TransactionPage extends StatelessWidget {
 
     var _transactionDesc = "";
     if(_left >= 0) {
-      _transactionDesc = "${budgetCurrencyFormatter.format(_left)} ${reverse ? "more" : "left"}";
+      _transactionDesc = "${moneyFormatter.format(_left)} ${reverse ? "more" : "left"}";
     } else {
-      _transactionDesc = "${budgetCurrencyFormatter.format(_left * (-1))} over";
+      _transactionDesc = "${moneyFormatter.format(_left * (-1))} over";
     }
 
     final _color = _left == 0 ? AppTheme.amber : _left > 0 ? safeColor : overColor;
@@ -176,7 +177,7 @@ class TransactionPage extends StatelessWidget {
                         softWrap: true,
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,),
-                      Text(budgetCurrencyFormatter.format(entity.total), style: Theme.of(context).textTheme.title.apply(color: AppTheme.black), textAlign: TextAlign.center,),
+                      Text(moneyFormatter.format(entity.total), style: Theme.of(context).textTheme.title.apply(color: AppTheme.black), textAlign: TextAlign.center,),
                       Text(_transactionDesc, style: Theme.of(context).textTheme.body2.apply(color: _color), textAlign: TextAlign.center, ),
                       Padding(
                         padding: EdgeInsets.only(top:10.0, bottom: 10.0),

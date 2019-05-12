@@ -62,7 +62,7 @@ class _ListAccountsState extends CleanArchitectureView<ListAccounts, ListAccount
               if (index < _accounts.length) {
                 return CardListTile(
                     cardName: _accounts[index].name,
-                    cardDescription: R.string.created_on(fullDateFormatter.format(_accounts[index].created)),
+                    cardDescription: _accounts[index].type,
                     cardBalance: moneyFormatter.format(_accounts[index].balance),
                     cardSpent: moneyFormatter.format(_accounts[index].spent),
                     onTap: () {

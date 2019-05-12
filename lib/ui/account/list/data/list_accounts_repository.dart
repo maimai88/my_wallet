@@ -23,7 +23,7 @@ class ListAccountsRepository extends CleanArchitectureRepository {
         entities.add(AccountEntity(
             account.id,
             account.name,
-            account.created,
+            account.type.name,
             account.initialBalance + earn - spent,
             spent,
             account.type == AccountType.liability

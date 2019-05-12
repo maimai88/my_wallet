@@ -70,7 +70,7 @@ class CardListTile extends StatelessWidget {
                     flex: 1,
                     child: Text(
                       _cardDescription,
-                      style: Theme.of(context).textTheme.caption,
+                      style: Theme.of(context).textTheme.body1,
                       overflow: TextOverflow.ellipsis,
                       maxLines: 1,
                     ),

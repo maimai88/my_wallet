@@ -79,7 +79,6 @@ class _CreateAccountState extends CleanArchitectureView<CreateAccount, CreateAcc
   }
 
   void _showAccountTypeSelection() {
-    _numPadKey.currentState.hide();
     showModalBottomSheet(context: context, builder: (context) =>
         BottomViewContent(
             AccountType.all, (context, f) =>
@@ -91,8 +90,6 @@ class _CreateAccountState extends CleanArchitectureView<CreateAccount, CreateAcc
                 ),
                 onTap: () {
                   setState(() => _type = f);
-
-                  _numPadKey.currentState.show();
 
                   Navigator.pop(context);
                 },

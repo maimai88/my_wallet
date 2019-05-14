@@ -140,36 +140,4 @@ class NumberInputPadState extends State<NumberInputPad> {
     var amount = double.parse("${_number == null || _number.isEmpty ? 0 : _number}.${_decimal == null || _decimal.isEmpty ? 0 : _decimal}");
     widget._onValueChanged(amount);
   }
-
-  void hide() {}
-  void show() {}
-
-//  void toggleVisiblity() {
-//    if(_showNumPad) hide();
-//    else show();
-//  }
-//
-//  void hide() {
-//    setState(() {
-//      _showNumPad = false;
-//    });
-//  }
-//
-//  void show() {
-//    setState(() {
-//      _showNumPad = true;
-//    });
-//  }
-
-//  double calculateHeight() {
-//    var height = 0.0;
-//    final keyContext = stickyKey.currentContext;
-//
-//    if(keyContext != null) {
-//      final RenderBox numPadBox = keyContext.findRenderObject();
-//      height = numPadBox.size.height;
-//    }
-//
-//    return height;
-//  }
 }

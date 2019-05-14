@@ -1,13 +1,23 @@
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:flutter/material.dart';
+import 'package:my_wallet/style/app_theme.dart';
 
 class NumberInputPad extends StatefulWidget {
   final Function(double) _onValueChanged;
-  final String _number;
-  final String _decimal;
-  final bool showNumPad;
+  final double _initialValue;
+  final Widget _child;
 
-  NumberInputPad(GlobalKey<NumberInputPadState> key, this._onValueChanged, this._number, this._decimal, {this.showNumPad = true}) : super(key: key);
+  NumberInputPad(GlobalKey<NumberInputPadState> key,
+  {
+    Function(double) onValueChange,
+    double initialValue,
+    Widget child,
+  }) :
+        assert(onValueChange != null),
+        assert(child != null),
+        this._onValueChanged = onValueChange,
+        this._initialValue = initialValue ?? 0.0,
+        this._child = child,
+        super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -16,70 +26,82 @@ class NumberInputPad extends StatefulWidget {
 }
 
 class NumberInputPadState extends State<NumberInputPad> {
-  String number = "";
-  String decimal = "";
-  bool isDecimal = false;
+  String _number = "";
+  String _decimal = "";
+  bool _isDecimal = false;
 
-  bool _showNumPad = true;
+  GlobalKey _stickyKey = new GlobalKey();
 
-  GlobalKey stickyKey = new GlobalKey();
+  static final _numbers = [
+    "1", "2", "3",
+    "4", "5", "6",
+    "7", "8", "9",
+    ".", "0", "C"];
+
+  static final _column = 3;
+  static final _row = _numbers.length/_column;
 
   @override
   void initState() {
     super.initState();
 
-    _showNumPad = widget.showNumPad;
+    _number = widget._initialValue != 0 ? "${widget._initialValue.floor()}" : "";
+    _decimal = widget._initialValue != 0 && widget._initialValue - widget._initialValue.floor() != 0 ? "${widget._initialValue - widget._initialValue.floor()}" : "";
 
-    number = widget._number;
-    decimal = widget._decimal;
+    if(_number == null) _number = "";
+    if(_decimal == null) _decimal = "";
 
-    if(number == null) number = "";
-    if(decimal == null) decimal = "";
-
-    isDecimal = decimal.isNotEmpty;
+    _isDecimal = widget._initialValue.floor() != widget._initialValue;
   }
 
   @override
   Widget build(BuildContext context) {
     FocusScope.of(context).requestFocus(new FocusNode());
 
-    final numbers = [
-      "1", "2", "3", "C",
-      "4", "5", "6", "7",
-      "8", "9", "0", "."];
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Flexible(
+          flex: 3,
+          child: widget._child,
+        ),
+        Flexible(
+          flex: 2,
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: AppTheme.bgGradient
+            ),
+            child: SafeArea(
+                child: LayoutBuilder(builder: (context, constraint) {
+                  final childAspectRatio = (constraint.maxWidth/_column)/(constraint.maxHeight/_row);
 
-    return Align(
-//      key: fullScreenKey,
-      alignment: Alignment.bottomCenter,
-      child: _showNumPad ? StaggeredGridView.countBuilder(
-        key: stickyKey,
-        shrinkWrap: true,
-        primary: false,
-        crossAxisCount: 4,
-        itemCount: numbers.length,
-        itemBuilder: (BuildContext context, int index) => _createButton(numbers[index], _onButtonClick),
-        staggeredTileBuilder: (int index) => new StaggeredTile.count(_isDoubleWidth(index) ? 2 : 1, _isDoubleHeight(index) ? 3 : 1),
-        crossAxisSpacing: 0.3,
-      ) : null,
+                  return SizedBox.fromSize(
+                    size: constraint.biggest,
+                    child: Container(
+                      alignment: Alignment.bottomCenter,
+                      child: GridView.count(
+                          crossAxisCount: 3,
+                      children: _numbers.map((title) => _createButton(title, _onButtonClick)).toList(),
+                      childAspectRatio: childAspectRatio,),
+                      decoration: BoxDecoration(
+                        gradient: AppTheme.bgGradient
+                      ),
+                    ),
+                  );
+                })),
+          ),
+        )
+      ],
     );
   }
 
   Widget _createButton(String title, ValueChanged<String> f, {double width, double height}) {
     return Container(
       decoration: BoxDecoration(
-          border: Border.all(color: Colors.white, width: 0.3),
-//          color: theme.darkBlue
+        border: Border.all(color: Colors.white, width: 0.3),
       ),
       child: FlatButton(onPressed: () => f(title), child: Text(title, style: TextStyle(fontSize: 24.0), textAlign: TextAlign.center,)),
     );
-  }
-
-  bool _isDoubleHeight(int index) {
-    return index == 3;
-  }
-
-  bool _isDoubleWidth(int index) {
-    return index == 10 || index == 11;
   }
 
   void _onButtonClick(String value) {
@@ -94,57 +116,60 @@ class NumberInputPadState extends State<NumberInputPad> {
       case "8":
       case "9":
       case "0":
-        if (isDecimal) {
-          if (decimal.length < 2) decimal += value;
+        if (_isDecimal) {
+          if (_decimal.length < 2) _decimal += value;
         } else {
-          if (number.length < 12) number += value;
+          if (_number.length < 12) _number += value;
         }
         break;
       case "C":
-        if (isDecimal && decimal.isNotEmpty)
-          decimal = decimal.substring(0, decimal.length - 1);
-        else if (number.isNotEmpty) {
-          number = number.substring(0, number.length - 1);
-          isDecimal = false;
+        if (_isDecimal && _decimal.isNotEmpty)
+          _decimal = _decimal.substring(0, _decimal.length - 1);
+        else if (_number.isNotEmpty) {
+          _number = _number.substring(0, _number.length - 1);
+          _isDecimal = false;
         } else {
-          isDecimal = false;
+          _isDecimal = false;
         }
         break;
       case ".":
-        isDecimal = true;
+        _isDecimal = true;
         break;
     }
 
-    var amount = double.parse("${number == null || number.isEmpty ? 0 : number}.${decimal == null || decimal.isEmpty ? 0 : decimal}");
+    var amount = double.parse("${_number == null || _number.isEmpty ? 0 : _number}.${_decimal == null || _decimal.isEmpty ? 0 : _decimal}");
     widget._onValueChanged(amount);
   }
 
-  void toggleVisiblity() {
-    if(_showNumPad) hide();
-    else show();
-  }
+  void hide() {}
+  void show() {}
 
-  void hide() {
-    setState(() {
-      _showNumPad = false;
-    });
-  }
+//  void toggleVisiblity() {
+//    if(_showNumPad) hide();
+//    else show();
+//  }
+//
+//  void hide() {
+//    setState(() {
+//      _showNumPad = false;
+//    });
+//  }
+//
+//  void show() {
+//    setState(() {
+//      _showNumPad = true;
+//    });
+//  }
 
-  void show() {
-    setState(() {
-      _showNumPad = true;
-    });
-  }
-
-  double calculateHeight() {
-    var height = 0.0;
-    final keyContext = stickyKey.currentContext;
-
-    if(keyContext != null) {
-      final RenderBox numPadBox = keyContext.findRenderObject();
-      height = numPadBox.size.height;
-    }
-
-    return height;
-  }
+//  double calculateHeight() {
+//    var height = 0.0;
+//    final keyContext = stickyKey.currentContext;
+//
+//    if(keyContext != null) {
+//      final RenderBox numPadBox = keyContext.findRenderObject();
+//      height = numPadBox.size.height;
+//    }
+//
+//    return height;
+//  }
 }

@@ -44,43 +44,37 @@ class _CreateAccountState extends CleanArchitectureView<CreateAccount, CreateAcc
 
     return GradientScaffold(
       appBar: appBar,
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            child: Container(
-              alignment: Alignment.center,
-              color: AppTheme.white,
-              child: FittedBox(
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    ConversationRow(
-                        R.string.create_new,
-                        _type.name,
-                        dataColor: AppTheme.darkBlue,
-                        onPressed: _showAccountTypeSelection),
-                    ConversationRow(
-                      R.string.with_name,
-                      _name == null || _name.isEmpty ? "Enter a name" : _name,
-                      dataColor: AppTheme.darkBlue,
-                      onPressed: _showAccountNameDialog,),
-                    ConversationRow(
-                      R.string.and_initial_amount,
-                      _nf.format(_amount),
-                      dataColor: AppTheme.brightPink,
-                      style: Theme.of(context).textTheme.display2,),
-                  ],
-                ),
-              ),
-            ),
+      body: NumberInputPad(_numPadKey,
+      onValueChange: _onNumberInput,
+      initialValue: 0.0,
+      child: Container(
+        alignment: Alignment.center,
+        color: AppTheme.white,
+        child: FittedBox(
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              ConversationRow(
+                  R.string.create_new,
+                  _type.name,
+                  dataColor: AppTheme.darkBlue,
+                  onPressed: _showAccountTypeSelection),
+              ConversationRow(
+                R.string.with_name,
+                _name == null || _name.isEmpty ? "Enter a name" : _name,
+                dataColor: AppTheme.darkBlue,
+                onPressed: _showAccountNameDialog,),
+              ConversationRow(
+                R.string.and_initial_amount,
+                _nf.format(_amount),
+                dataColor: AppTheme.brightPink,
+                style: Theme.of(context).textTheme.display2,),
+            ],
           ),
-          Align(
-            child: NumberInputPad(_numPadKey, _onNumberInput, null, null, showNumPad: true,),
-            alignment: Alignment.bottomCenter,
-          )
-        ],
-      )
+        ),
+      ),
+      ),
     );
   }
 

@@ -34,6 +34,8 @@ class _AddTransactionState extends CleanArchitectureView<AddTransaction, AddTran
   final GlobalKey<BottomViewContentState<Account>> _accountKey = GlobalKey();
   final GlobalKey<BottomViewContentState<AppCategory>> _categoryKey = GlobalKey();
 
+  final GlobalKey<NumberInputPadState> numPadKey2 = GlobalKey();
+
   var _amount = 0.0;
   var _type = TransactionType.expenses;
   var _date = DateTime.now();
@@ -110,70 +112,65 @@ class _AddTransactionState extends CleanArchitectureView<AddTransaction, AddTran
       ],
     );
 
-    return GradientScaffold(
+    return PlainScaffold(
       appBar: appBar,
-      body: Column(
-          children: <Widget>[
-          Expanded(
-            child: Container(
-              color: AppTheme.white,
-              alignment: Alignment.center,
-              child: FittedBox(
-                child: Column(children: <Widget> [
-                  ConversationRow(
-                      widget.transactionId == null ? R.string.create_new : R.string.an,
-                      _type.name,
-                      dataColor: AppTheme.darkBlue,
-                      onPressed: _showTransactionTypeSelection,
-                  ),
-                  ConversationRow(
-                      widget.transactionId == null ? R.string.of : R.string.value_of,
-                      _numberFormat.format(_amount),
-                      dataColor: TransactionType.isIncome(_type) ? AppTheme.tealAccent : TransactionType.isExpense(_type) ? AppTheme.pinkAccent : AppTheme.blueGrey,
-                      style: Theme.of(context).textTheme.display2,
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      ConversationRow(
-                          "${widget.transactionId == null ? "" : R.string.was_made}${TransactionType.isExpense(_type) ? R.string.from : TransactionType.isIncome(_type) ? R.string.into : R.string.from}",
-                          _account == null ? R.string.select_account : _account.name,
-                          dataColor: AppTheme.darkGreen,
-                          onPressed: _showSelectAccount,
-                      ),
-                      ConversationRow(
-                          R.string.by,
-                          _user == null ? R.string.unknown : _user.firstName,
-                          dataColor: AppTheme.darkGreen,
-                      )
-                    ],
-                  ),
-                  ConversationRow(
-                      R.string.txt_for,
-                      _category == null ? R.string.select_category : _category.name,
-                      dataColor: AppTheme.brightPink,
-                      onPressed: _showSelectCategory,
-                    trail: IconButton(
-                      icon: Icon(_note == null || _note.isEmpty ? Icons.note_add : Icons.note, color: _note == null || _note.isEmpty ? AppTheme.darkGreen : AppTheme.pinkAccent,),
-                      onPressed: () => Navigator.push(context, SlidePageRoute(
-                          builder: (context) => InputName(
-                            R.string.enter_note,
-                                (name) =>_note = name,
-                            hintText: _note == null || _note.isEmpty ? R.string.add_your_note : _note,))),
-                    )
-                  ),
-                  DateTimeRow(_date, _showDatePicker, _showTimePicker,),
-                ],),
+      body: NumberInputPad(
+        numPadKey2,
+        initialValue: 0.0,
+        onValueChange: _onNumberInput,
+        child: Container(
+          color: AppTheme.white,
+          alignment: Alignment.center,
+          child: FittedBox(
+            child: Column(children: <Widget> [
+              ConversationRow(
+                widget.transactionId == null ? R.string.create_new : R.string.an,
+                _type.name,
+                dataColor: AppTheme.darkBlue,
+                onPressed: _showTransactionTypeSelection,
               ),
-            ),
+              ConversationRow(
+                widget.transactionId == null ? R.string.of : R.string.value_of,
+                _numberFormat.format(_amount),
+                dataColor: TransactionType.isIncome(_type) ? AppTheme.tealAccent : TransactionType.isExpense(_type) ? AppTheme.pinkAccent : AppTheme.blueGrey,
+                style: Theme.of(context).textTheme.display2,
+              ),
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  ConversationRow(
+                    "${widget.transactionId == null ? "" : R.string.was_made}${TransactionType.isExpense(_type) ? R.string.from : TransactionType.isIncome(_type) ? R.string.into : R.string.from}",
+                    _account == null ? R.string.select_account : _account.name,
+                    dataColor: AppTheme.darkGreen,
+                    onPressed: _showSelectAccount,
+                  ),
+                  ConversationRow(
+                    R.string.by,
+                    _user == null ? R.string.unknown : _user.firstName,
+                    dataColor: AppTheme.darkGreen,
+                  )
+                ],
+              ),
+              ConversationRow(
+                  R.string.txt_for,
+                  _category == null ? R.string.select_category : _category.name,
+                  dataColor: AppTheme.brightPink,
+                  onPressed: _showSelectCategory,
+                  trail: IconButton(
+                    icon: Icon(_note == null || _note.isEmpty ? Icons.note_add : Icons.note, color: _note == null || _note.isEmpty ? AppTheme.darkGreen : AppTheme.pinkAccent,),
+                    onPressed: () => Navigator.push(context, SlidePageRoute(
+                        builder: (context) => InputName(
+                          R.string.enter_note,
+                              (name) =>_note = name,
+                          hintText: _note == null || _note.isEmpty ? R.string.add_your_note : _note,))),
+                  )
+              ),
+              DateTimeRow(_date, _showDatePicker, _showTimePicker,),
+            ],),
           ),
-            Align(
-              child: NumberInputPad(numPadKey, _onNumberInput, null, null, showNumPad: true,),
-              alignment: Alignment.bottomCenter,
-            )
-          ],
         ),
+      ),
     );
   }
 

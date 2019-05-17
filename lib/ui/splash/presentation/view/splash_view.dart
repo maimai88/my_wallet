@@ -15,7 +15,7 @@ class SplashView extends StatefulWidget {
 class _SplashViewState extends CleanArchitectureView<SplashView, SplashPresenter> implements SplashDataView {
   _SplashViewState() : super(SplashPresenter());
 
-  var _error;
+  String _error;
   var _version;
 
   get _isError => _error != null;
@@ -40,7 +40,7 @@ class _SplashViewState extends CleanArchitectureView<SplashView, SplashPresenter
     return PlainScaffold(
       body: Stack(
         children: <Widget>[
-          _isError ? ErrorPage(_errorKey, R.string.auto_login_failed, loadData) : Column(
+          _isError ? ErrorPage(_errorKey, _error.isEmpty ? R.string.auto_login_failed : _error, loadData) : Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
@@ -100,6 +100,7 @@ class _SplashViewState extends CleanArchitectureView<SplashView, SplashPresenter
 
   @override
   void onAppLoadingError(Exception e) {
+    print("on app loading error ${e.toString()}");
     if(_errorKey.currentContext != null) {
       _errorKey.currentState.stopRetry();
     }

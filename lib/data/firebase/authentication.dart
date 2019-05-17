@@ -147,26 +147,22 @@ Future<User> getCurrentUser() async {
 Future<User> _getCurrentUser() async {
     User _user;
 
-    try {
-      FirebaseUser user = await _auth.currentUser();
+    FirebaseUser user = await _auth.currentUser();
 
-      if (user != null) {
-        await user.reload();
-        var photoUrlList; /*user.providerData != null && user.providerData.isNotEmpty
+    if (user != null) {
+      await user.reload();
+      var photoUrlList; /*user.providerData != null && user.providerData.isNotEmpty
             ? user.providerData.where((f) => f.photoUrl != null && f.photoUrl.isNotEmpty).map((f) => f.photoUrl).toList()
             : [];*/
 
-        _user = User(
-            user.uid,
-            user.email,
-            user.displayName,
-            photoUrlList != null && photoUrlList.isNotEmpty ? photoUrlList[0] : null,
-            null,
-            user.isEmailVerified
-        );
-      }
-    } on PlatformException catch (e) {
-      debugPrint("Error: ${e.toString()}");
+      _user = User(
+          user.uid,
+          user.email,
+          user.displayName,
+          photoUrlList != null && photoUrlList.isNotEmpty ? photoUrlList[0] : null,
+          null,
+          user.isEmailVerified
+      );
     }
 
     return _user;

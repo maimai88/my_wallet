@@ -39,10 +39,10 @@ class _CreateAccountState extends CleanArchitectureView<CreateAccount, CreateAcc
     );
 
     return GradientScaffold(
-      appBar: appBar,
-      body: Column(
-        children: <Widget>[
-          Expanded(
+        appBar: appBar,
+        body: NumberInputPad(_numPadKey,
+            onValueChange: _onNumberInput,
+            initialValue: 0.0,
             child: Container(
               alignment: Alignment.center,
               color: AppTheme.white,
@@ -51,63 +51,54 @@ class _CreateAccountState extends CleanArchitectureView<CreateAccount, CreateAcc
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    ConversationRow(
-                        R.string.create_new,
-                        _type.name,
-                        dataColor: AppTheme.darkBlue,
-                        onPressed: _showAccountTypeSelection),
+                    ConversationRow(R.string.create_new, _type.name, dataColor: AppTheme.darkBlue, onPressed: _showAccountTypeSelection),
                     ConversationRow(
                       R.string.with_name,
                       _name == null || _name.isEmpty ? "Enter a name" : _name,
                       dataColor: AppTheme.darkBlue,
-                      onPressed: _showAccountNameDialog,),
+                      onPressed: _showAccountNameDialog,
+                    ),
                     ConversationRow(
                       R.string.and_initial_amount,
-                      moneyFormatter.format(_amount),
+                      _nf.format(_amount),
                       dataColor: AppTheme.brightPink,
-                      style: Theme.of(context).textTheme.display2,),
+                      style: Theme.of(context).textTheme.display2,
+                    ),
                   ],
                 ),
               ),
-            ),
-          ),
-          Align(
-            child: NumberInputPad(_numPadKey, _onNumberInput, null, null, showNumPad: true,),
-            alignment: Alignment.bottomCenter,
-          )
-        ],
-      )
-    );
+            )));
   }
 
   void _showAccountTypeSelection() {
-    _numPadKey.currentState.hide();
-    showModalBottomSheet(context: context, builder: (context) =>
-        BottomViewContent(
-            AccountType.all, (context, f) =>
-            Align(
-              child: InkWell(
-                child: Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: Text(f.name, style: Theme.of(context).textTheme.title.apply(color: AppTheme.darkBlue))
-                ),
-                onTap: () {
-                  setState(() => _type = f);
+    showModalBottomSheet(
+        context: context,
+        builder: (context) => BottomViewContent(
+              AccountType.all,
+              (context, f) => Align(
+                    child: InkWell(
+                      child: Padding(padding: EdgeInsets.all(10.0), child: Text(f.name, style: Theme.of(context).textTheme.title.apply(color: AppTheme.darkBlue))),
+                      onTap: () {
+                        setState(() => _type = f);
 
-                  _numPadKey.currentState.show();
-
-                  Navigator.pop(context);
-                },
-              ),
-              alignment: Alignment.center,
-            ),
-          R.string.select_account_type,
-        )
-    );
+                        Navigator.pop(context);
+                      },
+                    ),
+                    alignment: Alignment.center,
+                  ),
+              R.string.select_account_type,
+            ));
   }
 
   void _showAccountNameDialog() {
-    Navigator.push(context, SlidePageRoute(builder: (context) => InputName(R.string.account_name, (name) => setState(() => _name = name), hintText: R.string.enter_account_name,)));
+    Navigator.push(
+        context,
+        SlidePageRoute(
+            builder: (context) => InputName(
+                  R.string.account_name,
+                  (name) => setState(() => _name = name),
+                  hintText: R.string.enter_account_name,
+                )));
   }
 
   void _onNumberInput(double amount) {
@@ -119,19 +110,21 @@ class _CreateAccountState extends CleanArchitectureView<CreateAccount, CreateAcc
   }
 
   void onAccountSaved(bool result) {
-    if(result) Navigator.pop(context, result);
+    if (result) Navigator.pop(context, result);
   }
 
   void onError(Exception e) {
-      showDialog(context: context, builder: (context) => AlertDialog(
-        title: Text(R.string.error),
-        content: Text(e.toString()),
-        actions: <Widget>[
-          FlatButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text(R.string.ok),
-          )
-        ],
-      ));
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text(R.string.error),
+              content: Text(e.toString()),
+              actions: <Widget>[
+                FlatButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text(R.string.ok),
+                )
+              ],
+            ));
   }
 }

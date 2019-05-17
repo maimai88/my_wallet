@@ -329,37 +329,23 @@ class _AmountInputState extends State<_AmountInput> {
           )
         ],
       ),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            child: Container(
-              color: AppTheme.white,
-              alignment: Alignment.center,
-              child: FittedBox(
-                child: Column(
-                  children: <Widget>[
-                    ConversationRow(
-                        widget._caption,
-                        moneyFormatter.format(number)
-                    )
-                  ],
-                ),
-              ),
-            ),
+      body: NumberInputPad(_numPadKey,
+      initialValue: 0.0,
+      onValueChange: _updateNumber,
+      child: Container(
+        color: AppTheme.white,
+        alignment: Alignment.center,
+        child: FittedBox(
+          child: Column(
+            children: <Widget>[
+              ConversationRow(
+                  widget._caption,
+                  _nf.format(number)
+              )
+            ],
           ),
-          Container(
-            child: NumberInputPad(
-                _numPadKey,
-                _updateNumber,
-                null,
-                null
-            ),
-            decoration: BoxDecoration(
-              gradient: AppTheme.bgGradient
-            ),
-          )
-        ],
-      ),
+        ),
+      ),),
     );
   }
 

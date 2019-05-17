@@ -48,7 +48,6 @@ class _CreateAccountDatabaseRepository {
 
   Future<bool> createAccount(Account account) async {
     return Future(() async {
-      await db.startTransaction();
       db.insertAccount(account);
 
       return true;

@@ -22,8 +22,9 @@ class CleanArchitectureUseCase<T extends CleanArchitectureRepository> {
   void execute<T>(Future<T> task, onNext<T> next, onError error) {
     if(task != null) {
     final subscriptionKey = DateTime.now().millisecondsSinceEpoch.toRadixString(12);
-      StreamSubscription subscription = Observable.fromFuture(task).listen((data) => next(data), onError: (e, stacktrace) {
-        debugPrintStack(label: "Task failed", maxFrames: 30);
+      _streamSubscription.putIfAbsent(subscriptionKey, () => Observable.fromFuture(task).listen((data) => next(data), onError: (e, stacktrace) {
+        debugPrintStack(label: "Task failed ${e.toString()}", maxFrames: 30);
+        print(stacktrace);
 
         if(error != null) {
           if(e is Exception) {
@@ -32,9 +33,7 @@ class CleanArchitectureUseCase<T extends CleanArchitectureRepository> {
             error(Exception(e.toString()));
           }
         }
-      }, onDone: () => clearSubscription(subscriptionKey));
-
-      _streamSubscription.putIfAbsent(subscriptionKey, () => subscription);
+      }, onDone: () => clearSubscription(subscriptionKey)));
     } else {
       debugPrint("task is null: $task ${this.toString()}");
     }

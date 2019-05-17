@@ -61,16 +61,16 @@ class _PayLiabilityDatabaseRepository {
         AppTransaction interest,
         DischargeOfLiability additionalPayment
       }) async {
-    await db.startTransaction();
+    var transaction = await db.startTransaction();
 
-    db.insertDischargeOfLiability(discharge);
+    db.insertDischargeOfLiability(discharge, batchIdentifier: transaction);
 
     if(interest != null) {
-      db.insertTransaction(interest);
+      db.insertTransaction(interest, batchIdentifier: transaction);
     }
 
     if(additionalPayment != null) {
-      db.insertDischargeOfLiability(additionalPayment);
+      db.insertDischargeOfLiability(additionalPayment, batchIdentifier: transaction);
     }
 
     await db.execute();

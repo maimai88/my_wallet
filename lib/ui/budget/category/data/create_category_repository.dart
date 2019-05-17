@@ -69,17 +69,13 @@ class _CreateCategoryDatabaseRepository {
   }
 
   Future<bool> saveCategory(int id, String name, String color, CategoryType categoryType, int group) async {
-    await db.startTransaction();
     db.insertCategory(AppCategory(id, name, color, categoryType, group: group));
-    await db.execute();
 
     return true;
   }
 
   Future<bool> updateCategory(int id, String name, String colorHex, CategoryType type, int group) async {
-    await db.startTransaction();
     db.updateCategory(AppCategory(id, name, colorHex, type, group: group));
-    await db.execute();
 
     return true;
   }

@@ -62,8 +62,6 @@ _Database _db = new _Database();
 _Converter _converter = new _Converter();
 var _tableChanged = Set<String>();
 
-const DEFAULT_IDENTIFIER = "DEFAULT_IDENTIFIER";
-
 Future<void> init() async {
   return _db.init();
 }
@@ -76,12 +74,9 @@ Future<String> startTransaction() {
   return _db.startTransaction();
 }
 
-Future<void> execute({String batchIdentifier = DEFAULT_IDENTIFIER}) async {
-  Batch batch = _db._getBatch(batchIdentifier: batchIdentifier);
+Future<void> execute({String batchIdentifier}) async {
+  await _db._executeBatch(batchIdentifier: batchIdentifier);
 
-  await batch.commit();
-
-  _db._clearBatch(batchIdentifier);
   _db._notifyObservers(_tableChanged.toList());
 }
 
@@ -372,45 +367,45 @@ Future<List<Account>> queryAccounts({AccountType type}) async {
   return null;
 }
 
-Future<void> insertAccount(Account account, {String batchIdentifier = DEFAULT_IDENTIFIER}) async {
+Future<void> insertAccount(Account account, {String batchIdentifier}) async {
   if (await _db.isExist(tblAccount, _id, account.id)) {
-    _db._getBatch(batchIdentifier: batchIdentifier).update(tblAccount, _converter.accountToMap(account), where: "$_id = ?", whereArgs: [account.id]);
+    updateAccount(account, batchIdentifier: batchIdentifier);
   } else {
-    _db._getBatch(batchIdentifier: batchIdentifier).insert(tblAccount, _converter.accountToMap(account, includeId: true));
+    _db.insert(batchIdentifier, tblAccount, _converter.accountToMap(account, includeId: true));
   }
 
   _tableChanged.add(tblAccount);
 }
 
-Future<void> updateAccount(Account account, {String batchIdentifier = DEFAULT_IDENTIFIER}) async {
-  _db._getBatch(batchIdentifier: batchIdentifier).update(tblAccount, _converter.accountToMap(account), where: "$_id = ?", whereArgs: [account.id]);
+Future<void> updateAccount(Account account, {String batchIdentifier}) async {
+  _db.update(batchIdentifier, tblAccount, _converter.accountToMap(account), where: "$_id = ?", whereArgs: [account.id]);
   _tableChanged.add(tblAccount);
 }
 
-Future<void> deleteAccount(int accountId, {String batchIdentifier = DEFAULT_IDENTIFIER}) async {
-  _db._getBatch(batchIdentifier: batchIdentifier).delete(tblAccount, where: "$_id = ?", whereArgs: [accountId]);
+Future<void> deleteAccount(int accountId, {String batchIdentifier}) async {
+  _db.delete(batchIdentifier, tblAccount, where: "$_id = ?", whereArgs: [accountId]);
   _tableChanged.add(tblAccount);
 }
 
 // -----------------------------------------------------------------------------------------------------------------------------
 // Category
-Future<void> insertCategory(AppCategory category, {String batchIdentifier = DEFAULT_IDENTIFIER}) async {
+Future<void> insertCategory(AppCategory category, {String batchIdentifier}) async {
   if(await _db.isExist(tblCategory, _id, category.id)) {
-    _db._getBatch(batchIdentifier: batchIdentifier).update(tblCategory, _converter.categoryToMap(category), where: "$_id = ?", whereArgs: [category.id]);
+    updateCategory(category, batchIdentifier: batchIdentifier);
   } else {
-    _db._getBatch(batchIdentifier: batchIdentifier).insert(tblCategory, _converter.categoryToMap(category, includeId: true));
+    _db.insert(batchIdentifier, tblCategory, _converter.categoryToMap(category, includeId: true));
   }
 
   _tableChanged.add(tblCategory);
 }
 
-Future<void> updateCategory(AppCategory category, {String batchIdentifier = DEFAULT_IDENTIFIER}) async {
-  _db._getBatch(batchIdentifier: batchIdentifier).update(tblCategory, _converter.categoryToMap(category), where: "$_id = ?", whereArgs: [category.id]);
+Future<void> updateCategory(AppCategory category, {String batchIdentifier}) async {
+  _db.update(batchIdentifier, tblCategory, _converter.categoryToMap(category), where: "$_id = ?", whereArgs: [category.id]);
   _tableChanged.add(tblCategory);
 }
 
-Future<void> deleteCategory(int catId, {String batchIdentifier = DEFAULT_IDENTIFIER}) async {
-  _db._getBatch(batchIdentifier: batchIdentifier).delete(tblCategory, where: "$_id = ?", whereArgs: [catId]);
+Future<void> deleteCategory(int catId, {String batchIdentifier}) async {
+  _db.delete(batchIdentifier, tblCategory, where: "$_id = ?", whereArgs: [catId]);
   _tableChanged.add(tblCategory);
 }
 
@@ -441,23 +436,23 @@ Future<int> generateCategoryId() {
 
 // -----------------------------------------------------------------------------------------------------------------------------
 // Transaction
-Future<void> insertTransaction(AppTransaction transaction, {String batchIdentifier = DEFAULT_IDENTIFIER}) async {
+Future<void> insertTransaction(AppTransaction transaction, {String batchIdentifier}) async {
   if(await _db.isExist(tblTransaction, _id, transaction.id)) {
-    _db._getBatch(batchIdentifier: batchIdentifier).update(tblTransaction, _converter.transactionToMap(transaction), where: "$_id = ?", whereArgs: [transaction.id]);
+    updateTransaction(transaction, batchIdentifier: batchIdentifier);
   } else {
-    _db._getBatch(batchIdentifier: batchIdentifier).insert(tblTransaction, _converter.transactionToMap(transaction, includeId: true));
+    _db.insert(batchIdentifier, tblTransaction, _converter.transactionToMap(transaction, includeId: true));
   }
 
   _tableChanged.add(tblTransaction);
 }
 
-Future<void> updateTransaction(AppTransaction transaction, {String batchIdentifier = DEFAULT_IDENTIFIER}) async {
-  _db._getBatch(batchIdentifier: batchIdentifier).update(tblTransaction, _converter.transactionToMap(transaction), where: "$_id = ?", whereArgs: [transaction.id]);
+Future<void> updateTransaction(AppTransaction transaction, {String batchIdentifier}) async {
+  _db.update(batchIdentifier, tblTransaction, _converter.transactionToMap(transaction), where: "$_id = ?", whereArgs: [transaction.id]);
   _tableChanged.add(tblTransaction);
 }
 
-Future<void> deleteTransaction(int id, {String batchIdentifier = DEFAULT_IDENTIFIER}) async {
-  _db._getBatch(batchIdentifier: batchIdentifier).delete(tblTransaction, where: "$_id = ?", whereArgs: [id]);
+Future<void> deleteTransaction(int id, {String batchIdentifier}) async {
+  _db.delete(batchIdentifier, tblTransaction, where: "$_id = ?", whereArgs: [id]);
   _tableChanged.add(tblTransaction);
 }
 
@@ -542,22 +537,22 @@ Future<double> sumAllTransactionBetweenDateByType(DateTime from, DateTime to, Li
 
 // -----------------------------------------------------------------------------------------------------------------------------
 // User
-Future<void> insertUser(User user, {String batchIdentifier = DEFAULT_IDENTIFIER}) async {
+Future<void> insertUser(User user, {String batchIdentifier}) async {
   if(await _db.isExist(tblUser, _id, user.uuid)) {
-    _db._getBatch(batchIdentifier: batchIdentifier).update(tblUser, _converter.userToMap(user), where: "$_id = ?", whereArgs: [user.uuid]);
+    updateUser(user, batchIdentifier: batchIdentifier);
   } else {
-    _db._getBatch(batchIdentifier: batchIdentifier).insert(tblUser, _converter.userToMap(user, includeId: true));
+    _db.insert(batchIdentifier, tblUser, _converter.userToMap(user, includeId: true));
   }
   _tableChanged.add(tblUser);
 }
 
-Future<void> updateUser(User user, {String batchIdentifier = DEFAULT_IDENTIFIER}) async {
-  _db._getBatch(batchIdentifier: batchIdentifier).update(tblUser, _converter.userToMap(user), where: "$_id = ?", whereArgs: [user.uuid]);
+Future<void> updateUser(User user, {String batchIdentifier}) async {
+  _db.update(batchIdentifier, tblUser, _converter.userToMap(user), where: "$_id = ?", whereArgs: [user.uuid]);
   _tableChanged.add(tblUser);
 }
 
-Future<void> deleteUser(String uid, {String batchIdentifier = DEFAULT_IDENTIFIER}) async {
-  _db._getBatch(batchIdentifier: batchIdentifier).delete(tblUser, where: "$_id = ?", whereArgs: [uid]);
+Future<void> deleteUser(String uid, {String batchIdentifier}) async {
+  _db.delete(batchIdentifier, tblUser, where: "$_id = ?", whereArgs: [uid]);
   _tableChanged.add(tblUser);
 }
 
@@ -580,22 +575,22 @@ Future<User> queryUser(String uuid) async {
 
 // -----------------------------------------------------------------------------------------------------------------------------
 // Budget
-Future<void> insertBudget(Budget budget, {String batchIdentifier = DEFAULT_IDENTIFIER}) async {
+Future<void> insertBudget(Budget budget, {String batchIdentifier}) async {
   if (await _db.isExist(tblBudget, _id, budget.id)) {
-    _db._getBatch(batchIdentifier: batchIdentifier).update(tblBudget, _converter.budgetToMap(budget), where: "$_id = ?", whereArgs: [budget.id]);
+    updateBudget(budget, batchIdentifier: batchIdentifier);
   } else {
-    _db._getBatch(batchIdentifier: batchIdentifier).insert(tblBudget, _converter.budgetToMap(budget, includeId: true));
+    _db.insert(batchIdentifier, tblBudget, _converter.budgetToMap(budget, includeId: true));
   }
   _tableChanged.add(tblBudget);
 }
 
-Future<void> updateBudget(Budget budget, {String batchIdentifier = DEFAULT_IDENTIFIER}) async {
-  _db._getBatch(batchIdentifier: batchIdentifier).update(tblBudget, _converter.budgetToMap(budget), where: "$_id = ?", whereArgs: [budget.id]);
+Future<void> updateBudget(Budget budget, {String batchIdentifier}) async {
+  _db.update(batchIdentifier, tblBudget, _converter.budgetToMap(budget), where: "$_id = ?", whereArgs: [budget.id]);
   _tableChanged.add(tblBudget);
 }
 
-Future<void> deleteBudget(int id, {String batchIdentifier = DEFAULT_IDENTIFIER}) async {
-  _db._getBatch(batchIdentifier: batchIdentifier).delete(tblBudget, where: "$_id = ?", whereArgs: [id]);
+Future<void> deleteBudget(int id, {String batchIdentifier}) async {
+  _db.delete(batchIdentifier, tblBudget, where: "$_id = ?", whereArgs: [id]);
   _tableChanged.add(tblBudget);
 }
 
@@ -687,22 +682,22 @@ String _compileFindBudgetSqlQuery(int monthStart, int monthEnd) {
 
 // -----------------------------------------------------------------------------------------------------------------------------
 // Transfer
-Future<void> insertTransfer(Transfer transfer, {String batchIdentifier = DEFAULT_IDENTIFIER}) async {
+Future<void> insertTransfer(Transfer transfer, {String batchIdentifier}) async {
   if(await _db.isExist(tblTransfer, _id, transfer.id)) {
-    _db._getBatch(batchIdentifier: batchIdentifier).update(tblTransfer, _converter.transferToMap(transfer), where: "$_id = ?", whereArgs: [transfer.id]);
+    updateTransfer(transfer, batchIdentifier: batchIdentifier);
   } else {
-    _db._getBatch(batchIdentifier: batchIdentifier).insert(tblTransfer, _converter.transferToMap(transfer, includeId: true));
+    _db.insert(batchIdentifier, tblTransfer, _converter.transferToMap(transfer, includeId: true));
   }
   _tableChanged.add(tblTransfer);
 }
 
-Future<void> updateTransfer(Transfer transfer, {String batchIdentifier = DEFAULT_IDENTIFIER}) async {
-  _db._getBatch(batchIdentifier: batchIdentifier).update(tblTransfer, _converter.transferToMap(transfer), where: "$_id = ?", whereArgs: [transfer.id]);
+Future<void> updateTransfer(Transfer transfer, {String batchIdentifier}) async {
+  _db.update(batchIdentifier, tblTransfer, _converter.transferToMap(transfer), where: "$_id = ?", whereArgs: [transfer.id]);
   _tableChanged.add(tblTransfer);
 }
 
-Future<void> deleteTransfer(int id, {String batchIdentifier = DEFAULT_IDENTIFIER}) async {
-  _db._getBatch(batchIdentifier: batchIdentifier).delete(tblTransfer, where: "$_id = ?", whereArgs: [id]);
+Future<void> deleteTransfer(int id, {String batchIdentifier}) async {
+  _db.delete(batchIdentifier, tblTransfer, where: "$_id = ?", whereArgs: [id]);
   _tableChanged.add(tblTransfer);
 }
 
@@ -731,22 +726,22 @@ Future<int> generateTransferId() {
 
 // -----------------------------------------------------------------------------------------------------------------------------
 // DischargeOfLiability
-Future<void> insertDischargeOfLiability(DischargeOfLiability liability, {String batchIdentifier = DEFAULT_IDENTIFIER}) async{
+Future<void> insertDischargeOfLiability(DischargeOfLiability liability, {String batchIdentifier}) async{
   if(await _db.isExist(tblDischargeOfLiability, _id, liability.id)) {
-    _db._getBatch(batchIdentifier: batchIdentifier).update(tblDischargeOfLiability, _converter.dischargeLiabilityToMap(liability), where: "$_id = ?", whereArgs: [liability.id]);
+    updateDischargeOfLiability(liability, batchIdentifier: batchIdentifier);
   } else {
-    _db._getBatch(batchIdentifier: batchIdentifier).insert(tblDischargeOfLiability, _converter.dischargeLiabilityToMap(liability, includeId: true));
+    _db.insert(batchIdentifier, tblDischargeOfLiability, _converter.dischargeLiabilityToMap(liability, includeId: true));
   }
   _tableChanged.add(tblDischargeOfLiability);
 }
 
-Future<void> updateDischargeOfLiability(DischargeOfLiability liability, {String batchIdentifier = DEFAULT_IDENTIFIER}) async {
-  _db._getBatch(batchIdentifier: batchIdentifier).update(tblDischargeOfLiability, _converter.dischargeLiabilityToMap(liability), where: "$_id = ?", whereArgs: [liability.id]);
+Future<void> updateDischargeOfLiability(DischargeOfLiability liability, {String batchIdentifier}) async {
+  _db.update(batchIdentifier, tblDischargeOfLiability, _converter.dischargeLiabilityToMap(liability), where: "$_id = ?", whereArgs: [liability.id]);
   _tableChanged.add(tblDischargeOfLiability);
 }
 
-Future<void> deleteDischargeOfLiability(int id, {String batchIdentifier = DEFAULT_IDENTIFIER}) async {
-  _db._getBatch(batchIdentifier: batchIdentifier).delete(tblDischargeOfLiability, where: "$_id = ?", whereArgs: [id]);
+Future<void> deleteDischargeOfLiability(int id, {String batchIdentifier}) async {
+  _db.delete(batchIdentifier, tblDischargeOfLiability, where: "$_id = ?", whereArgs: [id]);
   _tableChanged.add(tblDischargeOfLiability);
 }
 
@@ -1009,9 +1004,6 @@ class _Database {
 
   Future<void> init() async {
     db = await _openDatabase();
-
-    // create default batch
-    _batch.putIfAbsent(DEFAULT_IDENTIFIER, () => db.batch());
   }
 
   Future<void> dispose() async {
@@ -1019,21 +1011,31 @@ class _Database {
     await db.close();
   }
 
-  Batch _getBatch({String batchIdentifier = DEFAULT_IDENTIFIER}) {
+//  Batch _getBatch({String batchIdentifier}) {
+//    if (_batch == null || _batch.isEmpty) throw Exception("No transaction to execute. You need to call startTransaction() before calling execute()");
+//
+//    return _batch[batchIdentifier];
+//  }
+//
+//  void _clearBatch(String batchIdentifier) {
+//    if(_batch == null) return;
+//    if(_batch.isEmpty) return;
+//    _batch.removeWhere((key, value) => batchIdentifier == key);
+//
+//    if(batchIdentifier == DEFAULT_IDENTIFIER) {
+//      // put new
+//      _batch.putIfAbsent(DEFAULT_IDENTIFIER, () => db.batch());
+//    }
+//  }
+
+  Future<void> _executeBatch({String batchIdentifier}) async {
     if (_batch == null || _batch.isEmpty) throw Exception("No transaction to execute. You need to call startTransaction() before calling execute()");
 
-    return _batch[batchIdentifier];
-  }
+    if(batchIdentifier == null) throw Exception("No batch to execute");
 
-  void _clearBatch(String batchIdentifier) {
-    if(_batch == null) return;
-    if(_batch.isEmpty) return;
-    _batch.removeWhere((key, value) => batchIdentifier == key);
+    Batch _b = _batch[batchIdentifier];
 
-    if(batchIdentifier == DEFAULT_IDENTIFIER) {
-      // put new
-      _batch.putIfAbsent(DEFAULT_IDENTIFIER, () => db.batch());
-    }
+    await _b.commit();
   }
 
   Future<bool> isExist(String table, String column, dynamic value) async {
@@ -1066,6 +1068,43 @@ class _Database {
     _batch.putIfAbsent(batchIdentifier, () => batch);
 
     return batchIdentifier;
+  }
+
+  Future<void> insert(String batchIdentifier, String table, Map<String, dynamic> values) async {
+    if(batchIdentifier != null) {
+      Batch batch = _batch[batchIdentifier];
+
+      if(batch == null) throw Exception("Batch with ID $batchIdentifier is not created");
+
+      batch.insert(table, values);
+    } else {
+      await db.insert(table, values);
+    }
+  }
+
+  Future<void> update(String batchIdentifier, String table, Map<String, dynamic> values, {String where, List<dynamic> whereArgs}) async {
+    if(batchIdentifier != null) {
+      Batch batch = _batch[batchIdentifier];
+
+      if(batch == null) throw Exception("Batch with ID $batchIdentifier is not created");
+
+      batch.update(table, values, where: where, whereArgs: whereArgs);
+    } else {
+      await db.update(table, values, where: where, whereArgs: whereArgs);
+    }
+  }
+
+  Future<void> delete(String batchIdentifier, String table, {String where, List<dynamic> whereArgs}) async {
+    if(batchIdentifier != null) {
+      Batch batch = _batch[batchIdentifier];
+
+      if(batch == null) throw Exception("Batch with ID $batchIdentifier is not created");
+
+      batch.delete(table, where: where, whereArgs: whereArgs);
+    } else {
+      await db.delete(table, where: where, whereArgs: whereArgs);
+    }
+
   }
 
   Future<List<Map<String, dynamic>>> _executeSql(String sql) async {

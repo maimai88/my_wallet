@@ -130,7 +130,7 @@ class _AddTransactionState extends CleanArchitectureView<AddTransaction, AddTran
               ),
               ConversationRow(
                 widget.transactionId == null ? R.string.of : R.string.value_of,
-                _numberFormat.format(_amount),
+                moneyFormatter.format(_amount),
                 dataColor: TransactionType.isIncome(_type) ? AppTheme.tealAccent : TransactionType.isExpense(_type) ? AppTheme.pinkAccent : AppTheme.blueGrey,
                 style: Theme.of(context).textTheme.display2,
               ),

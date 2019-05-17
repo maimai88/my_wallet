@@ -190,7 +190,7 @@ class _SelectAccountState extends State<_SelectAccount> {
             itemBuilder: (context, index) => ListTile(
                   title: Text(_accounts[index].name, style: Theme.of(context).textTheme.title.apply(color: AppTheme.darkBlue)),
                   subtitle: Text(
-                    _nf.format(_accounts[index].balance),
+                    moneyFormatter.format(_accounts[index].balance),
                     style: Theme.of(context).textTheme.body1.apply(color: AppTheme.darkBlue),
                   ),
                   onTap: () {
@@ -277,7 +277,7 @@ class _EnterAmountState extends State<_EnterAmount> {
               ),
               ConversationRow(
                 R.string.amount,
-                _nf.format(_amount),
+                moneyFormatter.format(_amount),
                 style: Theme.of(context).textTheme.display2,
               ),
               Padding(
@@ -333,7 +333,6 @@ class _ConfirmState extends State<_Confirm> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("build confirm page $amount ${toAccount == null ? "no toAccount" : toAccount.name} and from ${fromAccount == null ? " no from account" : fromAccount.name}");
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -345,7 +344,7 @@ class _ConfirmState extends State<_Confirm> {
         ),
         ConversationRow(
           R.string.amount,
-          _nf.format(amount == null ? 0.0 : amount),
+          moneyFormatter.format(amount == null ? 0.0 : amount),
           style: Theme.of(context).textTheme.display2,
         ),
         ConversationRow(
@@ -358,7 +357,7 @@ class _ConfirmState extends State<_Confirm> {
         ),
         ConversationRow(
           R.string.has,
-          _nf.format((toAccount == null ? 0.0 : toAccount.balance) + (amount == null ? 0.0 : amount)),
+          moneyFormatter.format((toAccount == null ? 0.0 : toAccount.balance) + (amount == null ? 0.0 : amount)),
           style: Theme.of(context).textTheme.title,
         ),
         ConversationRow(
@@ -367,7 +366,7 @@ class _ConfirmState extends State<_Confirm> {
         ),
         ConversationRow(
           R.string.has,
-          _nf.format((fromAccount == null ? 0.0 : fromAccount.balance) - (amount == null ? 0.0 : amount)),
+          moneyFormatter.format((fromAccount == null ? 0.0 : fromAccount.balance) - (amount == null ? 0.0 : amount)),
           style: Theme.of(context).textTheme.title,
         ),
         Padding(
@@ -382,7 +381,7 @@ class _ConfirmState extends State<_Confirm> {
     );
   }
 
-  void updateDetail(Account _toAccount, Account _fromAccount, double _amount) {
+  void updateDetail(AccountEntity _toAccount, AccountEntity _fromAccount, double _amount) {
     setState(() {
       this.toAccount = _toAccount;
       this.fromAccount = _fromAccount;

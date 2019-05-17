@@ -25,10 +25,7 @@ class _PayLiabilityState extends CleanArchitectureView<PayLiability, PayLiabilit
   final GlobalKey<BottomViewContentState<Account>> _accountKey = GlobalKey();
   final GlobalKey<BottomViewContentState<AppCategory>> _categoryKey = GlobalKey();
 
-  final tables = [
-    observer.tableAccount,
-    observer.tableCategory
-  ];
+  final tables = [observer.tableAccount, observer.tableCategory];
 
   String _name;
   Account _account;
@@ -72,12 +69,7 @@ class _PayLiabilityState extends CleanArchitectureView<PayLiability, PayLiabilit
     return GradientScaffold(
       appBar: MyWalletAppBar(
         title: R.string.make_a_payment,
-        actions: <Widget>[
-          FlatButton(
-            child: Text(R.string.save),
-              onPressed: _savePayment
-          )
-        ],
+        actions: <Widget>[FlatButton(child: Text(R.string.save), onPressed: _savePayment)],
       ),
       body: Column(
         children: <Widget>[
@@ -88,22 +80,24 @@ class _PayLiabilityState extends CleanArchitectureView<PayLiability, PayLiabilit
               child: FittedBox(
                 child: Column(
                   children: <Widget>[
-                    ConversationRow(R.string.pay_to, _name,),
                     ConversationRow(
-                      R.string.from, _account == null ? R.string.select_account : _account.name,
+                      R.string.pay_to,
+                      _name,
+                    ),
+                    ConversationRow(
+                      R.string.from,
+                      _account == null ? R.string.select_account : _account.name,
                       dataColor: AppTheme.darkBlue,
-                    onPressed: _showAccountListSelection,),
+                      onPressed: _showAccountListSelection,
+                    ),
                     ConversationRow(
                       R.string.txt_in,
-                        _category == null ? R.string.select_category : _category.name,
+                      _category == null ? R.string.select_category : _category.name,
                       dataColor: _category == null ? AppTheme.pinkAccent : Color(AppTheme.hexToInt(_category.colorHex)),
                       onPressed: _showCategoryListSelection,
                     ),
                     Row(
-                      children: <Widget>[
-                        ConversationRow(R.string.on, fullDateFormatter.format(_date)),
-                        ConversationRow(R.string.at, timeFormatter.format(_date))
-                      ],
+                      children: <Widget>[ConversationRow(R.string.on, fullDateFormatter.format(_date)), ConversationRow(R.string.at, timeFormatter.format(_date))],
                     ),
                     ConversationRow(
                       R.string.discharge_liability,
@@ -131,122 +125,109 @@ class _PayLiabilityState extends CleanArchitectureView<PayLiability, PayLiabilit
   }
 
   void _changeDischargeLiability() {
-    Navigator.push(context,
-        SlidePageRoute(builder:
-            (context) => _AmountInput(
-                R.string.discharge_liability)))
-    .then((value) => setState(() => _dischargeLiability = value ?? 0.0));
+    Navigator.push(context, SlidePageRoute(builder: (context) => _AmountInput(R.string.discharge_liability))).then((value) => setState(() => _dischargeLiability = value ?? 0.0));
   }
 
   void _changeInterest() {
-    Navigator.push(context,
-        SlidePageRoute(builder:
-            (context) => _AmountInput(
-            R.string.interest)))
-        .then((value) => setState(() => _interest = value ?? 0.0));
+    Navigator.push(context, SlidePageRoute(builder: (context) => _AmountInput(R.string.interest))).then((value) => setState(() => _interest = value ?? 0.0));
   }
 
   void _changeAdditionalPayment() {
-    Navigator.push(context,
-        SlidePageRoute(builder:
-            (context) => _AmountInput(
-            R.string.additional_payment)))
-        .then((value) => setState(() => _additionalPayment = value ?? 0.0));
+    Navigator.push(context, SlidePageRoute(builder: (context) => _AmountInput(R.string.additional_payment))).then((value) => setState(() => _additionalPayment = value ?? 0.0));
   }
 
   void _showAccountListSelection() {
-    showModalBottomSheet(context: context, builder: (context) =>
-        BottomViewContent(
-          _accounts,
+    showModalBottomSheet(
+        context: context,
+        builder: (context) => BottomViewContent(
+              _accounts,
               (context, f) => Align(
-                child: InkWell(
-                  child: Padding(padding: EdgeInsets.all(10.0),
-                      child: Text(
-                        f.name,
-                        style: Theme.of(context).textTheme.title.apply(color: AppTheme.brightPink),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,)
-                  ),
-                  onTap: () {
-                    setState(() => _account = f);
+                    child: InkWell(
+                      child: Padding(
+                          padding: EdgeInsets.all(10.0),
+                          child: Text(
+                            f.name,
+                            style: Theme.of(context).textTheme.title.apply(color: AppTheme.brightPink),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          )),
+                      onTap: () {
+                        setState(() => _account = f);
 
-                    Navigator.pop(context);
-                    },
-                ),
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
+              R.string.select_account,
+              noDataDescription: Stack(
+                children: <Widget>[
+                  Center(
+                    child: Text(
+                      R.string.no_account_available,
+                      style: Theme.of(context).textTheme.title.apply(color: AppTheme.darkBlue),
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: RoundedButton(
+                      onPressed: () => Navigator.pushNamed(context, routes.AddAccount),
+                      child: Text(R.string.add_account),
+                      color: AppTheme.darkBlue,
+                    ),
+                  )
+                ],
               ),
-          R.string.select_account,
-          noDataDescription: Stack(
-            children: <Widget>[
-              Center(
-                child: Text(R.string.no_account_available, style: Theme.of(context).textTheme.title.apply(color: AppTheme.darkBlue),),
-              ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: RoundedButton(
-                  onPressed: () => Navigator.pushNamed(context, routes.AddAccount),
-                  child: Text(R.string.add_account),
-                  color: AppTheme.darkBlue,
-                ),
-              )
-            ],
-          ),
-          key: _accountKey,
-        )
-    );
+              key: _accountKey,
+            ));
   }
 
   void _showCategoryListSelection() {
-    showModalBottomSheet(context: context, builder: (context) =>
-        BottomViewContent(
-          _categories,
+    showModalBottomSheet(
+        context: context,
+        builder: (context) => BottomViewContent(
+              _categories,
               (context, f) => Align(
-                child: InkWell(
-                child: Padding(padding: EdgeInsets.all(10.0),
+                    child: InkWell(
+                      child: Padding(
+                          padding: EdgeInsets.all(10.0),
+                          child: Text(
+                            f.name,
+                            style: Theme.of(context).textTheme.title.apply(color: AppTheme.brightPink),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          )),
+                      onTap: () {
+                        setState(() => _category = f);
+                        Navigator.pop(context);
+                      },
+                    ),
+                  ),
+              R.string.select_category,
+              noDataDescription: Stack(
+                children: <Widget>[
+                  Center(
                     child: Text(
-                      f.name,
-                      style: Theme.of(context).textTheme.title.apply(color: AppTheme.brightPink),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,)
-                ),
-                  onTap: () {
-                  setState(() => _category = f);
-                  Navigator.pop(context);
-            },
-          ),
-        ),
-          R.string.select_category,
-          noDataDescription: Stack(
-            children: <Widget>[
-              Center(
-                child: Text(
-                  R.string.no_category_available,
-                  style: Theme.of(context).textTheme.title.apply(color: AppTheme.darkBlue),
-                  textAlign: TextAlign.center,),
+                      R.string.no_category_available,
+                      style: Theme.of(context).textTheme.title.apply(color: AppTheme.darkBlue),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: RoundedButton(
+                      onPressed: () => Navigator.pushNamed(context, routes.CreateCategory),
+                      child: Text(R.string.create_category),
+                      color: AppTheme.darkBlue,
+                    ),
+                  )
+                ],
               ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: RoundedButton(
-                    onPressed: () => Navigator.pushNamed(context, routes.CreateCategory),
-                    child: Text(R.string.create_category),
-                color: AppTheme.darkBlue,),
-              )
-            ],
-          ),
-          key: _categoryKey,
-        )
-    );
+              key: _categoryKey,
+            ));
   }
 
   void _savePayment() {
-    presenter.savePayment(
-      widget._id,
-      _account,
-      _category,
-      _dischargeLiability,
-      _interest,
-      _additionalPayment,
-      _date
-    );
+    presenter.savePayment(widget._id, _account, _category, _dischargeLiability, _interest, _additionalPayment, _date);
   }
 
   void _loadAccounts() {
@@ -260,24 +241,20 @@ class _PayLiabilityState extends CleanArchitectureView<PayLiability, PayLiabilit
   @override
   void onAccountListLoaded(List<Account> accounts) {
     setState(() => _accounts = accounts);
-    if(_accountKey.currentContext != null) _accountKey.currentState.updateData(accounts);
+    if (_accountKey.currentContext != null) _accountKey.currentState.updateData(accounts);
   }
 
   @override
-  void onAccountLoadFailed(Exception e) {
-
-  }
+  void onAccountLoadFailed(Exception e) {}
 
   @override
   void onCategoryLoaded(List<AppCategory> categories) {
     setState(() => _categories = categories);
-    if(_categoryKey.currentContext != null) _categoryKey.currentState.updateData(categories);
+    if (_categoryKey.currentContext != null) _categoryKey.currentState.updateData(categories);
   }
 
   @override
-  void onCategoryLoadFailed(Exception e) {
-
-  }
+  void onCategoryLoadFailed(Exception e) {}
 
   @override
   void onSaveSuccess(bool result) {
@@ -286,34 +263,33 @@ class _PayLiabilityState extends CleanArchitectureView<PayLiability, PayLiabilit
 
   @override
   void onSaveFailed(Exception e) {
-    showDialog(context: context,
-    builder: (context) => AlertDialog(
-      title: Text(R.string.failed_to_save_payment),
-      content: Text(e.toString()),
-      actions: <Widget>[
-        FlatButton(
-          child: Text(R.string.ok),
-          onPressed: () => Navigator.pop(context),
-        )
-      ],
-    ));
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: Text(R.string.failed_to_save_payment),
+              content: Text(e.toString()),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text(R.string.ok),
+                  onPressed: () => Navigator.pop(context),
+                )
+              ],
+            ));
   }
 }
 
 class _AmountInput extends StatefulWidget {
-
   final String _caption;
+
   _AmountInput(this._caption);
 
   @override
   State<StatefulWidget> createState() {
     return _AmountInputState();
   }
-
 }
 
 class _AmountInputState extends State<_AmountInput> {
-
   double number = 0.0;
   final GlobalKey<NumberInputPadState> _numPadKey = GlobalKey();
 
@@ -329,23 +305,20 @@ class _AmountInputState extends State<_AmountInput> {
           )
         ],
       ),
-      body: NumberInputPad(_numPadKey,
-      initialValue: 0.0,
-      onValueChange: _updateNumber,
-      child: Container(
-        color: AppTheme.white,
-        alignment: Alignment.center,
-        child: FittedBox(
-          child: Column(
-            children: <Widget>[
-              ConversationRow(
-                  widget._caption,
-                  _nf.format(number)
-              )
-            ],
+      body: NumberInputPad(
+        _numPadKey,
+        initialValue: 0.0,
+        onValueChange: _updateNumber,
+        child: Container(
+          color: AppTheme.white,
+          alignment: Alignment.center,
+          child: FittedBox(
+            child: Column(
+              children: <Widget>[ConversationRow(widget._caption, moneyFormatter.format(number))],
+            ),
           ),
         ),
-      ),),
+      ),
     );
   }
 

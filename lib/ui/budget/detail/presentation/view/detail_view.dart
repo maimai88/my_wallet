@@ -100,13 +100,13 @@ class _BudgetDetailState extends CleanArchitectureView<BudgetDetail, BudgetDetai
               ),
               ConversationRow(
                 R.string.from,
-                df.format(_from),
+                monthYearFormatter.format(_from),
                 dataColor: AppTheme.darkBlue,
                 onPressed: _showFromMonth,
               ),
               ConversationRow(
                 R.string.to,
-                _to == null ? R.string.forever : df.format(_to),
+                _to == null ? R.string.forever : monthYearFormatter.format(_to),
                 dataColor: AppTheme.darkBlue,
                 onPressed: _showToMonth,
                 trail: _to == null ? null : IconButton(
@@ -115,65 +115,13 @@ class _BudgetDetailState extends CleanArchitectureView<BudgetDetail, BudgetDetai
               ),
               ConversationRow(
                 R.string.at_max,
-                _nf.format(_amount),
+                moneyFormatter.format(_amount),
                 style: Theme.of(context).textTheme.display2,
               )
             ],
           ),
         ),
       ),)
-//      body: Column(
-//        children: <Widget>[
-//          Expanded(
-//            child: Container(
-//              padding: EdgeInsets.all(10.0),
-//              color: AppTheme.white,
-//              width: MediaQuery.of(context).size.width,
-//              child: FittedBox(
-//                child: Column(
-//                  children: <Widget>[
-//                    ConversationRow(
-//                      R.string.a_monthly_budget_for,
-//                      _category == null ? R.string.select_category : _category.name,
-//                      onPressed: () => Navigator.pushNamed(context, routes.EditCategory(categoryId: _category.id, categoryName: _category.name)),
-//                    ),
-//                        ConversationRow(
-//                          R.string.from,
-//                          df.format(_from),
-//                          dataColor: AppTheme.darkBlue,
-//                          onPressed: _showFromMonth,
-//                        ),
-//                    ConversationRow(
-//                      R.string.to,
-//                      _to == null ? R.string.forever : df.format(_to),
-//                      dataColor: AppTheme.darkBlue,
-//                      onPressed: _showToMonth,
-//                      trail: _to == null ? null : IconButton(
-//                          icon: Icon(Icons.close, color: AppTheme.pinkAccent,),
-//                          onPressed: () => setState(() => _to = null)),
-//                    ),
-//                    ConversationRow(
-//                      R.string.at_max,
-//                      _nf.format(_amount),
-//                      style: Theme.of(context).textTheme.display2,
-//                    )
-//                  ],
-//                ),
-//              ),
-//            ),
-//          ),
-//          Align(
-//            child: NumberInputPad(
-//              numPadKey,
-//              _onNumberInput,
-//              null,
-//              null,
-//              showNumPad: true,
-//            ),
-//            alignment: Alignment.bottomCenter,
-//          )
-//        ],
-//      ),
     );
   }
 

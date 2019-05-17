@@ -60,14 +60,16 @@ class _CreateAccountState extends CleanArchitectureView<CreateAccount, CreateAcc
                     ),
                     ConversationRow(
                       R.string.and_initial_amount,
-                      _nf.format(_amount),
+                      moneyFormatter.format(_amount),
                       dataColor: AppTheme.brightPink,
                       style: Theme.of(context).textTheme.display2,
                     ),
                   ],
                 ),
               ),
-            )));
+            )
+        )
+    );
   }
 
   void _showAccountTypeSelection() {

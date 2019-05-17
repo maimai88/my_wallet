@@ -1,8 +1,9 @@
 # my_wallet
 
-My Wallet base on https:&#x2F;&#x2F;www.behance.net&#x2F;gallery&#x2F;34008582&#x2F;MyWallet-Manage-Your-Budget
+A simple Home budget management app that is written in Flutter
 
-## Getting Started
+* Firebase backend
+* beautiful UI
+* multi user
 
-For help getting started with Flutter, view our online
-[documentation](https://flutter.io/).
+

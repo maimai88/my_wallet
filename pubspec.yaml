@@ -39,6 +39,7 @@ dependencies:
   cloud_firestore: any
   flutter_keychain: any
   primary_secondary_progress_bar: ^0.1.0
+  device_info: ^0.4.0+1
 
 dev_dependencies:
   flutter_test:

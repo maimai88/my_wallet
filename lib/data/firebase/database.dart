@@ -9,6 +9,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 export 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:firebase_core/firebase_core.dart';
+import 'package:my_wallet/data/changes.dart';
+import 'package:device_info/device_info.dart';
+import 'dart:io' show Platform;
 
 const _data = "data";
 
@@ -19,7 +22,8 @@ bool _isDbSetup = false;
 
 FirebaseApp _app;
 
-Map<String, StreamSubscription> subs = {};
+Map<String, StreamSubscription> _changeSubscriptions = {};
+Device _deviceInfo;
 
 Future<void> init(FirebaseApp app, {String homeProfile}) async {
   if (_isInit) return;
@@ -28,6 +32,17 @@ Future<void> init(FirebaseApp app, {String homeProfile}) async {
   if(_app != null) _app = app;
 
   if (homeProfile != null && homeProfile.isNotEmpty) await setupDatabase(homeProfile);
+  DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+
+  final timestamp = Timestamp.now().nanoseconds;
+
+  if(Platform.isAndroid) {
+    final androidInfo = await deviceInfo.androidInfo;
+    _deviceInfo = Device(androidInfo.androidId, 'android', androidInfo.display, timestamp);
+  } else if (Platform.isIOS){
+    final iosInfo = await deviceInfo.iosInfo;
+    _deviceInfo = Device(iosInfo.identifierForVendor, 'ios', iosInfo.name, timestamp);
+  }
 }
 
 Future<void> dispose() {
@@ -61,37 +76,82 @@ Future<void> setupDatabase(final String homeKey) async {
       await db.dropAllTables();
     }
 
-//    await _addSubscriptions();
   });
 }
 
 Future<void> _addSubscriptions() async {
   for(String table in allTables) {
-    if (!subs.containsKey(table)) {
-      subs.putIfAbsent(table, () =>
-          _firestore.collection(table).snapshots().listen((f) async {
-            if (f.documentChanges != null && f.documentChanges.length > 0) {
-              final batchIdentifier = await db.startTransaction();
-              f.documentChanges.forEach((change) async {
-                if (change == null) return;
-                if (change.document == null) return;
+    if(!_changeSubscriptions.containsKey(table)) {
+      _changeSubscriptions.putIfAbsent(table, () => _firestore.collection(tblChange).document(fldTables).collection(table).snapshots().listen((change) async {
 
-                //print("Change ${change.type} with ID ${change.document.documentID} in table $table");
-                switch (change.type) {
-                  case DocumentChangeType.added:
-                    await _onAdded(table, change.document, batchIdentifier);
-                    break;
-                  case DocumentChangeType.modified:
-                    await _onModified(table, change.document, batchIdentifier);
-                    break;
-                  case DocumentChangeType.removed:
-                    await _onRemoved(table, change.document, batchIdentifier);
-                    break;
-                }
-              });
-              await db.execute(batchIdentifier: batchIdentifier);
+        var lastChangeInDevice = 0;
+
+        try {
+          final _device = await _firestore.collection(tblChange)
+              .document(fldDevices).get().timeout(Duration(seconds: 2));
+
+          if(_device != null && _device.data !=  null && _device.data[_deviceInfo.uuid] != null) {
+            lastChangeInDevice = int.parse("${_device.data[_deviceInfo.uuid]}");
+          }
+        } catch(e) {
+          // timeout error, or any error at all
+        }
+
+        print("Device ${_deviceInfo.uuid} : lastChangeInDevice $lastChangeInDevice");
+
+        final batchIdentifier = await db.startTransaction();
+
+        change.documentChanges.forEach((f) async {
+          if(f.document.data == null) {
+            // delete this document
+            print("Delete ${f.document.documentID}");
+            switch(table) {
+              case tblAccount: await _onAccountRemoved(f.document, batchIdentifier); break;
+              case tblBudget: await _onBudgetRemoved(f.document, batchIdentifier); break;
+              case tblCategory: await _onCategoryRemoved(f.document, batchIdentifier); break;
+              case tblDischargeOfLiability: await _onDischargeOfLiabilityAdded(f.document, batchIdentifier); break;
+              case tblTransaction: await _onTransactionRemoved(f.document, batchIdentifier); break;
+              case tblTransfer: await _onTransferRemoved(f.document, batchIdentifier); break;
+              case tblUser:  await _onUserRemoved(f.document, batchIdentifier); break;
             }
-          }));
+          } else {
+            Table _table = Table.from(table, f.document.data);
+
+            if(_table.timestamp > lastChangeInDevice) {
+              print("Change in table $table ==> type ${f.type} with data ==> ${f.document.data}");
+              print("Table conversion : ${_table.name} ==> ${_table.documentId}");
+
+              DocumentSnapshot _data = await _firestore.collection(table).document(_table.documentId).get();
+
+              switch (table) {
+                case tblAccount:
+                  await _onAccountAdded(_data, batchIdentifier);
+                  break;
+                case tblBudget:
+                  await _onBudgetAdded(_data, batchIdentifier);
+                  break;
+                case tblCategory:
+                  await _onCategoryAdded(f.document, batchIdentifier);
+                  break;
+                case tblDischargeOfLiability:
+                  await _onDischargeOfLiabilityAdded(f.document, batchIdentifier);
+                  break;
+                case tblTransaction:
+                  await _onTransactionAdded(f.document, batchIdentifier);
+                  break;
+                case tblTransfer:
+                  await _onTransferAdded(f.document, batchIdentifier);
+                  break;
+                case tblUser:
+                  await _onUserAdded(f.document, batchIdentifier);
+                  break;
+              }
+            }
+          }
+
+          db.execute(batchIdentifier: batchIdentifier);
+        });
+      }));
     }
   }
 }
@@ -424,6 +484,24 @@ Future<void> _onDischargeOfLiabilityChanged(DocumentSnapshot document, String ba
 Future<void> _onDischargeOfLiabilityRemoved(DocumentSnapshot document, String batchIdentifier) {
   return db.deleteDischargeOfLiability(_toId(document));
 }
+// log changes
+Future<void> _logChange(String table, dynamic id) async {
+  final timestamp = Timestamp.now().nanoseconds;
+
+  await _firestore.collection(tblChange).document(fldTables)
+      .collection(table).document().setData(
+      {
+        fldTableChange : id,
+        fldTableTimeStamp: timestamp
+      }
+  );
+
+  print("log changes to device ${_deviceInfo.uuid}");
+  
+  await _firestore.collection(tblChange).document(fldDevices).setData({
+    _deviceInfo.uuid  : timestamp
+  });
+}
 // ####################################################################################################
 // Account
 Lock _lock = Lock();
@@ -431,6 +509,8 @@ Lock _lock = Lock();
 Future<bool> addAccount(Account acc) async {
   return _lock.synchronized(() async {
     await _firestore.collection(tblAccount).document("${acc.id}").setData(_AccountToMap(acc));
+    // mark this change
+    await _logChange(tblAccount, acc.id);
     return true;
   });
 }
@@ -442,6 +522,8 @@ Future<bool> updateAccount(Account acc) async {
 Future<bool> deleteAccount(Account acc) async {
   return _lock.synchronized(() async {
     await _firestore.collection(tblAccount).document("${acc.id}").delete();
+    await _logChange(tblAccount, acc.id);
+
     return true;
   });
 }
@@ -450,7 +532,9 @@ Future<bool> deleteAccount(Account acc) async {
 // Transaction
 Future<bool> addTransaction(AppTransaction transaction) async {
   return _lock.synchronized(() async {
-    _firestore.collection(tblTransaction).document("${transaction.id}").setData(_TransactionToMap(transaction));
+    await _firestore.collection(tblTransaction).document("${transaction.id}").setData(_TransactionToMap(transaction));
+    await _logChange(tblTransaction, transaction.id);
+
     return true;
   });
 }
@@ -462,6 +546,8 @@ Future<bool> updateTransaction(AppTransaction trans) async {
 Future<bool> deleteTransaction(AppTransaction trans) async {
   return _lock.synchronized(() async {
     await _firestore.collection(tblTransaction).document("${trans.id}").delete();
+    await _logChange(tblTransaction, trans.id);
+
     return true;
   });
 }
@@ -470,6 +556,9 @@ Future<bool> deleteAllTransaction(List<AppTransaction> transactions) {
   return _lock.synchronized(() async {
     for(AppTransaction transaction in transactions) {
       await _firestore.collection(tblTransaction).document("${transaction.id}").delete();
+
+      await _logChange(tblTransaction, transaction.id);
+
     }
 
     return true;
@@ -481,6 +570,7 @@ Future<bool> deleteAllTransaction(List<AppTransaction> transactions) {
 Future<bool> addCategory(AppCategory cat) async {
   return _lock.synchronized(() async {
     _firestore.collection(tblCategory).document("${cat.id}").setData(_CategoryToMap(cat));
+    await _logChange(tblCategory, cat.id);
 
     return true;
   });
@@ -493,6 +583,7 @@ Future<bool> updateCategory(AppCategory cat) {
 Future<bool> deleteCategory(AppCategory cat) async {
   return _lock.synchronized(() async {
     await _firestore.collection(tblCategory).document("${cat.id}").delete();
+    await _logChange(tblCategory, cat.id);
 
     return true;
   });
@@ -502,7 +593,9 @@ Future<bool> deleteCategory(AppCategory cat) async {
 // User
 Future<bool> addUser(User user, {int color}) async {
   return _lock.synchronized(() async {
-    _firestore.collection(tblUser).document(user.uuid).setData(_UserToMap(user, color: color));
+    await _firestore.collection(tblUser).document(user.uuid).setData(_UserToMap(user, color: color));
+    await _logChange(tblUser, user.uuid);
+
     return true;
   });
 }
@@ -514,6 +607,8 @@ Future<bool> updateUser(User user) {
 Future<bool> deleteUser(User user) async {
   return _lock.synchronized(() async {
     await _firestore.collection(tblUser).document(user.uuid).delete();
+    await _logChange(tblUser, user.uuid);
+
     return true;
   });
 }
@@ -522,7 +617,9 @@ Future<bool> deleteUser(User user) async {
 // Budget
 Future<bool> addBudget(Budget budget) async {
   return _lock.synchronized(() async {
-    _firestore.collection(tblBudget).document("${budget.id}").setData(_BudgetToMap(budget));
+    await _firestore.collection(tblBudget).document("${budget.id}").setData(_BudgetToMap(budget));
+    await _logChange(tblBudget, budget.id);
+
     return true;
   });
 }
@@ -534,6 +631,8 @@ Future<bool> updateBudget(Budget budget) {
 Future<bool> deleteBudget(int id) async {
   return _lock.synchronized(() async {
     await _firestore.collection(tblBudget).document("$id").delete();
+    await _logChange(tblBudget, id);
+
     return true;
   });
 }
@@ -544,6 +643,8 @@ Future<bool> deleteBudget(int id) async {
 Future<bool> addTransfer(Transfer transfer) {
   return _lock.synchronized(() async {
     await _firestore.collection(tblTransfer).document("${transfer.id}").setData(_TransferToMap(transfer));
+    await _logChange(tblTransfer, transfer.id);
+
     return true;
   });
 }
@@ -556,6 +657,8 @@ Future<bool> deleteAllTransfer(List<Transfer> transfers) {
   return _lock.synchronized(() async {
     for(Transfer transfer in transfers) {
       await _firestore.collection(tblTransfer).document("${transfer.id}").delete();
+      await _logChange(tblTransfer, transfer.id);
+
     }
 
     return true;
@@ -568,6 +671,8 @@ Future<bool> deleteAllTransfer(List<Transfer> transfers) {
 Future<bool> addDischargeOfLiability(DischargeOfLiability discharge) {
   return _lock.synchronized(() async {
     await _firestore.collection(tblDischargeOfLiability).document("${discharge.id}").setData(_DischargeOfLiabilityToMap(discharge));
+    await _logChange(tblDischargeOfLiability, discharge.id);
+
     return true;
   });
 }
@@ -579,6 +684,8 @@ Future<bool> update(DischargeOfLiability discharge) {
 Future<bool> deleteDischargeOfLiability(DischargeOfLiability discharge) {
   return _lock.synchronized(() async {
     await _firestore.collection(tblDischargeOfLiability).document("${discharge.id}").delete();
+    await _logChange(tblDischargeOfLiability, discharge.id);
+
   });
 }
 
@@ -592,11 +699,11 @@ Future<bool> removeReference() async {
 }
 
 void _unsubscribe() {
-  if(subs != null) subs.forEach((key, value) async {
+    if(_changeSubscriptions != null) _changeSubscriptions.forEach((key, value) async {
     await value.cancel();
   });
 
-  subs = {};
+    _changeSubscriptions = {};
 }
 
 

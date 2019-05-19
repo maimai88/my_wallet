@@ -86,9 +86,8 @@ class _BudgetDetailState extends CleanArchitectureView<BudgetDetail, BudgetDetai
       onValueChange: _onNumberInput,
       initialValue: 0.0,
       child: Container(
-        padding: EdgeInsets.all(10.0),
         color: AppTheme.white,
-        width: MediaQuery.of(context).size.width,
+        alignment: Alignment.center,
         child: FittedBox(
           child: Column(
             children: <Widget>[
